@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-function Popup() {
+export function Popup() {
   const [showPopup, setShowPopup] = useState(true);
 
   return (
@@ -42,5 +42,3 @@ function Popup() {
     </>
   );
 }
-
-export default Popup;
