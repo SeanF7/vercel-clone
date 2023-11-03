@@ -41,13 +41,13 @@ export const BottomNavBar = () => {
   ];
 
   return (
-    <nav className="shadow-[inset_0px_-1px_0px] shadow-neutral-800">
-      <div className="flex items-center px-5">
+    <nav className="shadow-[inset_0px_-1px_0px] shadow-neutral-800 ">
+      <div className="scrollbar-hide  flex items-center overflow-x-scroll whitespace-nowrap px-5">
         {paths.map((path) => (
           <Link
             className={`link relative h-max rounded-md px-3 py-1 pb-4 text-sm  hover:bg-slate-700 ${
               pathname === path.path
-                ? "text-white before:absolute  before:bottom-0 before:left-2 before:right-2 before:block  before:border-b-2 before:border-white"
+                ? "text-white before:absolute  before:bottom-0 before:left-2 before:right-2 before:block  before:border-b-2 before:border-white "
                 : "text-stone-400"
             }`}
             href={path.path}
