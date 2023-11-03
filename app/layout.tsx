@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Popup } from "@/components/Popup";
 import { GeistSans, GeistMono } from "geist/font";
+import { Footer } from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
           {/* <Popup /> */}
           {children}
         </div>
+        <Footer />
       </body>
     </html>
   );

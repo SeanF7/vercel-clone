@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <main>
       <NavBar></NavBar>
-      <div className="ml-auto mr-auto w-full px-4 py-3">
+      <div className="ml-auto mr-auto min-h-screen w-full px-4  py-3">
         <div className="flex w-full items-center">
           <div className="flex w-full rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:shadow-neutral-700">
             <span className="stroke-current text-white">
