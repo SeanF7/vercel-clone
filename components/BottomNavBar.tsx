@@ -59,7 +59,7 @@ export const BottomNavBar = () => {
 
   return (
     <nav
-      className="h-12 shadow-[inset_0px_-1px_0px] shadow-neutral-800"
+      className="h-12  shadow-[inset_0px_-1px_0px] shadow-neutral-800"
       onMouseLeave={handleMenuMouseLeave}
     >
       <div className="px-5">

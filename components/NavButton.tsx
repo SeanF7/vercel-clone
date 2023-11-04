@@ -12,14 +12,14 @@ export const NavButton = () => {
     <div className="relative">
       <button className="flex h-8 w-8 " onClick={handleButtonClick}>
         <div className="hidden rounded-full bg-gradient-to-r from-green-400 to-blue-500 md:block" />
-        <div className="cir flex h-full w-full items-center justify-center rounded-full border border-gray-800">
+        <div className="flex h-full w-full items-center justify-center rounded-full border border-gray-800">
           <div className="absolute h-[1.5px] w-[14px] translate-y-1 bg-neutral-500" />
           <div className="absolute h-[1.5px] w-[14px] -translate-y-1 bg-neutral-500" />
         </div>
       </button>
       {showMenu && (
-        <div className="absolute left-full pt-3 font-sans">
-          <div className="flex w-64 -translate-x-full flex-col rounded-md bg-neutral-900  p-4 shadow-[0_0px_1px_1px] shadow-neutral-700">
+        <div className="absolute left-full right-0 pt-3 font-sans">
+          <div className="flex w-64 -translate-x-full flex-col rounded-lg bg-neutral-950  p-4 shadow-[0_0px_1px_1px] shadow-neutral-800">
             <div className="pb-3">
               <h1 className="text-sm font-semibold text-white">
                 Sean Firsching

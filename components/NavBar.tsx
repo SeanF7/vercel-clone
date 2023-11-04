@@ -4,6 +4,7 @@ import { BottomNavBar } from "./BottomNavBar";
 import Link from "next/link";
 import { UserDropdown } from "./UserDropdown";
 import { NavButton } from "./NavButton";
+import { HighlightedTextButton } from "./HighlightedTextButton";
 
 export const NavBar = () => {
   const navButtons = [
@@ -23,7 +24,7 @@ export const NavBar = () => {
 
   return (
     <div>
-      <nav className="flex h-10 items-center justify-between px-6 py-8 text-neutral-400">
+      <nav className="flex h-10 items-center justify-between px-6 pb-5 pt-8 text-neutral-400">
         <div className="flex items-center">
           <Image
             src="/vercel.svg"
@@ -50,24 +51,22 @@ export const NavBar = () => {
         </div>
         <div className="flex items-center">
           <div className="hidden p-2 md:block">
-            <Link
-              className=" rounded-md bg-neutral-950 px-3 py-2 text-sm  shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:text-white"
-              href="/feedback"
-            >
-              Feedback
-            </Link>
+            <HighlightedTextButton
+              text="Feedback"
+              link="/feedback"
+              classes="rounded-md bg-neutral-950 px-3 py-2  shadow-[0_0px_0px_1px] shadow-neutral-800 "
+            />
           </div>
           {navButtons.map((link) => (
-            <Link
-              className="hidden px-3 text-sm transition-colors hover:text-white md:block"
+            <HighlightedTextButton
+              text={link.name}
+              link={link.path}
+              classes="hidden px-3 md:block"
               key={link.name}
-              href={link.path}
-            >
-              {link.name}
-            </Link>
+            />
           ))}
           <div className="p-2">
-            <button className="cir rounded-full border border-gray-800 p-2 ">
+            <button className="rounded-full border border-gray-800 p-2 ">
               <span>
                 <svg
                   data-testid="geist-icon"
