@@ -59,10 +59,10 @@ export const BottomNavBar = () => {
 
   return (
     <nav
-      className="h-12  shadow-[inset_0px_-1px_0px] shadow-neutral-800"
+      className="shadow-[inset_0px_-1px_0px] shadow-neutral-800"
       onMouseLeave={handleMenuMouseLeave}
     >
-      <div className="px-5">
+      <div>
         <div className="scrollbar-hide  flex items-center overflow-x-scroll whitespace-nowrap">
           <div
             className="absolute h-7 rounded-sm bg-neutral-800 duration-150 ease-in-out"

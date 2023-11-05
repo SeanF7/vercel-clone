@@ -16,7 +16,6 @@ export const UserDropdown = () => {
             aria-hidden="true"
             fill="none"
             height="16"
-            stroke-width="1.5"
             viewBox="0 0 16 24"
             className="stroke-current text-gray-400"
           >
