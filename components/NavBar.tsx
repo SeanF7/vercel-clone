@@ -23,7 +23,7 @@ export const NavBar = () => {
 
   return (
     <div className="relative">
-      <nav className="flex h-10  items-center justify-between pb-5 pt-8 text-neutral-400">
+      <nav className="flex h-16  items-center justify-between  text-neutral-400">
         <div className="flex items-center [@media(max-width:600px)]:pl-4">
           <div className="flex items-center pl-6 [@media(max-width:600px)]:hidden ">
             <Image src="/vercel.svg" alt="Vercel Logo" width={26} height={26} />

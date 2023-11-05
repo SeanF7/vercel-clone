@@ -78,18 +78,17 @@ export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
 
         <ul className="flex flex-col text-sm text-neutral-500">
           {firstSection.map((path) => (
-            <>
-              <li
-                className={`flex cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800 hover:text-white ${
-                  pathname === path.path ? "bg-neutral-900 text-white" : ""
-                }`}
-                key={path.path}
-              >
-                {path.name} {path.svg}
-              </li>
-              <div className="mx-5  my-3 h-0.5 bg-neutral-800" />
-            </>
+            <li
+              className={`flex cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800 hover:text-white ${
+                pathname === path.path ? "bg-neutral-900 text-white" : ""
+              }`}
+              key={path.path}
+            >
+              {path.name} {path.svg}
+            </li>
           ))}
+          <div className="mx-5  my-3 h-0.5 bg-neutral-800" />
+
           <button className="flex cursor-pointer items-center justify-between  gap-1 px-5  py-1 hover:bg-neutral-800">
             Command Menu
             <div className="flex gap-1 text-xs ">
@@ -101,6 +100,7 @@ export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
               </kbd>
             </div>
           </button>
+          {/* Way to implement dark theme at https://tailwindcss.com/docs/dark-mode color-scheme: dark; */}
           <li className="flex items-center justify-between px-5 py-1 transition-colors hover:text-white">
             Theme
             <div className="flex items-center py-1 text-neutral-500 hover:text-white">
