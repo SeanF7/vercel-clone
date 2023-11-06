@@ -11,8 +11,8 @@ export const DesktopNotificationPopup = () => {
   };
 
   return (
-    <div className="fixed z-10 w-[400px]  -translate-x-full pt-3 font-sans">
-      <div className="relative left-10 rounded-xl bg-black  shadow-[0_0px_1px_1px] shadow-neutral-800">
+    <div className="absolute z-20 w-[400px]  -translate-x-full pt-2 font-sans">
+      <div className="relative left-12 rounded-md bg-black  shadow-[0_0px_1px_1px] shadow-neutral-800">
         <div className="flex flex-col border-b border-neutral-700">
           <div className="flex items-center justify-between pl-4 pr-2">
             <div className="flex w-full gap-5 text-sm">
