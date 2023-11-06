@@ -48,20 +48,24 @@ export const BottomNavBar = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth < 600) return;
+      const mobileScreen = window.innerWidth <= 600;
       const transitionClasses = ["fixed", "top-0"];
       if (window.scrollY >= 64) {
         navBar.current?.classList.add(...transitionClasses);
-        logo.current?.classList.add("opacity-100");
-        linkDivs.current?.classList.remove("-translate-x-6");
-        linkDivs.current?.classList.add("translate-x-4");
-        logo.current?.classList.add("translate-y-0");
+        if (!mobileScreen) {
+          logo.current?.classList.add("opacity-100");
+          linkDivs.current?.classList.remove("-translate-x-6");
+          linkDivs.current?.classList.add("translate-x-4");
+          logo.current?.classList.add("translate-y-0");
+        }
       } else {
         navBar.current?.classList.remove(...transitionClasses);
-        logo.current?.classList.remove("opacity-100");
-        linkDivs.current?.classList.remove("translate-x-6");
-        logo.current?.classList.remove("translate-y-0");
-        linkDivs.current?.classList.add("-translate-x-6");
+        if (!mobileScreen) {
+          logo.current?.classList.remove("opacity-100");
+          linkDivs.current?.classList.remove("translate-x-6");
+          logo.current?.classList.remove("translate-y-0");
+          linkDivs.current?.classList.add("-translate-x-6");
+        }
       }
     };
 
