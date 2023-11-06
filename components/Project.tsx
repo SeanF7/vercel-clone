@@ -11,7 +11,7 @@ export const Project = () => {
               height={32}
               width={32}
               alt="Next Icon"
-              className="h-8 w-8 rounded-full border border-white"
+              className="rounded-full border border-white"
             ></Image>
           </div>
           <div className="flex ">

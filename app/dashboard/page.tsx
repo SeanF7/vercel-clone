@@ -1,5 +1,6 @@
 import { NavBar } from "@/components/NavBar";
 import { Project } from "@/components/Project";
+import { SearchBar } from "@/components/SearchBar";
 
 export default function Home() {
   return (
@@ -7,23 +8,10 @@ export default function Home() {
       <NavBar></NavBar>
       <div className="ml-auto mr-auto min-h-screen max-w-[1200px] px-4 py-3">
         <div className="flex w-full items-center">
-          <div className="flex w-full rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:shadow-neutral-700">
-            <span className="stroke-current text-white">
-              <svg
-                height="24"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                width="24"
-              >
-                <path d="M11 17.25a6.25 6.25 0 110-12.5 6.25 6.25 0 010 12.5z"></path>
-                <path d="M16 16l4.5 4.5"></path>
-              </svg>
-            </span>
-            <input
-              className="ml-2 w-full bg-transparent"
-              placeholder="Search..."
-            />
-          </div>
+          <SearchBar
+            placeHolderText="Search..."
+            hoverColor="shadow-neutral-600"
+          />
           <div className="p-2">
             <div className="flex rounded-md bg-neutral-950 px-2 py-1 shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:shadow-neutral-500">
               <button className="rounded-md bg-neutral-800 px-3 py-2">

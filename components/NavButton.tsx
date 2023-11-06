@@ -27,6 +27,7 @@ export const NavButton = () => {
       }
       setWidth(window.innerWidth);
     };
+    setWidth(window.innerWidth);
 
     window.addEventListener("resize", handleResize);
     return () => {
