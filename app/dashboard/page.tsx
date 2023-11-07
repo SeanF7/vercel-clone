@@ -41,20 +41,22 @@ export default function Home() {
               </button>
             </div>
           </div>
-          <button className=" flex h-10 items-center rounded-md bg-white px-2 text-center align-middle text-black hover:bg-neutral-100 [@media(min-width:600px)]:w-32">
-            <span className=" font-medium: inline-block text-sm [@media(max-width:600px)]:hidden">
-              Add New...
-            </span>
-            <svg
-              fill="none"
-              height="16"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              width="16"
-              className="[@media(max-width:600px)]:hidden"
-            >
-              <path d="M6 9l6 6 6-6"></path>
-            </svg>
+          <button className=" flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black hover:bg-neutral-300 [@media(min-width:600px)]:w-36">
+            <div className="flex flex-1 items-center justify-between">
+              <span className=" font-medium: medium inline-block text-sm [@media(max-width:600px)]:hidden">
+                Add New...
+              </span>
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                width="24"
+                className="[@media(max-width:600px)]:hidden"
+              >
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+            </div>
             <svg
               fill="none"
               height="24"
