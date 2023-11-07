@@ -9,6 +9,12 @@ type Props = {
 
 export const SearchBar = ({ placeHolderText, classes, hoverColor }: Props) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleClear = () => {
+    setInputValue("");
+  };
+
   return (
     <div
       className={`flex w-full rounded-md bg-neutral-950 p-2  shadow-[0_0px_0px_1px] shadow-neutral-800 transition-all focus-within:shadow-neutral-400 ${
@@ -26,7 +32,25 @@ export const SearchBar = ({ placeHolderText, classes, hoverColor }: Props) => {
         placeholder={placeHolderText}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
+        onChange={(e) => setInputValue(e.target.value)}
+        value={inputValue}
       />
+      {inputValue.length > 0 && (
+        <button onClick={handleClear} className=" text-neutral-500">
+          <svg
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            stroke-width="1.5"
+            viewBox="0 0 24 24"
+            width="16"
+          >
+            <circle cx="12" cy="12" r="10" fill="var(--geist-fill)"></circle>
+            <path d="M15 9l-6 6" stroke="var(--geist-stroke)"></path>
+            <path d="M9 9l6 6" stroke="var(--geist-stroke)"></path>
+          </svg>
+        </button>
+      )}
     </div>
   );
 };
