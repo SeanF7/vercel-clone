@@ -1,17 +1,54 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
 import { SearchBar } from "./SearchBar";
+import { DesktopFiltersPopup } from "./DesktopFiltersPopup";
 
-export const DesktopNotificationPopup = () => {
+type Props = {
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const DesktopNotificationPopup = ({ setVisible }: Props) => {
   const [index, setIndex] = useState(0);
   const tabs = ["Inbox", "Archive", "Comments"];
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [childMenuOpen, setChildMenuOpen] = useState(false);
+  const menuPopup = useRef<HTMLDivElement>(null);
 
   const handleTabClick = (index: number) => {
     setIndex(index);
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && !childMenuOpen) {
+        setVisible(false);
+      }
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      if (
+        menuPopup.current &&
+        !menuPopup.current.contains(event.target as Node) &&
+        !childMenuOpen
+      ) {
+        setVisible(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("mousedown", handleClick);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("mousedown", handleClick);
+    };
+  }, [setVisible, showFilterMenu, childMenuOpen]);
+
   return (
-    <div className="absolute z-20 w-[400px]  -translate-x-full pt-2 font-sans">
+    <div
+      className="absolute z-20 w-[400px]  -translate-x-full pt-2 font-sans"
+      ref={menuPopup}
+    >
       <div className="relative left-12 rounded-md bg-black  shadow-[0_0px_1px_1px] shadow-neutral-800">
         <div className="flex flex-col border-b border-neutral-700">
           <div className="flex items-center justify-between pl-4 pr-2">
@@ -103,22 +140,49 @@ export const DesktopNotificationPopup = () => {
           </div>
         )}
         {index === 2 && (
-          <div className="">
-            <div className="flex items-center gap-2 p-2">
+          <div className="flex flex-col">
+            <div className="flex p-4">
               <SearchBar placeHolderText="Search comments..." classes="h-8" />
-              <div className="flex rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-700">
-                <button className="flex items-center text-white">
-                  <svg
-                    height="16"
-                    viewBox="0 0 24 24"
-                    width="16"
-                    stroke="currentColor"
-                  >
-                    <path d="M12 5v14"></path>
-                    <path d="M5 12h14"></path>
-                  </svg>
-                  <span className="text-sm">Filter</span>
+              <div className="ml-4 flex h-8 w-20 rounded-md bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                <button
+                  className="flex w-full flex-1  items-center px-2 text-white"
+                  onClick={() => setShowFilterMenu(true)}
+                >
+                  <span className="mr-2">
+                    <svg
+                      height="16"
+                      viewBox="0 0 24 24"
+                      width="16"
+                      stroke="currentColor"
+                    >
+                      <path d="M12 5v14"></path>
+                      <path d="M5 12h14"></path>
+                    </svg>
+                  </span>
+                  <span className="flex-1 text-sm">Filter</span>
                 </button>
+              </div>
+              <DesktopFiltersPopup
+                showFilterMenu={showFilterMenu}
+                setShowFilterMenu={setShowFilterMenu}
+                setChildMenuOpen={setChildMenuOpen}
+              />
+            </div>
+            <div className="flex min-h-[400px] w-full items-center justify-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="rounded-full bg-neutral-900 p-4 text-neutral-400">
+                  <svg
+                    fill="none"
+                    height="20"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="20"
+                    aria-label="Empty inbox"
+                  >
+                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                  </svg>
+                </div>
+                <span className="text-sm "> No new comments</span>
               </div>
             </div>
           </div>

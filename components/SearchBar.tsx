@@ -5,9 +5,15 @@ type Props = {
   placeHolderText: string;
   classes?: string;
   hoverColor?: string;
+  escapeButton?: boolean;
 };
 
-export const SearchBar = ({ placeHolderText, classes, hoverColor }: Props) => {
+export const SearchBar = ({
+  placeHolderText,
+  classes,
+  hoverColor,
+  escapeButton,
+}: Props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -17,7 +23,7 @@ export const SearchBar = ({ placeHolderText, classes, hoverColor }: Props) => {
 
   return (
     <div
-      className={`flex w-full rounded-md bg-neutral-950 p-2  shadow-[0_0px_0px_1px] shadow-neutral-800 transition-all focus-within:shadow-neutral-400 ${
+      className={`flex w-full rounded-md bg-neutral-950 p-2  shadow-[0_0px_0px_1px] shadow-neutral-800  ring-neutral-500 transition-all focus-within:shadow-neutral-400 focus-within:ring-[0_0_0_4px]${
         !isFocused ? `hover:${hoverColor}` : ""
       } ${classes} `}
     >
@@ -49,6 +55,11 @@ export const SearchBar = ({ placeHolderText, classes, hoverColor }: Props) => {
             <path d="M15 9l-6 6" stroke="var(--geist-stroke)"></path>
             <path d="M9 9l6 6" stroke="var(--geist-stroke)"></path>
           </svg>
+        </button>
+      )}
+      {escapeButton && (
+        <button className="flex items-center rounded-md bg-neutral-950 p-2 text-sm text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
+          Esc
         </button>
       )}
     </div>

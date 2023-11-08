@@ -53,7 +53,9 @@ export const NotificationButton = () => {
           </svg>
         </span>
       </button>
-      {showNotifications && width > 700 && <DesktopNotificationPopup />}
+      {showNotifications && width > 700 && (
+        <DesktopNotificationPopup setVisible={setShowNotifications} />
+      )}
       {/* {showNotifications && width <= 700 && <MobileNotificationPopup />} */}
     </div>
   );
