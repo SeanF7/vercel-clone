@@ -2,30 +2,30 @@
 import { useState, useEffect, useRef } from "react";
 import { SearchBar } from "./SearchBar";
 import { DesktopFiltersPopup } from "./DesktopFiltersPopup";
+import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 
 type Props = {
+  controllingButton: React.RefObject<HTMLButtonElement>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const DesktopNotificationPopup = ({ setVisible }: Props) => {
+export const DesktopNotificationPopup = ({
+  controllingButton,
+  setVisible,
+}: Props) => {
   const [index, setIndex] = useState(0);
   const tabs = ["Inbox", "Archive", "Comments"];
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [childMenuOpen, setChildMenuOpen] = useState(false);
-  const menuPopup = useRef<HTMLDivElement>(null);
-
-  const handleTabClick = (index: number) => {
-    setIndex(index);
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+  const filterButton = useRef<HTMLButtonElement>(null);
+  const { menuPopup } = useCustomPopupExits(
+    (event: KeyboardEvent) => {
       if (event.key === "Escape" && !childMenuOpen) {
         setVisible(false);
+        controllingButton.current?.focus();
       }
-    };
-
-    const handleClick = (event: MouseEvent) => {
+    },
+    (event: MouseEvent) => {
       if (
         menuPopup.current &&
         !menuPopup.current.contains(event.target as Node) &&
@@ -33,16 +33,12 @@ export const DesktopNotificationPopup = ({ setVisible }: Props) => {
       ) {
         setVisible(false);
       }
-    };
+    }
+  );
 
-    window.addEventListener("keydown", handleKeyDown);
-    document.addEventListener("mousedown", handleClick);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      document.removeEventListener("mousedown", handleClick);
-    };
-  }, [setVisible, showFilterMenu, childMenuOpen]);
+  const handleTabClick = (index: number) => {
+    setIndex(index);
+  };
 
   return (
     <div
@@ -59,6 +55,7 @@ export const DesktopNotificationPopup = ({ setVisible }: Props) => {
                     index === i ? "border-b border-white" : ""
                   }`}
                   key={i}
+                  tabIndex={0}
                   onClick={() => handleTabClick(i)}
                 >
                   {tab}
@@ -147,6 +144,7 @@ export const DesktopNotificationPopup = ({ setVisible }: Props) => {
                 <button
                   className="flex w-full flex-1  items-center px-2 text-white"
                   onClick={() => setShowFilterMenu(true)}
+                  ref={filterButton}
                 >
                   <span className="mr-2">
                     <svg
@@ -161,12 +159,13 @@ export const DesktopNotificationPopup = ({ setVisible }: Props) => {
                   </span>
                   <span className="flex-1 text-sm">Filter</span>
                 </button>
+                <DesktopFiltersPopup
+                  showFilterMenu={showFilterMenu}
+                  setShowFilterMenu={setShowFilterMenu}
+                  setChildMenuOpen={setChildMenuOpen}
+                  button={filterButton}
+                />
               </div>
-              <DesktopFiltersPopup
-                showFilterMenu={showFilterMenu}
-                setShowFilterMenu={setShowFilterMenu}
-                setChildMenuOpen={setChildMenuOpen}
-              />
             </div>
             <div className="flex min-h-[400px] w-full items-center justify-center">
               <div className="flex flex-col items-center gap-4">

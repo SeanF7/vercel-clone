@@ -1,57 +1,53 @@
 import React, { useEffect, useState, useRef } from "react";
 import { SearchBar } from "./SearchBar";
+import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 
 type Props = {
   showFilterMenu: boolean;
   setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  button: React.RefObject<HTMLButtonElement>;
 };
 
 export const DesktopFiltersPopup = ({
   showFilterMenu,
   setShowFilterMenu,
   setChildMenuOpen,
+  button,
 }: Props) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const filterMenu = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClick = (event: MouseEvent) => {
-      if (
-        filterMenu.current &&
-        !filterMenu.current.contains(event.target as Node)
-      ) {
-        if (menuIndex !== null) {
-          setMenuIndex(null);
-        }
-        setShowFilterMenu(false);
-        setChildMenuOpen(false);
-      }
-    };
-
-    const handleKeyDown = (event: KeyboardEvent) => {
+  const { menuPopup } = useCustomPopupExits(
+    (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         if (menuIndex !== null) {
           setMenuIndex(null);
           setShowFilterMenu(true);
+          setChildMenuOpen(true);
         } else {
           setShowFilterMenu(false);
           setChildMenuOpen(false);
         }
       }
-    };
-
-    document.addEventListener("mousedown", handleClick);
-    window.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClick);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [menuIndex, setShowFilterMenu, setChildMenuOpen]);
+    },
+    (event: MouseEvent) => {
+      if (
+        menuPopup.current &&
+        !menuPopup.current.contains(event.target as Node)
+      ) {
+        if (menuIndex !== null) {
+          setMenuIndex(null);
+          setShowFilterMenu(true);
+          setChildMenuOpen(true);
+        } else {
+          setShowFilterMenu(false);
+          setChildMenuOpen(false);
+        }
+      }
+    }
+  );
 
   return (
-    <div className="relative" ref={filterMenu}>
+    <div className="relative" ref={menuPopup}>
       {showFilterMenu && (
         <div className="absolute w-[240px] -translate-x-full translate-y-10 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
           {["Author", "Status", "Project", "Page", "Branch"].map((item, i) => (

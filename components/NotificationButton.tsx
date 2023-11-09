@@ -1,10 +1,11 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { DesktopNotificationPopup } from "./DesktopNotificationPopup";
 import { MobileNotificationPopup } from "./MobileNotificationPopup";
 
 export const NotificationButton = () => {
   const [showNotifications, setShowNotifications] = useState(false);
+  const button = useRef<HTMLButtonElement>(null);
 
   const handleButtonClick = () => {
     // if (!showNotifications && width < 700)
@@ -37,6 +38,7 @@ export const NotificationButton = () => {
       <button
         className="rounded-full border border-gray-800 p-2 hover:bg-neutral-600"
         onClick={handleButtonClick}
+        ref={button}
       >
         <span>
           <svg
@@ -54,7 +56,10 @@ export const NotificationButton = () => {
         </span>
       </button>
       {showNotifications && width > 700 && (
-        <DesktopNotificationPopup setVisible={setShowNotifications} />
+        <DesktopNotificationPopup
+          setVisible={setShowNotifications}
+          controllingButton={button}
+        />
       )}
       {/* {showNotifications && width <= 700 && <MobileNotificationPopup />} */}
     </div>
