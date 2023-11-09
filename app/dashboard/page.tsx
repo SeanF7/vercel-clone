@@ -11,6 +11,7 @@ export default function Home() {
           <SearchBar
             placeHolderText="Search..."
             hoverColor="shadow-neutral-600"
+            focusColors={true}
           />
           <div className="p-2">
             <div className="flex rounded-md bg-neutral-950 px-2 py-1 shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:shadow-neutral-500">

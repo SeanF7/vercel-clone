@@ -139,7 +139,11 @@ export const DesktopNotificationPopup = ({
         {index === 2 && (
           <div className="flex flex-col">
             <div className="flex p-4">
-              <SearchBar placeHolderText="Search comments..." classes="h-8" />
+              <SearchBar
+                placeHolderText="Search comments..."
+                classes="h-8"
+                focusColors={true}
+              />
               <div className="ml-4 flex h-8 w-20 rounded-md bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
                 <button
                   className="flex w-full flex-1  items-center px-2 text-white"
