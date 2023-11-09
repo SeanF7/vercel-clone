@@ -6,15 +6,15 @@ type Props = {
   classes?: string;
   hoverColor?: string;
   escapeButton?: boolean;
+  focusColors?: boolean;
 };
 
 export const SearchBar = ({
   placeHolderText,
   classes,
-  hoverColor,
   escapeButton,
+  focusColors,
 }: Props) => {
-  const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
   const handleClear = () => {
@@ -23,9 +23,13 @@ export const SearchBar = ({
 
   return (
     <div
-      className={`flex w-full rounded-md bg-neutral-950 p-2  shadow-[0_0px_0px_1px] shadow-neutral-800  ring-neutral-500 transition-all focus-within:shadow-neutral-400 focus-within:ring-[0_0_0_4px]${
-        !isFocused ? `hover:${hoverColor}` : ""
-      } ${classes} `}
+      className={`flex w-full rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px]  shadow-neutral-800  
+      ${
+        focusColors
+          ? "outline outline-0 outline-neutral-400 ring-neutral-700 transition-all focus-within:outline-1 focus-within:ring-4"
+          : ""
+      } 
+      ${classes ? classes : ""} `}
     >
       <span className="flex items-center stroke-current text-neutral-400">
         <svg height="20" stroke="currentColor" viewBox="0 0 24 24" width="20">
@@ -36,8 +40,6 @@ export const SearchBar = ({
       <input
         className="ml-2 w-full bg-transparent text-sm outline-none"
         placeholder={placeHolderText}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
       />
