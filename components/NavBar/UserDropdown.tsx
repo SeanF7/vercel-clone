@@ -18,8 +18,8 @@ export const UserDropdown = async () => {
       <div className="flex items-center">
         <Image
           src={user.avatar}
-          height={18}
-          width={18}
+          height={20}
+          width={20}
           className="rounded-full"
           alt="User avatar"
         ></Image>

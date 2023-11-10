@@ -63,7 +63,7 @@ export const NavBar = () => {
             <NotificationButton />
           </div>
           <NavButton>
-            <Avatar width={32} height={32} />
+            <Avatar width={30} height={30} />
           </NavButton>
         </div>
       </nav>

@@ -50,25 +50,25 @@ export const BottomNavBar = () => {
     const handleScroll = () => {
       const mobileScreen = window.innerWidth <= 600;
       const transitionClasses = ["fixed", "top-0"];
+      const logoClasses = ["opacity-100", "translate-y-0"];
       if (window.scrollY >= 64) {
         navBar.current?.classList.add(...transitionClasses);
+        navBar.current?.classList.remove("-translate-y-3");
         if (!mobileScreen) {
-          logo.current?.classList.add("opacity-100");
-          linkDivs.current?.classList.remove("-translate-x-6");
+          logo.current?.classList.add(...logoClasses);
           linkDivs.current?.classList.add("translate-x-4");
-          logo.current?.classList.add("translate-y-0");
         }
       } else {
         navBar.current?.classList.remove(...transitionClasses);
+        navBar.current?.classList.add("-translate-y-3");
         if (!mobileScreen) {
-          logo.current?.classList.remove("opacity-100");
-          linkDivs.current?.classList.remove("translate-x-6");
-          logo.current?.classList.remove("translate-y-0");
-          linkDivs.current?.classList.add("-translate-x-6");
+          logo.current?.classList.remove(...logoClasses);
+          linkDivs.current?.classList.remove("translate-x-4");
         }
       }
     };
 
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
