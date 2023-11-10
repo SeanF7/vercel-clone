@@ -1,8 +1,12 @@
+"use client";
 import { NavBar } from "@/components/NavBar";
 import { Project } from "@/components/Project";
 import { SearchBar } from "@/components/SearchBar";
+import { useState } from "react";
 
 export default function Home() {
+  const [search, setSearch] = useState("");
+
   return (
     <main>
       <NavBar></NavBar>
@@ -10,8 +14,11 @@ export default function Home() {
         <div className="flex w-full items-center">
           <SearchBar
             placeHolderText="Search..."
-            hoverColor="shadow-neutral-600"
             focusColors={true}
+            inputValue={search}
+            setInputValue={setSearch}
+            clearButton={true}
+            classes="hover:shadow-neutral-600"
           />
           <div className="p-2">
             <div className="flex rounded-md bg-neutral-950 px-2 py-1 shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:shadow-neutral-500">

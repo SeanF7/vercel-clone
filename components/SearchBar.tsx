@@ -3,20 +3,23 @@ import React, { useState } from "react";
 
 type Props = {
   placeHolderText: string;
+  inputValue: string;
+  setInputValue: React.Dispatch<React.SetStateAction<string>>;
   classes?: string;
-  hoverColor?: string;
   escapeButton?: boolean;
   focusColors?: boolean;
+  clearButton?: boolean;
 };
 
 export const SearchBar = ({
   placeHolderText,
   classes,
-  escapeButton,
+  escapeButton = false,
   focusColors,
+  inputValue,
+  setInputValue,
+  clearButton = false,
 }: Props) => {
-  const [inputValue, setInputValue] = useState("");
-
   const handleClear = () => {
     setInputValue("");
   };
@@ -27,7 +30,8 @@ export const SearchBar = ({
         focusColors
           ? " outline outline-0 outline-neutral-400 ring-neutral-700 transition-all focus-within:outline-1 focus-within:ring-4"
           : ""
-      } ${classes ? classes : ""} `}
+      }
+      ${classes ? classes : ""} `}
     >
       <span className="flex items-center stroke-current text-neutral-400">
         <svg height="20" stroke="currentColor" viewBox="0 0 24 24" width="20">
@@ -41,27 +45,29 @@ export const SearchBar = ({
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
       />
-      {inputValue.length > 0 && (
-        <button onClick={handleClear} className=" text-neutral-500">
-          <svg
-            fill="none"
-            height="16"
-            stroke="currentColor"
-            stroke-width="1.5"
-            viewBox="0 0 24 24"
-            width="16"
-          >
-            <circle cx="12" cy="12" r="10" fill="var(--geist-fill)"></circle>
-            <path d="M15 9l-6 6" stroke="var(--geist-stroke)"></path>
-            <path d="M9 9l6 6" stroke="var(--geist-stroke)"></path>
-          </svg>
-        </button>
-      )}
-      {escapeButton && (
-        <button className="flex items-center rounded-md bg-neutral-950 p-2 text-sm text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
-          Esc
-        </button>
-      )}
+      <div className="flex gap-2">
+        {inputValue.length > 0 && clearButton && (
+          <button onClick={handleClear} className=" text-neutral-500">
+            <svg
+              fill="none"
+              height="16"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="16"
+            >
+              <circle cx="12" cy="12" r="10" fill="var(--geist-fill)"></circle>
+              <path d="M15 9l-6 6" stroke="var(--geist-stroke)"></path>
+              <path d="M9 9l6 6" stroke="var(--geist-stroke)"></path>
+            </svg>
+          </button>
+        )}
+        {escapeButton && (
+          <button className="flex items-center rounded-md bg-neutral-950 p-2 text-sm text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
+            Esc
+          </button>
+        )}
+      </div>
     </div>
   );
 };

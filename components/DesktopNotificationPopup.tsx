@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { SearchBar } from "./SearchBar";
 import { DesktopFiltersPopup } from "./DesktopFiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
+import { FilterComponent } from "./FilterComponent";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
@@ -17,6 +18,7 @@ export const DesktopNotificationPopup = ({
   const tabs = ["Inbox", "Archive", "Comments"];
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [childMenuOpen, setChildMenuOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const filterButton = useRef<HTMLButtonElement>(null);
   const { menuPopup } = useCustomPopupExits(
     (event: KeyboardEvent) => {
@@ -138,38 +140,44 @@ export const DesktopNotificationPopup = ({
         )}
         {index === 2 && (
           <div className="flex flex-col">
-            <div className="flex p-4">
-              <SearchBar
-                placeHolderText="Search comments..."
-                classes="h-8"
-                focusColors={true}
-              />
-              <div className="ml-4 flex h-8 w-20 rounded-md bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
-                <button
-                  className="flex w-full flex-1  items-center px-2 text-white"
-                  onClick={() => setShowFilterMenu(true)}
-                  ref={filterButton}
-                >
-                  <span className="mr-2">
-                    <svg
-                      height="16"
-                      viewBox="0 0 24 24"
-                      width="16"
-                      stroke="currentColor"
-                    >
-                      <path d="M12 5v14"></path>
-                      <path d="M5 12h14"></path>
-                    </svg>
-                  </span>
-                  <span className="flex-1 text-sm">Filter</span>
-                </button>
-                <DesktopFiltersPopup
-                  showFilterMenu={showFilterMenu}
-                  setShowFilterMenu={setShowFilterMenu}
-                  setChildMenuOpen={setChildMenuOpen}
-                  button={filterButton}
+            <div className="flex flex-col">
+              <div className="flex p-4">
+                <SearchBar
+                  placeHolderText="Search comments..."
+                  classes="h-8"
+                  focusColors={true}
+                  setInputValue={setSearchValue}
+                  inputValue={searchValue}
+                  clearButton={true}
                 />
+                <div className="ml-4 flex h-8 w-20 rounded-md bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                  <button
+                    className="flex w-full flex-1  items-center px-2 text-white"
+                    onClick={() => setShowFilterMenu(true)}
+                    ref={filterButton}
+                  >
+                    <span className="mr-2">
+                      <svg
+                        height="16"
+                        viewBox="0 0 24 24"
+                        width="16"
+                        stroke="currentColor"
+                      >
+                        <path d="M12 5v14"></path>
+                        <path d="M5 12h14"></path>
+                      </svg>
+                    </span>
+                    <span className="flex-1 text-sm">Filter</span>
+                  </button>
+                  <DesktopFiltersPopup
+                    showFilterMenu={showFilterMenu}
+                    setShowFilterMenu={setShowFilterMenu}
+                    setChildMenuOpen={setChildMenuOpen}
+                    button={filterButton}
+                  />
+                </div>
               </div>
+              <FilterComponent />
             </div>
             <div className="flex min-h-[400px] w-full items-center justify-center">
               <div className="flex flex-col items-center gap-4">

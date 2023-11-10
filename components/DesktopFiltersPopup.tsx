@@ -16,6 +16,10 @@ export const DesktopFiltersPopup = ({
   setChildMenuOpen,
 }: Props) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
+  const [authorSearch, setauthorSearch] = useState("");
+  const [projectSearch, setProjectSearch] = useState("");
+  const [pageSearch, setPageSearch] = useState("");
+  const [branchSearch, setBranchSearch] = useState("");
   const { menuPopup } = useCustomPopupExits(
     (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -73,6 +77,8 @@ export const DesktopFiltersPopup = ({
               placeHolderText="Author"
               classes="h-12 rounded-b-none rounded-t-xl"
               escapeButton={true}
+              setInputValue={setauthorSearch}
+              inputValue={authorSearch}
             />
             <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
           </div>
@@ -102,6 +108,8 @@ export const DesktopFiltersPopup = ({
               placeHolderText="Project"
               classes="h-12 rounded-none rounded-t-xl outline-none"
               escapeButton={true}
+              setInputValue={setProjectSearch}
+              inputValue={projectSearch}
             />
             <div className="flex flex-col p-2">
               {["vercel-clone", "politics-chat", "sdokb-capstone"].map(
@@ -129,6 +137,8 @@ export const DesktopFiltersPopup = ({
               placeHolderText="Page"
               classes="h-12 rounded-b-none rounded-xl"
               escapeButton={true}
+              setInputValue={setPageSearch}
+              inputValue={pageSearch}
             />
             <div className="flex rounded-b-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
               <div className="flex flex-col rounded-md bg-black text-neutral-200 shadow-[0_0_0_1px] shadow-neutral-700">
@@ -149,6 +159,8 @@ export const DesktopFiltersPopup = ({
               placeHolderText="Branches"
               classes="h-12 rounded-xl rounded-b-none"
               escapeButton={true}
+              setInputValue={setBranchSearch}
+              inputValue={branchSearch}
             />
             <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
           </div>

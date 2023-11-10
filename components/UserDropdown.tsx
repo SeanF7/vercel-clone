@@ -2,12 +2,12 @@ import React from "react";
 
 export const UserDropdown = () => {
   return (
-    <div className="flex text-white">
+    <div className="flex text-neutral-300">
       <div className="flex items-center">
         <div className="h-5 w-5 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
         <h1 className="mx-2 text-sm">Sean Firsching</h1>
-        <span className="hidden h-2 items-center rounded-lg bg-neutral-800 p-2 py-2 md:flex">
-          <span className="text-xs font-medium ">Hobby</span>
+        <span className="hidden h-5 items-center rounded-xl bg-neutral-800 p-2 py-2 md:flex">
+          <span className="text-[11px]">Hobby</span>
         </span>
       </div>
       <div className="flex items-center">
