@@ -101,7 +101,7 @@ export const BottomNavBar = () => {
           ref={logo}
           className="relative -translate-y-5 items-center opacity-0 transition-transform duration-[.25s] ease-[ease]"
         >
-          <Image src="/vercel.svg" alt="Vercel Logo" width={20} height={20} />
+          <Image src="/vercel.png" alt="Vercel Logo" width={20} height={20} />
         </button>
         <div
           className="scrollbar-hide flex -translate-x-6 items-center overflow-x-scroll whitespace-nowrap transition-transform duration-[.25s]"

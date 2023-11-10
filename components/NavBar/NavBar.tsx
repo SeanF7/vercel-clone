@@ -1,10 +1,11 @@
 import React, { Suspense } from "react";
 import Image from "next/image";
 import { BottomNavBar } from "./BottomNavBar";
-import { UserDropdown } from "../UserDropdown";
+import { UserDropdown } from "@/components/NavBar/UserDropdown";
 import { NavButton } from "./NavButton/NavButton";
 import { HighlightedTextButton } from "../HighlightedTextButton";
-import { NotificationButton } from "../NotificationButton";
+import { NotificationButton } from "@/components/NavBar/Notifications/NotificationButton";
+import { Avatar } from "./Avatar";
 
 export const NavBar = () => {
   const navButtons = [
@@ -27,10 +28,9 @@ export const NavBar = () => {
       <nav className="flex h-16  items-center justify-between  text-neutral-400">
         <div className="flex items-center [@media(max-width:600px)]:pl-4">
           <div className="flex items-center pl-6 [@media(max-width:600px)]:hidden ">
-            <Image src="/vercel.svg" alt="Vercel Logo" width={26} height={26} />
+            <Image src="/vercel.png" alt="Vercel Logo" width={26} height={26} />
             <div className="p-2">
               <svg
-                xmlns="http://www.w3.org/2000/svg"
                 width={24}
                 height={24}
                 className="fill-current text-neutral-900"
@@ -62,7 +62,9 @@ export const NavBar = () => {
           <div className="p-2">
             <NotificationButton />
           </div>
-          <NavButton />
+          <NavButton>
+            <Avatar width={32} height={32} />
+          </NavButton>
         </div>
       </nav>
       <BottomNavBar />

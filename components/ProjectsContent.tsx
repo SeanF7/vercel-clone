@@ -1,10 +1,34 @@
 "use client";
 import { Project } from "@/components/Project";
 import { SearchBar } from "@/components/SearchBar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type Project = {
+  id: number;
+  name: string;
+  description: string;
+  url: string;
+  image: string;
+  lastUpdated: string;
+};
 
 export const ProjectsContent = () => {
   const [search, setSearch] = useState("");
+  const [projects, setProjects] = useState<Project[]>([]);
+
+  useEffect(() => {
+    const getProjects = async () => {
+      console.log("fetching");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/projects`);
+      if (!res.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const json = await res.json();
+      console.log(json);
+      setProjects(json);
+    };
+    getProjects();
+  }, []);
 
   return (
     <div className="ml-auto mr-auto min-h-screen max-w-[1200px] px-4 py-3">
@@ -76,14 +100,16 @@ export const ProjectsContent = () => {
         </button>
       </div>
       <div className="grid grid-cols-1 gap-6 py-6  sm:grid-cols-2 [@media(min-width:1000px)]:grid-cols-3 ">
-        <Project />
-        <Project />
-        <Project />
-        <Project />
-        <Project />
-        <Project />
-        <Project />
-        <Project />
+        {projects.map((project) => (
+          <Project
+            key={project.id}
+            name={project.name}
+            description={project.description}
+            url={project.url}
+            image={project.image}
+            lastUpdated={project.lastUpdated}
+          />
+        ))}
       </div>
     </div>
   );

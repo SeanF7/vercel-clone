@@ -11,7 +11,7 @@ export const Footer = () => {
             <div className="flex w-full flex-1 items-center justify-between md:justify-normal">
               <div className="flex gap-2">
                 <Image
-                  src="/vercel.svg"
+                  src="/vercel.png"
                   alt="Vercel Logo"
                   width={26}
                   height={26}

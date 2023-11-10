@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
-import { SearchBar } from "./SearchBar";
+import React, { useState } from "react";
+import { SearchBar } from "@/components/SearchBar";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import Image from "next/image";
 

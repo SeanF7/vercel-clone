@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { DesktopFiltersPopup } from "../DesktopFiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";

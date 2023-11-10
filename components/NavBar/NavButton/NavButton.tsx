@@ -1,11 +1,15 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { DesktopNavPopup } from "./DesktopNavPopup";
 import { MobileNavPopup } from "./MobileNavPopup";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
-export const NavButton = () => {
+type NavButtonProps = {
+  children: React.ReactNode;
+};
+
+export const NavButton = ({ children }: NavButtonProps) => {
   const [showMenu, setShowMenu] = useState(false);
   const pathname = usePathname();
 
@@ -44,7 +48,13 @@ export const NavButton = () => {
         onClick={handleButtonClick}
         ref={controllingButton}
       >
-        <div className="hidden h-full w-full rounded-full bg-gradient-to-r from-green-400 to-blue-500 [@media(min-width:700px)]:flex" />
+        <Suspense
+          fallback={
+            <div className="hidden h-full w-full rounded-full bg-gradient-to-r from-green-400 to-blue-500 [@media(min-width:700px)]:flex" />
+          }
+        >
+          {children}
+        </Suspense>
         {showMenu ? (
           <div className="hidden h-full w-full items-center justify-center rounded-full border border-gray-800 [@media(max-width:699px)]:flex">
             <div className="absolute h-[1.5px] w-[14px]  -rotate-45 scale-[1.1]  bg-neutral-400  transition-transform duration-[250ms] ease-[cubic-bezier(.77,0,.175,1)]" />

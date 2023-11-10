@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost", "avatar.vercel.sh"],
+    domains: ["localhost", "avatar.vercel.sh", "assets.vercel.com"],
   },
 };
 
