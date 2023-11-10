@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type ProjectProps = {
   name: string;
@@ -16,7 +17,10 @@ export const Project = ({
   url,
 }: ProjectProps) => {
   return (
-    <div className="flex flex-col justify-between rounded-md bg-neutral-950 px-4 pt-6 align-middle shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:bg-neutral-800">
+    <Link
+      href={`https://${url}`}
+      className="flex flex-col justify-between rounded-md bg-neutral-950 px-4 pt-6 align-middle shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:bg-neutral-800"
+    >
       <div className="flex justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white">
@@ -25,6 +29,7 @@ export const Project = ({
               height={32}
               width={32}
               alt={`${name} logo`}
+              className="bg-black"
             ></Image>
           </div>
           <div className="flex">
@@ -35,13 +40,13 @@ export const Project = ({
           </div>
         </div>
         <div className="flex items-center ">
-          <div className="rounded-full border-2 border-neutral-800 p-1">
+          <div className="rounded-full border-[3px] border-neutral-700 p-1">
             <svg
               fill="none"
               height="18"
               viewBox="0 0 24 24"
               width="18"
-              className="stroke-current text-neutral-800"
+              className="stroke-current text-neutral-700"
             >
               <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
             </svg>
@@ -68,6 +73,6 @@ export const Project = ({
           {lastUpdated} ago on master
         </span>
       </div>
-    </div>
+    </Link>
   );
 };
