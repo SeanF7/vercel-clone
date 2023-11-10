@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { SearchBar } from "./SearchBar";
-import { DesktopFiltersPopup } from "./DesktopFiltersPopup";
+import { SearchBar } from "@/components/SearchBar";
+import { DesktopFiltersPopup } from "../DesktopFiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
-import { FilterComponent } from "./FilterComponent";
+import { FilterComponent } from "../FilterComponent";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;

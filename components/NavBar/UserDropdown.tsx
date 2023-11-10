@@ -1,11 +1,29 @@
 import React from "react";
+import Image from "next/image";
 
-export const UserDropdown = () => {
+async function getUser() {
+  const res = await fetch(`${process.env.URL}/api/user`);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  const json = await res.json();
+  return json;
+}
+
+export const UserDropdown = async () => {
+  const user = await getUser();
+
   return (
     <div className="flex text-neutral-300">
       <div className="flex items-center">
-        <div className="h-5 w-5 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
-        <h1 className="mx-2 text-sm">Sean Firsching</h1>
+        <Image
+          src={user.avatar}
+          height={18}
+          width={18}
+          className="rounded-full"
+          alt="User avatar"
+        ></Image>
+        <h1 className="mx-2 text-sm">{user.name}</h1>
         <span className="hidden h-5 items-center rounded-xl bg-neutral-800 p-2 py-2 md:flex">
           <span className="text-[11px]">Hobby</span>
         </span>

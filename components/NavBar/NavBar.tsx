@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import { BottomNavBar } from "./BottomNavBar";
-import { UserDropdown } from "./UserDropdown";
-import { NavButton } from "./NavButton";
-import { HighlightedTextButton } from "./HighlightedTextButton";
-import { NotificationButton } from "./NotificationButton";
+import { UserDropdown } from "../UserDropdown";
+import { NavButton } from "./NavButton/NavButton";
+import { HighlightedTextButton } from "../HighlightedTextButton";
+import { NotificationButton } from "../NotificationButton";
 
 export const NavBar = () => {
   const navButtons = [
@@ -39,7 +39,9 @@ export const NavBar = () => {
               </svg>
             </div>
           </div>
-          <UserDropdown />
+          <Suspense fallback={<div className="h-5 w-52 bg-neutral-600"></div>}>
+            <UserDropdown />
+          </Suspense>
         </div>
         <div className="flex items-center px-6">
           <div className="hidden p-2 md:block">
