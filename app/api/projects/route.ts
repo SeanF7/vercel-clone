@@ -1,4 +1,4 @@
-import vercelLogo from "@/public/vercel.png";
+import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
 
 type Project = {
