@@ -10,7 +10,6 @@ export const usePopupExits = (
   useEffect(() => {
     const keyHandler = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isVisible) {
-        console.log("Triggered", menuPopup.current, document.activeElement);
         setVisible(false);
         controllingButton.current?.focus();
       }
@@ -21,7 +20,8 @@ export const usePopupExits = (
       if (
         menuPopup.current &&
         !menuPopup.current.contains(event.target as Node) &&
-        isVisible
+        isVisible &&
+        document.activeElement !== controllingButton.current
       ) {
         setVisible(false);
       }

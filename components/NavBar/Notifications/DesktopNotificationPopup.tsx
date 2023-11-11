@@ -38,7 +38,8 @@ export const DesktopNotificationPopup = ({
       if (
         menuPopup.current &&
         !menuPopup.current.contains(event.target as Node) &&
-        !childMenuOpen
+        !childMenuOpen &&
+        document.activeElement !== controllingButton.current
       ) {
         setVisible(false);
       }
