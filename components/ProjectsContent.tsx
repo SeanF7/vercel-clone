@@ -18,17 +18,17 @@ export const ProjectsContent = () => {
 
   useEffect(() => {
     const getProjects = async () => {
-      console.log("fetching");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/projects`);
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/projects?s=${search}`
+      );
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }
       const json = await res.json();
-      console.log(json);
       setProjects(json);
     };
     getProjects();
-  }, []);
+  }, [search]);
 
   return (
     <div className="ml-auto mr-auto min-h-screen max-w-[1200px] px-4 py-3">

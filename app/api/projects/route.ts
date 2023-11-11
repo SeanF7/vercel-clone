@@ -1,4 +1,5 @@
 import vercelLogo from "@/public/vercel.png";
+import { type NextRequest } from "next/server";
 
 type Project = {
   id: number;
@@ -64,7 +65,13 @@ function generateTimeAgo() {
   }
 }
 
-export async function GET() {
-  await new Promise((resolve) => setTimeout(resolve, 100));
+export async function GET(request: NextRequest) {
+  const search = request.nextUrl.searchParams.get("s");
+  if (search) {
+    const filteredProjects = projects.filter((project) => {
+      return project.name.toLowerCase().includes(search.toLowerCase());
+    });
+    return Response.json(filteredProjects);
+  }
   return Response.json(projects);
 }
