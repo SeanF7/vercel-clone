@@ -154,7 +154,7 @@ export const ListProject = ({
       </div>
       <div className="flex justify-between rounded-md bg-neutral-950 py-4 align-middle shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors">
         <div className="flex w-full px-4 [@media(max-width:600px)]:flex-col">
-          <div className="flex w-1/3 items-center gap-3">
+          <div className="flex items-center gap-3 [@media(min-width:600px)]:w-1/3">
             <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full border border-white">
               <Image
                 src={image}
@@ -192,7 +192,7 @@ export const ListProject = ({
               </div>
             </div>
           </div>
-          <div className="flex w-2/3 [@media(max-width:600px)]:pt-4">
+          <div className="flex [@media(max-width:600px)]:pt-4 [@media(min-width:600px)]:w-2/3">
             <div className="flex flex-col text-sm">
               <Link
                 className="line-clamp-1 text-ellipsis text-neutral-200 hover:underline"
