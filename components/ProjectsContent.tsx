@@ -15,7 +15,7 @@ type Project = {
 export const ProjectsContent = () => {
   const [search, setSearch] = useState("");
   const [projects, setProjects] = useState<Project[]>([]);
-  const [isListView, setIsListView] = useState(true);
+  const [isListView, setIsListView] = useState(false);
   const [highlightStyle, setHighlightStyle] = useState({});
 
   useEffect(() => {
