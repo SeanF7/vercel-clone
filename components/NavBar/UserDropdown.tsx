@@ -7,6 +7,7 @@ type User = {
 };
 
 async function getUser() {
+  "use server";
   const res = await fetch(`https://vercel-clone-three.vercel.app/api/user`);
   if (!res.ok) {
     throw new Error("Failed to fetch data");
