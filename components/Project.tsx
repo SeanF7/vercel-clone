@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Activity } from "./Activity";
 
 type ProjectProps = {
   name: string;
@@ -41,18 +42,8 @@ export const GridProject = ({
               </div>
             </div>
           </div>
-          <div className="flex items-center ">
-            <div className="rounded-full border-[3px] border-neutral-700 p-1">
-              <svg
-                fill="none"
-                height="18"
-                viewBox="0 0 24 24"
-                width="18"
-                className="stroke-current text-neutral-700"
-              >
-                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-              </svg>
-            </div>
+          <div className="flex items-center">
+            <Activity />
             <button className="p-3">
               <svg height="16" viewBox="0 0 16 16" width="16">
                 <path
@@ -230,17 +221,7 @@ export const ListProject = ({
           </div>
         </div>
         <div className="flex items-center pl-2">
-          <div className="rounded-full border-[3px] border-neutral-700 p-1">
-            <svg
-              fill="none"
-              height="18"
-              viewBox="0 0 24 24"
-              width="18"
-              className="stroke-current text-neutral-700"
-            >
-              <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
-            </svg>
-          </div>
+          <Activity />
           <button className="p-3">
             <svg height="16" viewBox="0 0 16 16" width="16">
               <path
