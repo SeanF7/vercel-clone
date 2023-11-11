@@ -7,7 +7,7 @@ type User = {
 };
 
 async function getUser() {
-  const res = await fetch(`${process.env.URL}/api/user`);
+  const res = await fetch(`https://vercel-clone-three.vercel.app/api/user`);
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
