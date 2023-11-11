@@ -1,7 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["localhost", "avatar.vercel.sh", "assets.vercel.com"],
+    remotePatterns: [
+      {
+        hostname: "assets.vercel.com",
+        protocol: "https",
+      },
+      {
+        hostname: "avatar.vercel.sh",
+        protocol: "https",
+      },
+      {
+        hostname: "localhost",
+        protocol: "http",
+      },
+    ],
   },
   async redirects() {
     return [

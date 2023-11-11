@@ -6,7 +6,7 @@ async function getUser() {
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  const json = await res.json();
+  const json = (await res.json()) as AvatarProps;
   return json;
 }
 

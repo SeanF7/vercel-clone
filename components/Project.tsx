@@ -83,7 +83,7 @@ export const GridProject = ({
                 <path
                   d="M4 6.25V14.25"
                   stroke="currentColor"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   strokeLinecap="square"
                   strokeLinejoin="round"
                 ></path>
@@ -212,7 +212,7 @@ export const ListProject = ({
                     <path
                       d="M4 6.25V14.25"
                       stroke="currentColor"
-                      stroke-width="1.5"
+                      strokeWidth="1.5"
                       strokeLinecap="square"
                       strokeLinejoin="round"
                     ></path>

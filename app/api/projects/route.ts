@@ -67,11 +67,26 @@ function generateTimeAgo() {
 
 export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("s");
+
   if (search) {
     const filteredProjects = projects.filter((project) => {
       return project.name.toLowerCase().includes(search.toLowerCase());
     });
-    return Response.json(filteredProjects);
+    return new Response(JSON.stringify(filteredProjects), {
+      status: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      },
+    });
   }
-  return Response.json(projects);
+  return new Response(JSON.stringify(projects), {
+    status: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type, Authorization",
+    },
+  });
 }

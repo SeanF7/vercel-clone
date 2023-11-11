@@ -1,13 +1,18 @@
 import React from "react";
 import Image from "next/image";
 
+type User = {
+  name: string;
+  avatar: string;
+};
+
 async function getUser() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user`);
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
   const json = await res.json();
-  return json;
+  return json as User;
 }
 
 export const UserDropdown = async () => {
