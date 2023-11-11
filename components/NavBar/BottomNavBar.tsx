@@ -108,7 +108,7 @@ export const BottomNavBar = () => {
           ref={linkDivs}
         >
           <div
-            className="absolute flex rounded-sm bg-neutral-800 duration-150 ease-in-out"
+            className="absolute flex h-8 rounded-sm bg-neutral-800 duration-150 ease-in-out"
             style={highlightStyle}
           />
           {paths.map((path) => (
