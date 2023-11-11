@@ -109,7 +109,7 @@ export const ProjectsContent = () => {
         </div>
         <button className="flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black hover:bg-neutral-300 [@media(min-width:601px)]:w-36">
           <div className="flex flex-1 items-center justify-between">
-            <span className=" font-medium: medium inline-block text-sm [@media(max-width:600px)]:hidden">
+            <span className=" font-medium: medium inline-block select-none text-sm [@media(max-width:600px)]:hidden">
               Add New...
             </span>
             <svg

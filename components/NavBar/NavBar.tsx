@@ -24,7 +24,7 @@ export const NavBar = () => {
   ];
 
   return (
-    <div className="relative">
+    <div className="relative select-none">
       <nav className="flex h-16  items-center justify-between  text-neutral-400">
         <div className="flex items-center [@media(max-width:600px)]:pl-4">
           <div className="flex items-center pl-6 [@media(max-width:600px)]:hidden ">
