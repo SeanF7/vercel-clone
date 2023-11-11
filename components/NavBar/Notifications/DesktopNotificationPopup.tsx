@@ -1,10 +1,10 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { DesktopFiltersPopup } from "../DesktopFiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
-import { FilterComponent } from "../FilterComponent";
 import { DesktopNotification } from "./DesktopNotification";
+import { EmptyTabComponent } from "./EmptyTabComponent";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
@@ -114,16 +114,36 @@ export const DesktopNotificationPopup = ({
         <div>
           {index === 0 && (
             <div className="flex min-h-[500px] flex-col justify-between">
-              <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
-                {inbox.map((notification) => (
-                  <DesktopNotification
-                    {...notification}
-                    archived={false}
-                    triggerReload={() => setReload(!reload)}
-                    key={notification.id}
+              {inbox.length === 0 ? (
+                <div className="flex min-h-[400px] w-full items-center justify-center">
+                  <EmptyTabComponent
+                    text="No new notifications"
+                    svgImport={
+                      <svg
+                        fill="none"
+                        height="24"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        width="24"
+                      >
+                        <path d="M22 12h-6l-2 3h-4l-2-3H2" />
+                        <path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />
+                      </svg>
+                    }
                   />
-                ))}
-              </div>
+                </div>
+              ) : (
+                <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
+                  {inbox.map((notification) => (
+                    <DesktopNotification
+                      {...notification}
+                      archived={false}
+                      triggerReload={() => setReload(!reload)}
+                      key={notification.id}
+                    />
+                  ))}
+                </div>
+              )}
               <div className="flex h-12 items-center p-2 shadow-[inset_0px_1px_1px] shadow-neutral-700">
                 <button className="ml-auto mr-auto rounded-md p-2 text-white hover:bg-neutral-800">
                   Archive All
@@ -134,16 +154,37 @@ export const DesktopNotificationPopup = ({
         </div>
         {index === 1 && (
           <div className="flex min-h-[500px] flex-col justify-between">
-            <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
-              {archive.map((notification) => (
-                <DesktopNotification
-                  {...notification}
-                  archived={true}
-                  triggerReload={() => setReload(!reload)}
-                  key={notification.id}
+            {archive.length === 0 ? (
+              <div className="flex min-h-[400px] w-full items-center justify-center">
+                <EmptyTabComponent
+                  text="No new notifications"
+                  svgImport={
+                    <svg
+                      fill="none"
+                      height="24"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      width="24"
+                    >
+                      <path d="M21 8v13H3V8" />
+                      <path d="M1 3h22v5H1z" />
+                      <path d="M10 12h4" />
+                    </svg>
+                  }
                 />
-              ))}
-            </div>
+              </div>
+            ) : (
+              <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
+                {archive.map((notification) => (
+                  <DesktopNotification
+                    {...notification}
+                    archived={true}
+                    triggerReload={() => setReload(!reload)}
+                    key={notification.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
         {index === 2 && (
@@ -185,24 +226,22 @@ export const DesktopNotificationPopup = ({
                   />
                 </div>
               </div>
-              <FilterComponent />
             </div>
             <div className="flex min-h-[400px] w-full items-center justify-center">
-              <div className="flex flex-col items-center gap-4">
-                <div className="rounded-full bg-neutral-900 p-4 text-neutral-400">
+              <EmptyTabComponent
+                text="No new comments"
+                svgImport={
                   <svg
                     fill="none"
-                    height="20"
+                    height="24"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
-                    width="20"
-                    aria-label="Empty inbox"
+                    width="24"
                   >
-                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"></path>
+                    <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
                   </svg>
-                </div>
-                <span className="text-sm "> No new comments</span>
-              </div>
+                }
+              />
             </div>
           </div>
         )}
