@@ -48,13 +48,15 @@ export const NavButton = ({ children }: NavButtonProps) => {
         onClick={handleButtonClick}
         ref={controllingButton}
       >
-        <Suspense
-          fallback={
-            <div className="hidden h-full w-full rounded-full bg-gradient-to-r from-green-400 to-blue-500 [@media(min-width:700px)]:flex" />
-          }
-        >
-          {children}
-        </Suspense>
+        <div className="hidden [@media(min-width:700px)]:flex">
+          <Suspense
+            fallback={
+              <div className="h-full w-full rounded-full bg-gradient-to-r from-green-400 to-blue-500 " />
+            }
+          >
+            {children}
+          </Suspense>
+        </div>
         {showMenu ? (
           <div className="hidden h-full w-full items-center justify-center rounded-full border border-gray-800 [@media(max-width:699px)]:flex">
             <div className="absolute h-[1.5px] w-[14px]  -rotate-45 scale-[1.1]  bg-neutral-400  transition-transform duration-[250ms] ease-[cubic-bezier(.77,0,.175,1)]" />
