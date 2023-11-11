@@ -6,6 +6,7 @@ import { NavButton } from "./NavButton/NavButton";
 import { HighlightedTextButton } from "../HighlightedTextButton";
 import { NotificationButton } from "@/components/NavBar/Notifications/NotificationButton";
 import { Avatar } from "./Avatar";
+import { FeedbackButton } from "./FeedbackButton";
 
 export const NavBar = () => {
   const navButtons = [
@@ -45,10 +46,7 @@ export const NavBar = () => {
         </div>
         <div className="flex items-center px-6">
           <div className="hidden p-2 md:block">
-            <HighlightedTextButton
-              text="Feedback"
-              classes="rounded-md bg-neutral-950 px-3 py-2  shadow-[0_0px_0px_1px] shadow-neutral-800 "
-            />
+            <FeedbackButton />
           </div>
           {navButtons.map((link) => (
             <HighlightedTextButton
