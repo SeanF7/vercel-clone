@@ -20,9 +20,7 @@ export const ProjectsContent = () => {
 
   useEffect(() => {
     const getProjects = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/projects?s=${search}`
-      );
+      const res = await fetch(`/api/projects?s=${search}`);
       if (!res.ok) {
         throw new Error("Failed to fetch data");
       }

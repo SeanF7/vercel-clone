@@ -51,17 +51,13 @@ export const DesktopNotificationPopup = ({
 
   useEffect(() => {
     const getNotifs = async () => {
-      const inboxRes = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/notifications`
-      );
+      const inboxRes = await fetch(`/api/notifications`);
       if (!inboxRes.ok) {
         throw new Error("Failed to fetch data");
       }
       const inboxJson = await inboxRes.json();
       setInbox(inboxJson);
-      const archivedRes = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/notifications?archived=true`
-      );
+      const archivedRes = await fetch(`/api/notifications?archived=true`);
       if (!archivedRes.ok) {
         throw new Error("Failed to fetch data");
       }

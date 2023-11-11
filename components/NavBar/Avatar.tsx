@@ -7,7 +7,7 @@ type User = {
 };
 
 async function getUser() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user`);
+  const res = await fetch(`${process.env.URL}/api/user`);
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }

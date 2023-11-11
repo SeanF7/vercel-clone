@@ -18,7 +18,7 @@ export const DesktopNotification = ({
   triggerReload,
 }: Props) => {
   const handleClick = (id: number) => {
-    fetch(`${process.env.NEXT_PUBLIC_URL}/api/notifications?id=${id}`, {
+    fetch(`/api/notifications?id=${id}`, {
       method: "DELETE",
     }).then(() => {
       triggerReload();
