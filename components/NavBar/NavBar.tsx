@@ -47,7 +47,6 @@ export const NavBar = () => {
           <div className="hidden p-2 md:block">
             <HighlightedTextButton
               text="Feedback"
-              link="/feedback"
               classes="rounded-md bg-neutral-950 px-3 py-2  shadow-[0_0px_0px_1px] shadow-neutral-800 "
             />
           </div>

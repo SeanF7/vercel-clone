@@ -113,15 +113,42 @@ export const Footer = () => {
                   </button>
                 </div>
               </div>
-              <HighlightedTextButton text="Home" link="/home" />
-              <HighlightedTextButton text="Documentation" link="/docs" />
-              <HighlightedTextButton text="Guides" link="/guides" />
-              <HighlightedTextButton text="Help" link="/help" />
-              <HighlightedTextButton text="Contact Sales" link="/sales" />
-              <HighlightedTextButton text="Blog" link="/blog" />
-              <HighlightedTextButton text="Changelog" link="/changelog" />
-              <HighlightedTextButton text="Pricing" link="/pricing" />
-              <HighlightedTextButton text="Enterprise" link="/enterprise" />
+              <HighlightedTextButton
+                text="Home"
+                link="https://vercel.com/home"
+              />
+              <HighlightedTextButton
+                text="Documentation"
+                link="https://vercel.com/docs"
+              />
+              <HighlightedTextButton
+                text="Guides"
+                link="https://vercel.com/guides"
+              />
+              <HighlightedTextButton
+                text="Help"
+                link="https://vercel.com/help"
+              />
+              <HighlightedTextButton
+                text="Contact Sales"
+                link="https://vercel.com/sales"
+              />
+              <HighlightedTextButton
+                text="Blog"
+                link="https://vercel.com/blog"
+              />
+              <HighlightedTextButton
+                text="Changelog"
+                link="https://vercel.com/changelog"
+              />
+              <HighlightedTextButton
+                text="Pricing"
+                link="https://vercel.com/pricing"
+              />
+              <HighlightedTextButton
+                text="Enterprise"
+                link="https://vercel.com/enterprise"
+              />
               <button className="flex items-center">
                 Legal
                 <svg height="16" viewBox="0 0 16 16" width="16">

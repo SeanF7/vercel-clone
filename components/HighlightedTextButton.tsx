@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 type props = {
-  link: string;
+  link?: string;
   text: string;
   classes?: string;
 };
@@ -10,7 +10,7 @@ export const HighlightedTextButton = ({ link, text, classes }: props) => {
   return (
     <Link
       className={`text-sm transition-colors hover:text-white ${classes}`}
-      href={link}
+      href={link ? link : "/"}
     >
       {text}
     </Link>

@@ -18,31 +18,31 @@ export const BottomNavBar = () => {
     },
     {
       name: "Integrations",
-      path: "/dashboard/integrations",
+      path: "https://vercel.com/dashboard/integrations",
     },
     {
       name: "Activity",
-      path: "/dashboard/activity",
+      path: "https://vercel.com/dashboard/activity",
     },
     {
       name: "Domains",
-      path: "/dashboard/domains",
+      path: "https://vercel.com/dashboard/domains",
     },
     {
       name: "Usage",
-      path: "/dashboard/usage",
+      path: "https://vercel.com/dashboard/usage",
     },
     {
       name: "Monitoring",
-      path: "/dashboard/monitoring",
+      path: "https://vercel.com/dashboard/monitoring",
     },
     {
       name: "Storage",
-      path: "/dashboard/storage",
+      path: "https://vercel.com/dashboard/storage",
     },
     {
       name: "Settings",
-      path: "/dashboard/settings",
+      path: "https://vercel.com/dashboard/settings",
     },
   ];
 
