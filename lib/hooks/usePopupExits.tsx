@@ -21,16 +21,16 @@ export const usePopupExits = (
         menuPopup.current &&
         !menuPopup.current.contains(event.target as Node) &&
         isVisible &&
-        document.activeElement !== controllingButton.current
+        event.target !== controllingButton.current
       ) {
         setVisible(false);
       }
     };
-    document.addEventListener("mousedown", clickHandler);
+    document.addEventListener("click", clickHandler);
 
     return () => {
       window.removeEventListener("keydown", keyHandler);
-      document.removeEventListener("mousedown", clickHandler);
+      document.removeEventListener("click", clickHandler);
     };
   }, [setVisible, isVisible]);
 
@@ -46,11 +46,11 @@ export const useCustomPopupExits = (
 
   useEffect(() => {
     window.addEventListener("keydown", customKeyDownHandler);
-    document.addEventListener("mousedown", customClickHandler);
+    document.addEventListener("click", customClickHandler);
 
     return () => {
       window.removeEventListener("keydown", customKeyDownHandler);
-      document.removeEventListener("mousedown", customClickHandler);
+      document.removeEventListener("click", customClickHandler);
     };
   }, [customClickHandler, customKeyDownHandler]);
   return { menuPopup, controllingButton };

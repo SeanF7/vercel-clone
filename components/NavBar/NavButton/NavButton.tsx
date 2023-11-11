@@ -42,7 +42,14 @@ export const NavButton = ({ children }: NavButtonProps) => {
   const { menuPopup, controllingButton } = usePopupExits(showMenu, setShowMenu);
 
   return (
-    <div className="relative">
+    <div
+      className={`relative ${
+        showMenu
+          ? "before:fixed before:left-0 before:top-0 before:z-[100] before:h-screen before:w-full"
+          : ""
+      }`}
+    >
+      <div className="Filler"></div>
       <button
         className="flex h-8 w-8 rounded-full"
         onClick={handleButtonClick}
