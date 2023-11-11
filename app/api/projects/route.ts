@@ -59,9 +59,9 @@ const projects: Project[] = [
 function generateTimeAgo() {
   let timeSpan = Math.round(Math.random());
   if (timeSpan === 0) {
-    return Math.floor(Math.random() * 24) + " hours ago";
+    return Math.ceil(Math.random() * 24) + "h ago";
   } else {
-    return Math.floor(Math.random() * 30) + " days ago";
+    return Math.ceil(Math.random() * 30) + "d ago";
   }
 }
 
