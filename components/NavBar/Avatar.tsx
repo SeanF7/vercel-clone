@@ -1,12 +1,17 @@
 import React from "react";
 import Image from "next/image";
 
+type User = {
+  name: string;
+  avatar: string;
+};
+
 async function getUser() {
   const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/api/user`);
   if (!res.ok) {
     throw new Error("Failed to fetch data");
   }
-  const json = (await res.json()) as AvatarProps;
+  const json = (await res.json()) as User;
   return json;
 }
 
