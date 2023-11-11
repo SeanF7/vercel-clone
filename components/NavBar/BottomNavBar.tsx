@@ -93,7 +93,7 @@ export const BottomNavBar = () => {
   return (
     <div className="h-12">
       <nav
-        className="z-10 flex w-full items-center bg-black px-6 shadow-[inset_0px_-1px_0px] shadow-neutral-800"
+        className="z-50 flex w-full items-center bg-black px-6 shadow-[inset_0px_-1px_0px] shadow-neutral-800"
         onMouseLeave={handleMenuMouseLeave}
         ref={navBar}
       >
