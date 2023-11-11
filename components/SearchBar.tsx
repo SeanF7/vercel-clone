@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 
 type Props = {
   placeHolderText: string;
@@ -52,7 +52,6 @@ export const SearchBar = ({
               fill="none"
               height="16"
               stroke="currentColor"
-              stroke-width="1.5"
               viewBox="0 0 24 24"
               width="16"
             >

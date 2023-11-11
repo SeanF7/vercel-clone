@@ -1,13 +1,21 @@
 "use client";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { DesktopFiltersPopup } from "../DesktopFiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { FilterComponent } from "../FilterComponent";
+import { DesktopNotification } from "./DesktopNotification";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+type Notification = {
+  id: number;
+  image: string;
+  description: string;
+  time: string;
 };
 
 export const DesktopNotificationPopup = ({
@@ -15,7 +23,6 @@ export const DesktopNotificationPopup = ({
   setVisible,
 }: Props) => {
   const [index, setIndex] = useState(0);
-  const tabs = ["Inbox", "Archive", "Comments"];
   const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [childMenuOpen, setChildMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -37,6 +44,32 @@ export const DesktopNotificationPopup = ({
       }
     }
   );
+  const tabs = ["Inbox", "Archive", "Comments"];
+  const [inbox, setInbox] = useState<Notification[]>([]);
+  const [archive, setArchive] = useState<Notification[]>([]);
+  const [reload, setReload] = useState(false);
+
+  useEffect(() => {
+    const getNotifs = async () => {
+      const inboxRes = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/notifications`
+      );
+      if (!inboxRes.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const inboxJson = await inboxRes.json();
+      setInbox(inboxJson);
+      const archivedRes = await fetch(
+        `${process.env.NEXT_PUBLIC_URL}/api/notifications?archived=true`
+      );
+      if (!archivedRes.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      const archivedJson = await archivedRes.json();
+      setArchive(archivedJson);
+    };
+    getNotifs();
+  }, [reload]);
 
   const handleTabClick = (index: number) => {
     setIndex(index);
@@ -80,26 +113,16 @@ export const DesktopNotificationPopup = ({
         </div>
         <div>
           {index === 0 && (
-            <div className="flex  flex-col justify-between">
+            <div className="flex min-h-[500px] flex-col justify-between">
               <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
-                <div className="flex p-4 pr-2 text-sm shadow-[inset_0px_-1px_1px] shadow-neutral-700">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
-                  <div className="flex flex-col pl-6">
-                    <h1 className="text-white">
-                      seanfirsching@gmail.com email change confirmed
-                    </h1>
-                    <p>235d ago</p>
-                  </div>
-                </div>
-                <div className="flex p-4 pr-2 text-sm shadow-[inset_0px_-1px_1px] shadow-neutral-700">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
-                  <div className="flex flex-col pl-6">
-                    <h1 className="text-white">
-                      seanfirsching@gmail.com email change confirmed
-                    </h1>
-                    <p>235d ago</p>
-                  </div>
-                </div>
+                {inbox.map((notification) => (
+                  <DesktopNotification
+                    {...notification}
+                    archived={false}
+                    triggerReload={() => setReload(!reload)}
+                    key={notification.id}
+                  />
+                ))}
               </div>
               <div className="flex h-12 items-center p-2 shadow-[inset_0px_1px_1px] shadow-neutral-700">
                 <button className="ml-auto mr-auto rounded-md p-2 text-white hover:bg-neutral-800">
@@ -110,31 +133,16 @@ export const DesktopNotificationPopup = ({
           )}
         </div>
         {index === 1 && (
-          <div className="flex  flex-col justify-between">
+          <div className="flex min-h-[500px] flex-col justify-between">
             <div className="grid min-h-[400px] auto-rows-max grid-cols-1">
-              <div className="flex p-4 pr-2 text-sm shadow-[inset_0px_-1px_1px] shadow-neutral-700">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
-                <div className="flex flex-col pl-6">
-                  <h1 className="text-white">
-                    seanfirsching@gmail.com email change confirmed
-                  </h1>
-                  <p>235d ago</p>
-                </div>
-              </div>
-              <div className="flex p-4 pr-2 text-sm shadow-[inset_0px_-1px_1px] shadow-neutral-700">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-green-400 to-blue-500" />
-                <div className="flex flex-col pl-6">
-                  <h1 className="text-white">
-                    seanfirsching@gmail.com email change confirmed
-                  </h1>
-                  <p>235d ago</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex h-12 items-center p-2 shadow-[inset_0px_1px_1px] shadow-neutral-700">
-              <button className="ml-auto mr-auto rounded-md p-2 text-white hover:bg-neutral-800">
-                Archive All
-              </button>
+              {archive.map((notification) => (
+                <DesktopNotification
+                  {...notification}
+                  archived={true}
+                  triggerReload={() => setReload(!reload)}
+                  key={notification.id}
+                />
+              ))}
             </div>
           </div>
         )}
