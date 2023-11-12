@@ -18,9 +18,14 @@ export async function GET(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const id = Number(request.nextUrl.searchParams.get("id"));
-  const index = inbox.findIndex((project) => project.id === id);
-  archive.push(inbox[index]);
-  inbox.splice(index, 1);
+  if (id) {
+    const index = inbox.findIndex((project) => project.id === id);
+    archive.push(inbox[index]);
+    inbox.splice(index, 1);
+  } else {
+    archive.push(...inbox);
+    inbox = [];
+  }
   return Response.json(inbox);
 }
 

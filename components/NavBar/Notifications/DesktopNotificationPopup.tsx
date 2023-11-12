@@ -145,7 +145,16 @@ export const DesktopNotificationPopup = ({
                 </div>
               )}
               <div className="flex h-12 items-center p-2 shadow-[inset_0px_1px_1px] shadow-neutral-700">
-                <button className="ml-auto mr-auto rounded-md p-2 text-white hover:bg-neutral-800">
+                <button
+                  className="ml-auto mr-auto rounded-md p-2 text-white hover:bg-neutral-800"
+                  onClick={() => {
+                    fetch(`/api/notifications`, {
+                      method: "DELETE",
+                    }).then(() => {
+                      setReload(!reload);
+                    });
+                  }}
+                >
                   Archive All
                 </button>
               </div>
