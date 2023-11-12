@@ -1,9 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export const usePopupExits = (
-  isVisible: boolean,
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>
-) => {
+export const usePopupExits = () => {
+  const [isVisible, setVisible] = useState(false);
   const menuPopup = useRef<HTMLDivElement>(null);
   const controllingButton = useRef<HTMLButtonElement>(null);
 
@@ -34,13 +32,14 @@ export const usePopupExits = (
     };
   }, [setVisible, isVisible]);
 
-  return { menuPopup, controllingButton };
+  return { menuPopup, controllingButton, isVisible, setVisible };
 };
 
 export const useCustomPopupExits = (
   customKeyDownHandler: (event: KeyboardEvent) => void,
   customClickHandler: (event: MouseEvent) => void
 ) => {
+  const [isVisible, setVisible] = useState(false);
   const menuPopup = useRef<HTMLDivElement>(null);
   const controllingButton = useRef<HTMLButtonElement>(null);
 
@@ -53,5 +52,5 @@ export const useCustomPopupExits = (
       document.removeEventListener("click", customClickHandler);
     };
   }, [customClickHandler, customKeyDownHandler]);
-  return { menuPopup, controllingButton };
+  return { menuPopup, controllingButton, isVisible, setVisible };
 };

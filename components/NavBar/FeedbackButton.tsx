@@ -5,14 +5,15 @@ import Link from "next/link";
 import { redirect } from "next/dist/server/api-utils";
 
 export const FeedbackButton = () => {
-  const [showFeedbackMenu, setShowFeedbackMenu] = useState(false);
   const [feedBackText, setFeedBackText] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
   const [formError, setFormError] = useState("");
-  const { menuPopup, controllingButton } = usePopupExits(
-    showFeedbackMenu,
-    setShowFeedbackMenu
-  );
+  const {
+    menuPopup,
+    controllingButton,
+    isVisible: showFeedbackMenu,
+    setVisible: setShowFeedbackMenu,
+  } = usePopupExits();
 
   const handleSubmission = () => {
     if (feedBackText.length > 0 && selectedEmoji != null) {

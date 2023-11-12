@@ -23,11 +23,14 @@ export const DesktopNotificationPopup = ({
   setVisible,
 }: Props) => {
   const [index, setIndex] = useState(0);
-  const [showFilterMenu, setShowFilterMenu] = useState(false);
   const [childMenuOpen, setChildMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const filterButton = useRef<HTMLButtonElement>(null);
-  const { menuPopup } = useCustomPopupExits(
+  const {
+    menuPopup,
+    isVisible: showFilterMenu,
+    setVisible: setShowFilterMenu,
+  } = useCustomPopupExits(
     (event: KeyboardEvent) => {
       if (event.key === "Escape" && !childMenuOpen) {
         setVisible(false);

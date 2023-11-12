@@ -10,7 +10,6 @@ type NavButtonProps = {
 };
 
 export const NavButton = ({ children }: NavButtonProps) => {
-  const [showMenu, setShowMenu] = useState(false);
   const pathname = usePathname();
 
   const handleButtonClick = () => {
@@ -39,7 +38,12 @@ export const NavButton = ({ children }: NavButtonProps) => {
     };
   }, [width]);
 
-  const { menuPopup, controllingButton } = usePopupExits(showMenu, setShowMenu);
+  const {
+    menuPopup,
+    controllingButton,
+    isVisible: showMenu,
+    setVisible: setShowMenu,
+  } = usePopupExits();
 
   return (
     <div

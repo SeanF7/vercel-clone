@@ -3,15 +3,14 @@ import Link from "next/link";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
 export const EllipsisButton = () => {
-  const [visible, setVisible] = useState(false);
-  const { menuPopup } = usePopupExits(visible, setVisible);
+  const { menuPopup, isVisible, setVisible } = usePopupExits();
 
   return (
     <>
       <button
         className="z-0 rounded-md p-2 hover:bg-neutral-700"
         onClick={() => {
-          setVisible(!visible);
+          setVisible(!isVisible);
           requestAnimationFrame(() => {
             menuPopup.current?.classList.toggle("animate-fade");
           });
@@ -24,7 +23,7 @@ export const EllipsisButton = () => {
           ></path>
         </svg>
       </button>
-      {visible && (
+      {isVisible && (
         <div
           className="absolute z-20 w-[184px] -translate-x-3/4 translate-y-2/3 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
           ref={menuPopup}
