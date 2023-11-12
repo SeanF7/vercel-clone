@@ -1,6 +1,5 @@
 import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
-import { revalidateTag } from "next/cache";
 
 type Project = {
   id: number;
@@ -13,17 +12,17 @@ type Project = {
 };
 
 let projects: Project[] = generateProjects();
+let favoriteProjects = new Map<number, boolean>();
 
 export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("s");
-
-  if (search) {
-    const filteredProjects = projects.filter((project) => {
-      return project.name.toLowerCase().includes(search.toLowerCase());
-    });
-    return Response.json(filteredProjects);
-  }
-  return Response.json(projects);
+  let returnProjects =
+    search !== null && search !== ""
+      ? projects.filter((project) =>
+          project.name.toLowerCase().includes(search.toLowerCase())
+        )
+      : projects;
+  return Response.json(returnProjects);
 }
 
 export async function PATCH(request: NextRequest) {
@@ -31,12 +30,25 @@ export async function PATCH(request: NextRequest) {
 
   const index = projects.findIndex((project) => project.id === id);
   projects[index].favorite = !projects[index].favorite;
+  console.log(projects[index].favorite);
+
+  if (projects[index].favorite) {
+    favoriteProjects.set(id, true);
+  } else {
+    favoriteProjects.delete(id);
+  }
 
   return Response.json(projects[index]);
 }
 
 setInterval(() => {
   projects = generateProjects();
+  favoriteProjects = new Map<number, boolean>();
+  projects.forEach((project) => {
+    if (project.favorite) {
+      favoriteProjects.set(project.id, true);
+    }
+  });
 }, 10000);
 
 function generateTimeAgo() {

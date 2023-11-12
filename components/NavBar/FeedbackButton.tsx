@@ -166,7 +166,7 @@ const EmojiButtons = ({ setSelectedEmoji }: EmojiButtonsProps) => {
     },
     {
       svg: (
-        <svg height="16" stroke-linejoin="round" viewBox="0 0 16 16" width="16">
+        <svg height="16" strokeLinejoin="round" viewBox="0 0 16 16" width="16">
           <path
             fillRule="evenodd"
             clipRule="evenodd"

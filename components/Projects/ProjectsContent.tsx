@@ -1,36 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext } from "react";
 import { SearchBar } from "../SearchBar";
 import { ListProject, GridProject } from "./Project";
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  image: string;
-  lastUpdated: string;
-  favorite: boolean;
-};
+import { useProjectContext } from "../../lib/hooks/ProjectContext";
 
 export const ProjectsContent = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [search, setSearch] = useState("");
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
   const [isListView, setIsListView] = useState(false);
   const [favoriteExist, setFavoriteExist] = useState(false);
+  const { projects, setSearch, search } = useProjectContext();
 
   useEffect(() => {
-    const getProjects = async () => {
-      const res = await fetch(`/api/projects?s=${search}`);
-      if (!res.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      const json = await res.json();
-      setProjects(json);
-    };
-    getProjects();
-  }, [search]);
+    const favoriteExist = projects.some((project) => project.favorite);
+    setFavoriteExist(favoriteExist);
+  }, [projects]);
 
   return (
     <div className="ml-auto mr-auto min-h-screen max-w-[1200px] px-4 py-3">
@@ -117,7 +100,8 @@ export const ProjectsContent = () => {
                       url={project.url}
                       image={project.image}
                       lastUpdated={project.lastUpdated}
-                      favorite={true}
+                      favorite={project.favorite}
+                      inFavoriteSection={true}
                     />
                   ))}
               </div>
@@ -134,6 +118,7 @@ export const ProjectsContent = () => {
                 url={project.url}
                 image={project.image}
                 lastUpdated={project.lastUpdated}
+                favorite={project.favorite}
               />
             ))}
           </div>
@@ -176,7 +161,7 @@ export const ProjectsContent = () => {
                         url={project.url}
                         image={project.image}
                         lastUpdated={project.lastUpdated}
-                        favorite={true}
+                        favorite={project.favorite}
                       />
                     ))}
                 </div>
@@ -194,6 +179,7 @@ export const ProjectsContent = () => {
                 url={project.url}
                 image={project.image}
                 lastUpdated={project.lastUpdated}
+                favorite={project.favorite}
               />
             ))}
           </div>

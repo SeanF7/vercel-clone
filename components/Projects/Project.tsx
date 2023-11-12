@@ -9,8 +9,9 @@ type ProjectProps = {
   image: string;
   lastUpdated: string;
   url: string;
-  favorite?: boolean;
+  favorite: boolean;
   projectID: number;
+  inFavoriteSection?: boolean;
 };
 
 export const GridProject = ({
@@ -20,6 +21,7 @@ export const GridProject = ({
   lastUpdated,
   url,
   projectID,
+  favorite,
 }: ProjectProps) => {
   return (
     <div className="flex">
@@ -52,7 +54,7 @@ export const GridProject = ({
             </div>
             <div className="flex items-center gap-2">
               <Activity />
-              <EllipsisButton projectID={projectID} />
+              <EllipsisButton projectID={projectID} favorite={favorite} />
             </div>
           </div>
           <div className="pt-4 text-sm">
@@ -123,10 +125,11 @@ export const ListProject = ({
   url,
   favorite,
   projectID,
+  inFavoriteSection,
 }: ProjectProps) => {
   return (
     <div className="relative flex flex-col">
-      {!favorite && (
+      {!inFavoriteSection && (
         <div>
           <div className="flex items-center text-sm">
             <span className="flex gap-2 py-2 text-neutral-200">
@@ -228,7 +231,7 @@ export const ListProject = ({
         </div>
         <div className="flex items-center pl-2">
           <Activity />
-          <EllipsisButton projectID={projectID} />
+          <EllipsisButton projectID={projectID} favorite={favorite} />
         </div>
       </div>
     </div>
