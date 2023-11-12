@@ -1,8 +1,10 @@
 "use client";
-import { useEffect, useState, createContext } from "react";
+import { RefObject, useEffect, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { ListProject, GridProject } from "./Project";
 import { useProjectContext } from "../../lib/hooks/ProjectContext";
+import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
+import Link from "next/link";
 
 export const ProjectsContent = () => {
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
@@ -17,7 +19,7 @@ export const ProjectsContent = () => {
 
   return (
     <div className="ml-auto mr-auto min-h-screen max-w-[1200px] px-4 py-3">
-      <div className="flex w-full items-center">
+      <div className="flex w-full flex-1 items-center">
         <SearchBar
           placeHolderText="Search..."
           focusColors={true}
@@ -30,34 +32,7 @@ export const ProjectsContent = () => {
           isListView={isListView}
           setIsListView={setIsListView}
         />
-        <button className="flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black hover:bg-neutral-300 [@media(min-width:601px)]:w-36">
-          <div className="flex flex-1 items-center justify-between">
-            <span className=" font-medium: medium inline-block select-none text-sm [@media(max-width:600px)]:hidden">
-              Add New...
-            </span>
-            <svg
-              fill="none"
-              height="24"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              width="24"
-              className="[@media(max-width:600px)]:hidden"
-            >
-              <path d="M6 9l6 6 6-6"></path>
-            </svg>
-          </div>
-          <svg
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            className="[@media(min-width:601px)]:hidden"
-            width="24"
-          >
-            <path d="M12 5v14"></path>
-            <path d="M5 12h14"></path>
-          </svg>
-        </button>
+        <AddNewButton />
       </div>
       {isListView ? (
         <div>
@@ -261,6 +236,221 @@ const ProjectViewButtons = ({
                 fill="currentColor"
               ></path>
             </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Need a mobile version of this
+const AddNewButton = () => {
+  const { controllingButton, menuPopup, isVisible, setVisible } =
+    usePopupExits();
+
+  const {
+    controllingButton: teamMenuControllingButton,
+    menuPopup: teamMenuPopup,
+    isVisible: teamMenuIsVisible,
+    setVisible: setTeamMenuVisible,
+  } = usePopupExits();
+
+  return (
+    <div className="relative">
+      <button
+        className="hover:bg-neutral-30 flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black [@media(min-width:601px)]:w-32"
+        ref={controllingButton}
+        onClick={() => setVisible(!isVisible)}
+      >
+        <div className="flex flex-1 items-center justify-between">
+          <span className=" font-medium: medium inline-block select-none text-sm [@media(max-width:600px)]:hidden">
+            Add New...
+          </span>
+          <svg
+            fill="none"
+            height="24"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            width="24"
+            className="[@media(max-width:600px)]:hidden"
+          >
+            <path d="M6 9l6 6 6-6"></path>
+          </svg>
+        </div>
+        <svg
+          fill="none"
+          height="24"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          className="[@media(min-width:601px)]:hidden"
+          width="24"
+        >
+          <path d="M12 5v14"></path>
+          <path d="M5 12h14"></path>
+        </svg>
+      </button>
+      {isVisible && (
+        <div
+          className="absolute w-32  translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          ref={menuPopup}
+        >
+          {[
+            { name: "Project", url: "http://vercel.com/new" },
+            { name: "Domain", url: "http://vercel.com/domains" },
+            { name: "Storage", url: "http://vercel.com/stores" },
+          ].map((item, i) => (
+            <Link
+              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              key={i}
+              href={item.url}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <button
+            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            onClick={() => {
+              setVisible(false);
+              setTeamMenuVisible(!teamMenuIsVisible);
+            }}
+            ref={teamMenuControllingButton}
+          >
+            Team
+          </button>
+        </div>
+      )}
+
+      {teamMenuIsVisible && (
+        <TeamMenu setVisible={setTeamMenuVisible} menuRef={teamMenuPopup} />
+      )}
+    </div>
+  );
+};
+
+type TeamMenuProps = {
+  menuRef: RefObject<HTMLDivElement>;
+  setVisible: (visible: boolean) => void;
+};
+
+const TeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
+  const [selectedButton, setSelectedButton] = useState(0);
+  const [teamName, setTeamName] = useState("Sean Firsching's Team");
+
+  return (
+    <div className="fixed left-0 right-0 top-0 z-10 ml-auto mr-auto flex h-full w-full items-center justify-center">
+      <div
+        className="flex w-[480px] flex-col gap-4 rounded-xl bg-black bg-gradient-to-b from-neutral-900 to-5% shadow-[0_0px_0px_1px] shadow-neutral-800"
+        ref={menuRef}
+      >
+        <div className="flex flex-col gap-4 p-6">
+          <h1 className="text-2xl font-bold text-neutral-200">Create Team</h1>
+          <div className="flex flex-col gap-2">
+            <p className="text-xs text-neutral-400 ">Team Name</p>
+            <input
+              className="rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 outline outline-0 outline-neutral-400 ring-neutral-700 transition-all focus-within:outline-1 focus-within:ring-4 hover:shadow-neutral-600"
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+            ></input>
+          </div>
+          <div className="flex flex-col text-sm">
+            <div className="flex gap-4">
+              {[
+                { header: "Pro Trial", subheader: "Free for two weeks" },
+                { header: "Pro", subheader: "Get started now" },
+              ].map((item, i) => (
+                <button
+                  className={`flex w-[184px] flex-1 items-center justify-between gap-4 rounded-md p-3 text-start shadow-[0_0px_0px_1px] shadow-neutral-800 hover:bg-neutral-900 ${
+                    selectedButton === i ? "shadow-blue-600" : ""
+                  }`}
+                  key={i}
+                  onClick={() => setSelectedButton(i)}
+                >
+                  <div className="flex flex-col justify-between p-1">
+                    <h1 className="font-medium">{item.header}</h1>
+                    <p className=" text-neutral-400">{item.subheader}</p>
+                  </div>
+                  <span
+                    className={`${
+                      selectedButton === i ? "fill-blue-400 text-blue-950" : ""
+                    }`}
+                  >
+                    <svg
+                      height="20"
+                      shapeRendering="geometricPrecision"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.5"
+                      viewBox="0 0 24 24"
+                      width="20"
+                    >
+                      <path d="M12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2Z"></path>
+                      <path d="M8 11.8571L10.5 14.3572L15.8572 9"></path>
+                    </svg>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+          <details className="group text-sm">
+            <summary className="flex list-none items-center">
+              <svg
+                fill="none"
+                height="24"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                width="24"
+                className={`-rotate-90 transition duration-200 ease-linear group-open:rotate-0`}
+              >
+                <path d="M6 9l6 6 6-6"></path>
+              </svg>
+              {`Continuing will start a ${
+                selectedButton
+                  ? "monthly Pro plan subscription."
+                  : "14-day Pro plan trial."
+              }`}
+            </summary>
+            <div className="ml-6 flex flex-col gap-2 pt-2">
+              <p className="flex-0">
+                Creating a new team will not affect your Personal Account
+                (Hobby) or any of its projects.
+              </p>
+              <Link
+                href={"https://vercel.com/docs/accounts/plans/pro/trials"}
+                className="flex items-center gap-2 font-medium text-blue-500"
+              >
+                Learn More
+                <svg
+                  fill="none"
+                  height="16"
+                  shapeRendering="geometricPrecision"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                >
+                  <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"></path>
+                  <path d="M15 3h6v6"></path>
+                  <path d="M10 14L21 3"></path>
+                </svg>
+              </Link>
+            </div>
+          </details>
+        </div>
+        <div className="flex justify-between rounded-b-xl border-t border-neutral-800 bg-neutral-950 p-3 text-sm">
+          <button
+            className="rounded-md bg-neutral-950 p-3 text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800"
+            onClick={() => setVisible(false)}
+          >
+            Cancel
+          </button>
+          <button
+            className="rounded-md bg-neutral-200 p-3 text-neutral-600"
+            onClick={() => setVisible(false)}
+          >
+            Continue
           </button>
         </div>
       </div>
