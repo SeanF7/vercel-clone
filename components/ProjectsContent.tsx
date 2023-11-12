@@ -66,7 +66,7 @@ export const ProjectsContent = () => {
                 style={highlightStyle}
               ></div>
               <button
-                className={`z-10 flex items-center  justify-center rounded-md bg-transparent text-neutral-500 hover:text-neutral-200`}
+                className={`z-0 flex items-center  justify-center rounded-md bg-transparent text-neutral-500 hover:text-neutral-200`}
                 onClick={() => setIsListView(false)}
                 onMouseEnter={handleMenuItemHover}
               >
@@ -88,7 +88,7 @@ export const ProjectsContent = () => {
                 </svg>
               </button>
               <button
-                className={`z-10 flex items-center justify-center rounded-md bg-transparent text-neutral-500  hover:text-neutral-200`}
+                className={`z-0 flex items-center justify-center rounded-md bg-transparent text-neutral-500  hover:text-neutral-200`}
                 onClick={() => setIsListView(true)}
                 onMouseEnter={handleMenuItemHover}
               >

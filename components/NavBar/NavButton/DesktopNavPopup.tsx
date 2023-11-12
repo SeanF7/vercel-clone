@@ -69,7 +69,7 @@ export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
   ];
 
   return (
-    <div className="absolute left-full right-0 z-10 w-[250px] -translate-x-full pt-3 font-sans">
+    <div className="absolute left-full right-0 z-50 w-[250px] -translate-x-full pt-3 font-sans">
       <div className="flex flex-col rounded-xl bg-neutral-950  shadow-[0_0px_1px_1px] shadow-neutral-800">
         <div className="px-5 pb-2 pt-5">
           <h1 className="text-sm font-semibold text-white">Sean Firsching</h1>

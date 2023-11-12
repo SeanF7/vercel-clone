@@ -98,7 +98,7 @@ export const MobileNavPopup = () => {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 top-14 z-10 flex w-screen overflow-scroll bg-black px-6  font-sans">
+    <div className="fixed bottom-0 left-0 top-14 z-50 flex w-screen overflow-scroll bg-black px-6  font-sans">
       <div className="flex flex-1 flex-col py-1 ">
         <div className="flex justify-center">
           <button className="w-full rounded-md bg-neutral-950 p-2 text-white shadow-[0_0px_1px_1px] shadow-neutral-800">

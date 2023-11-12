@@ -9,7 +9,7 @@ export const EllipsisButton = () => {
   return (
     <>
       <button
-        className="z-10 rounded-md p-2 hover:bg-neutral-700"
+        className="z-0 rounded-md p-2 hover:bg-neutral-700"
         onClick={() => {
           setVisible(!visible);
           requestAnimationFrame(() => {
