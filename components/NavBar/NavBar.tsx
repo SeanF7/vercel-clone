@@ -12,15 +12,15 @@ export const NavBar = () => {
   const navButtons = [
     {
       name: "Changelog",
-      path: "/changelog",
+      path: "http://vercel.com/changelog",
     },
     {
       name: "Help",
-      path: "/help",
+      path: "http://vercel.com/help",
     },
     {
       name: "Docs",
-      path: "/docs",
+      path: "http://vercel.com/docs",
     },
   ];
 
