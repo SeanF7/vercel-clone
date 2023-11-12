@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import Link from "next/link";
 import { redirect } from "next/dist/server/api-utils";
@@ -38,64 +38,69 @@ export const FeedbackButton = () => {
   return (
     <>
       <button
-        className="h-8 w-24 rounded-md bg-neutral-950  text-sm shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:text-white"
-        onClick={() => setShowFeedbackMenu(!showFeedbackMenu)}
+        className="h-8  w-24 rounded-md bg-neutral-950 text-sm shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors hover:text-white"
+        onClick={() => {
+          setShowFeedbackMenu(!showFeedbackMenu);
+          requestAnimationFrame(() => {
+            menuPopup.current?.classList.toggle("animate-fade");
+          });
+        }}
         ref={controllingButton}
       >
         Feedback
       </button>
-      <div className="relative">
-        <div
-          className={`absolute left-12 top-2 z-20 w-[340px] -translate-x-1/2 rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800 transition ${
-            showFeedbackMenu ? "opacity-100" : "opacity-0"
-          }`}
-          ref={menuPopup}
-        >
-          <div className="flex flex-col gap-2 p-2 transition duration-700">
-            <textarea
-              placeholder="Your feedback..."
-              className="h-24 w-full resize-none appearance-none rounded-md bg-neutral-950 p-2 text-sm 
+      {showFeedbackMenu && (
+        <div className="relative">
+          <div
+            className={`absolute left-12 top-2 z-20 w-[340px] -translate-x-1/2 rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800 `}
+            ref={menuPopup}
+          >
+            <div className="flex flex-col gap-2 p-2">
+              <textarea
+                placeholder="Your feedback..."
+                className="h-24 w-full resize-none appearance-none rounded-md bg-neutral-950 p-2 text-sm 
     text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800 transition  duration-300 ease-[ease] hover:shadow-neutral-200 focus:shadow-neutral-200 focus:outline-0"
-              value={feedBackText}
-              onChange={(e) => setFeedBackText(e.target.value)}
-            ></textarea>
-            <p
-              className={`ease-[ease]] align-text-bottom transition-[height] duration-300 ${
-                formError.length > 0 ? "h-5" : ""
-              } h-0 text-sm text-red-400 `}
-            >
-              {formError}
-            </p>
-            <span className="flex items-end justify-end gap-2 text-xs">
-              <svg
-                height="14"
-                viewBox="0 0 22 14"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-                className="fill-neutral-400"
+                value={feedBackText}
+                onChange={(e) => setFeedBackText(e.target.value)}
+              ></textarea>
+              <p
+                className={`ease-[ease]] align-text-bottom transition-[height] duration-300 ${
+                  formError.length > 0 ? "h-5" : ""
+                } h-0 text-sm text-red-400 `}
               >
-                <path
-                  clipRule="evenodd"
-                  d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
-                  fillRule="evenodd"
-                ></path>
-              </svg>
-              supported.
-            </span>
-          </div>
-          <div className="flex items-center justify-between rounded-b-xl border-t border-neutral-700 bg-neutral-900 p-2">
-            <div>
-              <EmojiButtons setSelectedEmoji={setSelectedEmoji} />
+                {formError}
+              </p>
+              <span className="flex items-end justify-end gap-2 text-xs">
+                <svg
+                  height="14"
+                  viewBox="0 0 22 14"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="fill-neutral-400"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M19.5 1.25H2.5C1.80964 1.25 1.25 1.80964 1.25 2.5V11.5C1.25 12.1904 1.80964 12.75 2.5 12.75H19.5C20.1904 12.75 20.75 12.1904 20.75 11.5V2.5C20.75 1.80964 20.1904 1.25 19.5 1.25ZM2.5 0C1.11929 0 0 1.11929 0 2.5V11.5C0 12.8807 1.11929 14 2.5 14H19.5C20.8807 14 22 12.8807 22 11.5V2.5C22 1.11929 20.8807 0 19.5 0H2.5ZM3 3.5H4H4.25H4.6899L4.98715 3.82428L7 6.02011L9.01285 3.82428L9.3101 3.5H9.75H10H11V4.5V10.5H9V6.79807L7.73715 8.17572L7 8.97989L6.26285 8.17572L5 6.79807V10.5H3V4.5V3.5ZM15 7V3.5H17V7H19.5L17 9.5L16 10.5L15 9.5L12.5 7H15Z"
+                    fillRule="evenodd"
+                  ></path>
+                </svg>
+                supported.
+              </span>
             </div>
-            <button
-              className="flex h-8 w-14 items-center justify-center rounded-md bg-neutral-200 text-sm text-neutral-600 hover:bg-neutral-300"
-              onClick={handleSubmission}
-            >
-              Send
-            </button>
+            <div className="flex items-center justify-between rounded-b-xl border-t border-neutral-700 bg-neutral-900 p-2">
+              <div>
+                <EmojiButtons setSelectedEmoji={setSelectedEmoji} />
+              </div>
+              <button
+                className="flex h-8 w-14 items-center justify-center rounded-md bg-neutral-200 text-sm text-neutral-600 hover:bg-neutral-300"
+                onClick={handleSubmission}
+              >
+                Send
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 };
