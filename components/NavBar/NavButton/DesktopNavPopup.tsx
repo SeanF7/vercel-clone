@@ -1,10 +1,11 @@
 "use client";
+import { TeamMenu } from "@/components/Projects/ProjectsContent";
+import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
-type DesktopNavPopupProps = {
-  pathname: string;
-};
+export const DesktopNavPopup = () => {
+  const { controllingButton, isVisible, menuPopup, setVisible } =
+    usePopupExits();
 
-export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
   const firstSection = [
     {
       name: "Dashboard",
@@ -23,22 +24,6 @@ export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
         >
           <circle cx="12" cy="12" r="3"></circle>
           <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"></path>
-        </svg>
-      ),
-    },
-    {
-      name: "Create Team",
-      path: "/dashboard/create-team",
-      svg: (
-        <svg
-          fill="none"
-          height="16"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          width="16"
-        >
-          <path d="M12 5v14"></path>
-          <path d="M5 12h14"></path>
         </svg>
       ),
     },
@@ -70,23 +55,45 @@ export const DesktopNavPopup = ({ pathname }: DesktopNavPopupProps) => {
 
   return (
     <div className="absolute left-full right-0 z-50 w-[250px] -translate-x-full pt-3 font-sans">
-      <div className="flex flex-col rounded-xl bg-neutral-950  shadow-[0_0px_1px_1px] shadow-neutral-800">
+      <div className="z-20 flex flex-col rounded-xl bg-neutral-950  shadow-[0_0px_1px_1px] shadow-neutral-800">
         <div className="px-5 pb-2 pt-5">
           <h1 className="text-sm font-semibold text-white">Sean Firsching</h1>
           <h2 className="text-sm text-neutral-400">seanfirsching@gmail.com</h2>
         </div>
-
         <ul className="flex flex-col text-sm text-neutral-500">
           {firstSection.map((path) => (
             <li
-              className={`flex cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800 hover:text-white ${
-                pathname === path.path ? "bg-neutral-900 text-white" : ""
-              }`}
+              className={`flex cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800 hover:text-white`}
               key={path.path}
             >
               {path.name} {path.svg}
             </li>
           ))}
+
+          <div>
+            <button
+              className="flex w-full cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800  hover:text-white "
+              ref={controllingButton}
+              onClick={() => {
+                setVisible(!isVisible);
+              }}
+            >
+              Create Team
+              <svg
+                fill="none"
+                height="16"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                width="16"
+              >
+                <path d="M12 5v14"></path>
+                <path d="M5 12h14"></path>
+              </svg>
+            </button>
+            {isVisible && (
+              <TeamMenu menuRef={menuPopup} setVisible={setVisible} />
+            )}
+          </div>
           <div className="mx-5  my-3 h-0.5 bg-neutral-800" />
 
           <button className="flex cursor-pointer items-center justify-between  gap-1 px-5  py-1 hover:bg-neutral-800">

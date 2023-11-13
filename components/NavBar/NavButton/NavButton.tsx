@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { DesktopNavPopup } from "./DesktopNavPopup";
 import { MobileNavPopup } from "./MobileNavPopup";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
+import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 
 type NavButtonProps = {
   children: React.ReactNode;
@@ -43,10 +43,29 @@ export const NavButton = ({ children }: NavButtonProps) => {
     controllingButton,
     isVisible: showMenu,
     setVisible: setShowMenu,
-  } = usePopupExits();
+  } = useCustomPopupExits(
+    (event: KeyboardEvent) => {
+      if (event.key === "Escape" && showMenu) {
+        setShowMenu(false);
+        controllingButton.current?.focus();
+      }
+    },
+    (event: MouseEvent) => {
+      if (
+        menuPopup.current &&
+        !menuPopup.current.contains(event.target as Node) &&
+        showMenu &&
+        event.target !== controllingButton.current &&
+        // This is a hack to prevent the menu from closing when clicking on the portal as otherwise it will close as its outside of the hierarchy
+        !document.getElementById("portal")?.contains(event.target as Node)
+      ) {
+        setShowMenu(false);
+      }
+    }
+  );
 
   return (
-    <div>
+    <div className="relative">
       <div
         className={`relative ${
           showMenu
