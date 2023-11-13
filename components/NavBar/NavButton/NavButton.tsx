@@ -46,14 +46,14 @@ export const NavButton = ({ children }: NavButtonProps) => {
   } = usePopupExits();
 
   return (
-    <div
-      className={`relative ${
-        showMenu
-          ? "before:fixed before:left-0 before:top-0 before:z-[100] before:h-screen before:w-full"
-          : ""
-      }`}
-    >
-      <div className="Filler"></div>
+    <div>
+      <div
+        className={`relative ${
+          showMenu
+            ? "z-0 before:fixed before:left-0 before:top-0 before:z-[100] before:h-screen before:w-full"
+            : ""
+        }`}
+      ></div>
       <button
         className="flex h-8 w-8 rounded-full"
         onClick={handleButtonClick}
@@ -81,7 +81,7 @@ export const NavButton = ({ children }: NavButtonProps) => {
         )}
       </button>
       <div ref={menuPopup}>
-        {showMenu && width > 700 && <DesktopNavPopup pathname={pathname} />}
+        {showMenu && width > 700 && <DesktopNavPopup />}
         {showMenu && width <= 700 && <MobileNavPopup />}
       </div>
     </div>
