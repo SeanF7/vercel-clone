@@ -20,6 +20,7 @@ export const EllipsisButton = ({ projectID, favorite }: Props) => {
     }).then(() => {
       fetchData();
     });
+    setVisible(false);
   };
 
   return (
