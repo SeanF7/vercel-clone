@@ -7,6 +7,7 @@ import { HighlightedTextButton } from "../HighlightedTextButton";
 import { NotificationButton } from "@/components/NavBar/Notifications/NotificationButton";
 import { Avatar } from "./Avatar";
 import { FeedbackButton } from "./FeedbackButton";
+import Link from "next/link";
 
 export const NavBar = () => {
   const navButtons = [
@@ -29,7 +30,14 @@ export const NavBar = () => {
       <nav className="flex h-16  items-center justify-between  text-neutral-400">
         <div className="flex items-center [@media(max-width:600px)]:pl-4">
           <div className="flex items-center pl-6 [@media(max-width:600px)]:hidden ">
-            <Image src="/vercel.png" alt="Vercel Logo" width={26} height={26} />
+            <Link href="/dashboard">
+              <Image
+                src="/vercel.png"
+                alt="Vercel Logo"
+                width={26}
+                height={26}
+              />
+            </Link>
             <div className="p-2">
               <svg
                 width={24}

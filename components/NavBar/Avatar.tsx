@@ -16,11 +16,11 @@ async function getUser() {
 }
 
 type AvatarProps = {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 };
 
-export const Avatar = async ({ width, height }: AvatarProps) => {
+export const Avatar = async ({ width = 16, height = 16 }: AvatarProps) => {
   const user = await getUser();
 
   return (
