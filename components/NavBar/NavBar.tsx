@@ -9,7 +9,21 @@ import { Avatar } from "./Avatar";
 import { FeedbackButton } from "./FeedbackButton";
 import Link from "next/link";
 
-export const NavBar = () => {
+type User = {
+  name: string;
+  avatar: string;
+};
+
+async function getUser() {
+  const res = await fetch(`${process.env.URL}/api/user`);
+  if (!res.ok) {
+    return { name: "null", avatar: "null" };
+  }
+  const json = await res.json();
+  return json as User;
+}
+
+export const NavBar = async () => {
   const navButtons = [
     {
       name: "Changelog",
@@ -24,6 +38,7 @@ export const NavBar = () => {
       path: "http://vercel.com/docs",
     },
   ];
+  const user = await getUser();
 
   return (
     <div className="relative select-none">
@@ -49,7 +64,7 @@ export const NavBar = () => {
             </div>
           </div>
           <Suspense fallback={<div className="h-5 w-52 bg-neutral-600"></div>}>
-            <UserDropdown />
+            <UserDropdown user={user} />
           </Suspense>
         </div>
         <div className="flex items-center px-6">

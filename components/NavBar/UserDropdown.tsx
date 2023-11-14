@@ -1,26 +1,37 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { UserDropdownPopup } from "./UserDropdownPopup";
-import { Avatar } from "./Avatar";
+import { MobileUserDropdownPopup } from "./MobileUserDropdownPopup";
+import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
 type User = {
   name: string;
   avatar: string;
 };
 
-async function getUser() {
-  const res = await fetch(`${process.env.URL}/api/user`);
-  if (!res.ok) {
-    return { name: "null", avatar: "null" };
-  }
-  const json = await res.json();
-  return json as User;
-}
+type UserDropdownProps = {
+  user: User;
+};
 
-export const UserDropdown = async () => {
-  const user = await getUser();
+export const UserDropdown = ({ user }: UserDropdownProps) => {
+  const [width, setWidth] = useState(0);
+  const [mobile, setMobile] = useState(false);
+  const { controllingButton, isVisible, menuPopup, setVisible } =
+    usePopupExits();
 
+  useEffect(() => {
+    const handleResize = () => {
+      setMobile(width <= 600);
+    };
+    setWidth(window.innerWidth);
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [width]);
   return (
     <div className="flex text-neutral-300">
       <Link className="flex items-center" href={"/dashboard"}>
@@ -38,7 +49,11 @@ export const UserDropdown = async () => {
           </span>
         </div>
       </Link>
-      <UserDropdownPopup avatar={<Avatar width={20} height={20} />} />
+      {mobile ? (
+        <MobileUserDropdownPopup avatar={user.avatar} />
+      ) : (
+        <UserDropdownPopup avatar={user.avatar} />
+      )}
     </div>
   );
 };

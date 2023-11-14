@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 type UserDropdownPopupProps = {
-  avatar: React.ReactNode;
+  avatar: string;
 };
 
 type Project = {
@@ -93,7 +93,13 @@ export const UserDropdownPopup = ({ avatar }: UserDropdownPopupProps) => {
                     onMouseEnter={() => setHoveredAccount(0)}
                   >
                     <div className="flex items-center gap-2">
-                      {avatar}
+                      <Image
+                        src={avatar}
+                        height={20}
+                        width={20}
+                        className="rounded-full"
+                        alt="User avatar"
+                      ></Image>
                       Sean Firshcing
                     </div>
                     <svg
