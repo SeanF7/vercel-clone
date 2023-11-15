@@ -1,5 +1,5 @@
 "use client";
-import { TeamMenu } from "@/components/Projects/ProjectsContent";
+import { DesktopTeamMenu } from "@/components/Projects/ProjectsContent";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
 export const DesktopNavPopup = () => {
@@ -91,7 +91,7 @@ export const DesktopNavPopup = () => {
               </svg>
             </button>
             {isVisible && (
-              <TeamMenu menuRef={menuPopup} setVisible={setVisible} />
+              <DesktopTeamMenu menuRef={menuPopup} setVisible={setVisible} />
             )}
           </div>
           <div className="mx-5  my-3 h-0.5 bg-neutral-800" />

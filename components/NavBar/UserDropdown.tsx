@@ -16,22 +16,20 @@ type UserDropdownProps = {
 };
 
 export const UserDropdown = ({ user }: UserDropdownProps) => {
-  const [width, setWidth] = useState(0);
   const [mobile, setMobile] = useState(false);
-  const { controllingButton, isVisible, menuPopup, setVisible } =
-    usePopupExits();
 
   useEffect(() => {
     const handleResize = () => {
-      setMobile(width <= 600);
+      setMobile(window.innerWidth <= 600);
     };
-    setWidth(window.innerWidth);
 
+    handleResize();
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [width]);
+  }, []);
+
   return (
     <div className="flex text-neutral-300">
       <Link className="flex items-center" href={"/dashboard"}>
