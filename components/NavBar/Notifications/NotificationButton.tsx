@@ -61,7 +61,12 @@ export const NotificationButton = () => {
           controllingButton={button}
         />
       )}
-      {/* {showNotifications && width <= 700 && <MobileNotificationPopup />} */}
+      {showNotifications && width < 700 && (
+        <MobileNotificationPopup
+          setVisible={setShowNotifications}
+          controllingButton={button}
+        />
+      )}
     </div>
   );
 };

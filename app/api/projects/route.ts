@@ -30,7 +30,6 @@ export async function PATCH(request: NextRequest) {
 
   const index = projects.findIndex((project) => project.id === id);
   projects[index].favorite = !projects[index].favorite;
-  console.log(projects[index].favorite);
 
   if (projects[index].favorite) {
     favoriteProjects.set(id, true);

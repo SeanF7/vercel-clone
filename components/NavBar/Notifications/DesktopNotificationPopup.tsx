@@ -1,9 +1,9 @@
 "use client";
 import { useState, useRef, useEffect, Suspense } from "react";
 import { SearchBar } from "@/components/SearchBar";
-import { DesktopFiltersPopup } from "../DesktopFiltersPopup";
+import { DesktopFiltersPopup } from "./FiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
-import { DesktopNotification } from "./DesktopNotification";
+import { DesktopNotification } from "./Notification";
 import { EmptyTabComponent } from "./EmptyTabComponent";
 
 type Props = {
