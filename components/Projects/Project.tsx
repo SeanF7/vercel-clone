@@ -24,7 +24,7 @@ export const GridProject = ({
   favorite,
 }: ProjectProps) => {
   return (
-    <div className="flex">
+    <div className="group flex">
       <div className="relative flex flex-1">
         <Link
           href={`https://${url}`}
