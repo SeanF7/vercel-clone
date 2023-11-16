@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserDropdownPopup } from "./UserDropdownPopup";
 import { MobileUserDropdownPopup } from "./MobileUserDropdownPopup";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
 
 type User = {
   name: string;
@@ -47,11 +46,7 @@ export const UserDropdown = ({ user }: UserDropdownProps) => {
           </span>
         </div>
       </Link>
-      {mobile ? (
-        <MobileUserDropdownPopup avatar={user.avatar} />
-      ) : (
-        <UserDropdownPopup avatar={user.avatar} />
-      )}
+      {mobile ? <MobileUserDropdownPopup /> : <UserDropdownPopup />}
     </div>
   );
 };
