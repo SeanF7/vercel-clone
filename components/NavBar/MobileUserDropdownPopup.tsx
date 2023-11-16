@@ -1,10 +1,11 @@
 "use client";
 import { SearchBar } from "@/components/SearchBar";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
 import { MobileTeamMenu } from "../Projects/ProjectsContent";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 
 type Team = {
   id: number;
@@ -16,6 +17,7 @@ export const MobileUserDropdownPopup = () => {
   const [search, setSearch] = useState("");
   const [userListItems, setuserListItems] = useState<Team[]>([]);
   const [hideDropdown, setHideDropdown] = useState(false);
+  const overlay = useRef(null);
   const {
     controllingButton: dropdownButton,
     isVisible: dropdownVisible,
@@ -67,6 +69,14 @@ export const MobileUserDropdownPopup = () => {
     }
   );
 
+  useMobileSwipe({
+    setDropdownVisible,
+    setHideDropdown,
+    dontChangeIfTrue: [teamVisible],
+    overlayRef: overlay,
+    popupRef: dropdownPopup,
+  });
+
   useEffect(() => {
     if (!teamVisible) {
       setHideDropdown(false);
@@ -102,9 +112,12 @@ export const MobileUserDropdownPopup = () => {
       </button>
       {dropdownVisible && (
         <>
-          <div className="fixed left-0 top-0 z-50 h-full w-full bg-black opacity-40"></div>
           <div
-            className={`fixed bottom-0 left-0 z-50 h-4/5 w-full bg-neutral-950 ${
+            className="fixed left-0 top-0 z-50 h-full w-full bg-black opacity-40"
+            ref={overlay}
+          ></div>
+          <div
+            className={`fixed bottom-0 left-0 z-50 h-4/5 w-full bg-neutral-950  ${
               hideDropdown ? "hidden" : "block"
             }`}
             ref={dropdownPopup}
