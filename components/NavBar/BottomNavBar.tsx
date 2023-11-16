@@ -56,15 +56,13 @@ export const BottomNavBar = () => {
         navBar.current?.classList.remove("-translate-y-3");
         if (!mobileScreen) {
           logo.current?.classList.add(...logoClasses);
-          linkDivs.current?.classList.add("translate-x-4");
+          linkDivs.current?.classList.add("!translate-x-4");
         }
       } else {
         navBar.current?.classList.remove(...transitionClasses);
         navBar.current?.classList.add("-translate-y-3");
-        if (!mobileScreen) {
-          logo.current?.classList.remove(...logoClasses);
-          linkDivs.current?.classList.remove("translate-x-4");
-        }
+        logo.current?.classList.remove(...logoClasses);
+        linkDivs.current?.classList.remove("!translate-x-4");
       }
     };
 
@@ -93,18 +91,18 @@ export const BottomNavBar = () => {
   return (
     <div className="h-12">
       <nav
-        className="z-50 flex w-full items-center bg-black px-6 shadow-[inset_0px_-1px_0px] shadow-neutral-800"
+        className="z-50 flex w-full items-center bg-black px-2 shadow-[inset_0px_-1px_0px] shadow-neutral-800 [@media(min-width:600px)]:px-6"
         onMouseLeave={handleMenuMouseLeave}
         ref={navBar}
       >
         <button
           ref={logo}
-          className="relative -translate-y-5 items-center opacity-0 transition-transform duration-[.25s] ease-[ease]"
+          className="relative -translate-y-5 items-center opacity-0 transition-transform duration-[.25s] ease-[ease] [@media(max-width:601px)]:fixed"
         >
           <Image src="/vercel.png" alt="Vercel Logo" width={20} height={20} />
         </button>
         <div
-          className="scrollbar-hide flex -translate-x-6 items-center overflow-x-scroll whitespace-nowrap transition-transform duration-[.25s]"
+          className="scrollbar-hide flex items-center overflow-x-scroll whitespace-nowrap transition-transform duration-[.25s] [@media(min-width:600px)]:-translate-x-6"
           ref={linkDivs}
         >
           <div

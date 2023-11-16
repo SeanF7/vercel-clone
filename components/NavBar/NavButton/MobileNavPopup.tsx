@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const MobileNavPopup = () => {
   const firstSection = [
     {
@@ -101,9 +103,12 @@ export const MobileNavPopup = () => {
     <div className="fixed bottom-0 left-0 top-14 z-50 flex w-screen overflow-scroll bg-black px-6  font-sans">
       <div className="flex flex-1 flex-col py-1 ">
         <div className="flex justify-center">
-          <button className="w-full rounded-md bg-neutral-950 p-2 text-white shadow-[0_0px_1px_1px] shadow-neutral-800">
+          <Link
+            href={"https://vercel.com/contact"}
+            className="w-full rounded-md bg-neutral-950 p-2 text-white shadow-[0_0px_1px_1px] shadow-neutral-800"
+          >
             Contact
-          </button>
+          </Link>
         </div>
         <div className="flex items-center justify-between border-b border-neutral-700">
           <div className="flex h-[72px] flex-col justify-center">

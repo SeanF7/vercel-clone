@@ -6,10 +6,6 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-type UserDropdownPopupProps = {
-  avatar: string;
-};
-
 type Project = {
   id: number;
   name: string;
@@ -26,7 +22,7 @@ type Team = {
   image: string;
 };
 
-export const UserDropdownPopup = ({ avatar }: UserDropdownPopupProps) => {
+export const UserDropdownPopup = () => {
   const { controllingButton, isVisible, menuPopup, setVisible } =
     usePopupExits();
   const [teamSearch, setTeamSearch] = useState("");
