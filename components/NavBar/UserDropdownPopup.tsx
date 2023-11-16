@@ -20,15 +20,30 @@ type Project = {
   favorite: boolean;
 };
 
+type Team = {
+  id: number;
+  name: string;
+  image: string;
+};
+
 export const UserDropdownPopup = ({ avatar }: UserDropdownPopupProps) => {
   const { controllingButton, isVisible, menuPopup, setVisible } =
     usePopupExits();
   const [teamSearch, setTeamSearch] = useState("");
+  const [teams, setTeams] = useState<Team[]>([]);
   const [projectSearch, setProjectSearch] = useState("");
   const [hoveredMenu, setHoveredMenu] = useState(0);
   const [hoveredAccount, setHoveredAccount] = useState(0);
   const [projects, setProjects] = useState<Project[]>([]);
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
+
+  useEffect(() => {
+    fetch(`/api/teams?s=${teamSearch}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setTeams(data);
+      });
+  }, [teamSearch]);
 
   useEffect(() => {
     const favoriteExist = projects.some((project) => project.favorite);
@@ -81,67 +96,58 @@ export const UserDropdownPopup = ({ avatar }: UserDropdownPopupProps) => {
                 placeHolderText="Find Team..."
                 setInputValue={setTeamSearch}
                 escapeButton={true}
-                classes={`rounded-tl-xl rounded-none border-b border-neutral-800 h-12 !shadow-none group-only:rounded-xl ${
+                classes={`rounded-tl-xl rounded-none border-b border-neutral-800 h-12 !shadow-none group-only:rounded-tr-xl ${
                   hoveredMenu === 0 ? "!bg-neutral-950" : "!bg-black"
                 }`}
               />
-              <div className="flex-col py-6 text-sm">
-                <h1 className="px-4 pb-2 text-neutral-400">Personal Account</h1>
-                <ul className="px-2">
-                  <li
-                    className="flex h-10 w-full items-center justify-between gap-2 rounded-md bg-neutral-700 px-2"
-                    onMouseEnter={() => setHoveredAccount(0)}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Image
-                        src={avatar}
-                        height={20}
-                        width={20}
-                        className="rounded-full"
-                        alt="User avatar"
-                      ></Image>
-                      Sean Firshcing
-                    </div>
-                    <svg
-                      fill="none"
-                      height="20"
-                      shapeRendering="geometricPrecision"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                      width="20"
-                      className="text-neutral-400"
-                    >
-                      <path d="M20 6L9 17l-5-5"></path>
-                    </svg>
-                  </li>
-                  <li
-                    className="flex h-10 w-full items-center gap-2 rounded-md px-2 hover:bg-neutral-900"
-                    onMouseEnter={() => setHoveredAccount(1)}
-                  >
-                    <svg
-                      fill="none"
-                      height="20"
-                      width="20"
-                      shapeRendering="geometricPrecision"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.5"
-                      viewBox="0 0 24 24"
-                    >
-                      <circle cx="12" cy="12" r="10"></circle>
-                      <path d="M12 8v8"></path>
-                      <path d="M8 12h8"></path>
-                    </svg>
-                    Create Team
-                  </li>
-                </ul>
-              </div>
+              {teams?.length > 0 ? (
+                <div className="flex-col py-6 text-sm">
+                  <h1 className="px-4 pb-2 text-neutral-400">
+                    Personal Account
+                  </h1>
+                  <ul className="px-2">
+                    {teams?.map((team: Team) => (
+                      <Team
+                        {...team}
+                        key={team.id}
+                        setHoveredAccount={setHoveredAccount}
+                      />
+                    ))}
+
+                    {teamSearch === "" && (
+                      <li
+                        className="flex h-10 w-full items-center gap-2 rounded-md px-2 hover:bg-neutral-900"
+                        onMouseEnter={() => setHoveredAccount(1)}
+                      >
+                        <svg
+                          fill="none"
+                          height="20"
+                          width="20"
+                          shapeRendering="geometricPrecision"
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="1.5"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <path d="M12 8v8"></path>
+                          <path d="M8 12h8"></path>
+                        </svg>
+                        Create Team
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              ) : (
+                <Empty
+                  team={true}
+                  search={teamSearch}
+                  clearSearch={setTeamSearch}
+                />
+              )}
             </div>
-            {hoveredAccount === 0 && (
+            {hoveredAccount === 0 && teams.length !== 0 && (
               <div
                 className={`peer w-64 flex-col rounded-xl rounded-bl-none ${
                   hoveredMenu === 1 ? "bg-neutral-950" : "bg-black"
@@ -177,40 +183,48 @@ export const UserDropdownPopup = ({ avatar }: UserDropdownPopupProps) => {
                       <div className="h-[1px] w-full bg-neutral-700" />
                     </div>
                   )}
-                  <div className="flex-col text-sm">
-                    <h1 className="px-4 pb-2 text-neutral-400">Projects</h1>
-                    <ul className="px-2 pb-2">
-                      {projects.map((project: Project) => (
-                        <Project
-                          {...project}
-                          projectID={project.id}
-                          key={project.id}
-                        />
-                      ))}
-                      <Link
-                        className="flex h-10 w-full items-center gap-2 rounded-md px-2 hover:bg-neutral-700"
-                        href={"/"}
-                      >
-                        <svg
-                          fill="none"
-                          height="16"
-                          width="16"
-                          shapeRendering="geometricPrecision"
-                          stroke="currentColor"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="1.5"
-                          viewBox="0 0 24 24"
-                          className="text-blue-400"
+                  {projects.length > 0 ? (
+                    <div className="flex-col text-sm">
+                      <h1 className="px-4 pb-2 text-neutral-400">Projects</h1>
+                      <ul className="px-2 pb-2">
+                        {projects.map((project: Project) => (
+                          <Project
+                            {...project}
+                            projectID={project.id}
+                            key={project.id}
+                          />
+                        ))}
+                        <Link
+                          className="flex h-10 w-full items-center gap-2 rounded-md px-2 hover:bg-neutral-700"
+                          href={"/"}
                         >
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <path d="M12 8v8"></path>
-                          <path d="M8 12h8"></path>
-                        </svg>
-                        Create Project
-                      </Link>
-                    </ul>
-                  </div>
+                          <svg
+                            fill="none"
+                            height="16"
+                            width="16"
+                            shapeRendering="geometricPrecision"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            viewBox="0 0 24 24"
+                            className="text-blue-400"
+                          >
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 8v8"></path>
+                            <path d="M8 12h8"></path>
+                          </svg>
+                          Create Project
+                        </Link>
+                      </ul>
+                    </div>
+                  ) : (
+                    <Empty
+                      team={false}
+                      search={projectSearch}
+                      clearSearch={setProjectSearch}
+                    />
+                  )}
                 </div>
               </div>
             )}
@@ -272,6 +286,74 @@ const Project = ({ name, image, projectID, favorite }: ProjectProps) => {
             ></path>
           </svg>
         )}
+      </button>
+    </div>
+  );
+};
+
+type TeamProps = {
+  name: string;
+  image: string;
+  setHoveredAccount: (value: number) => void;
+};
+
+const Team = ({ name, image, setHoveredAccount }: TeamProps) => {
+  return (
+    <li
+      className="flex h-10 w-full items-center justify-between gap-2 rounded-md bg-neutral-700 px-2"
+      onMouseEnter={() => setHoveredAccount(0)}
+    >
+      <div className="flex items-center gap-2">
+        <Image
+          src={image}
+          height={20}
+          width={20}
+          className="rounded-full"
+          alt="User avatar"
+        ></Image>
+        {name}
+      </div>
+      <svg
+        fill="none"
+        height="20"
+        shapeRendering="geometricPrecision"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+        viewBox="0 0 24 24"
+        width="20"
+        className="text-neutral-400"
+      >
+        <path d="M20 6L9 17l-5-5"></path>
+      </svg>
+    </li>
+  );
+};
+
+const Empty = ({
+  team,
+  search,
+  clearSearch,
+}: {
+  team: boolean;
+  search: string;
+  clearSearch: (string: string) => void;
+}) => {
+  const header = team ? "Team" : "Spaces or Projects";
+  const subheader = team ? "team" : "spaces or projects";
+
+  return (
+    <div className="flex flex-col gap-2 bg-neutral-950 p-4">
+      <p className="text-sm font-medium text-neutral-200">No {header} Found</p>
+      <p className="text-sm text-neutral-500">
+        Your search for &quot;{search}&quot; did not match any {subheader}.
+      </p>
+      <button
+        className="w-full rounded-md px-4 py-1 shadow-[0_0_0_1px] shadow-neutral-800 transition-colors hover:bg-neutral-900"
+        onClick={() => clearSearch("")}
+      >
+        Clear Search
       </button>
     </div>
   );
