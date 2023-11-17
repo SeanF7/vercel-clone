@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 type menuPos = {
   startingY: number;
@@ -8,37 +8,20 @@ type menuPos = {
 
 type useMobileSwipeProps = {
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setHideDropdown: React.Dispatch<React.SetStateAction<boolean>>;
-  dontChangeIfTrue: boolean[];
   overlayRef: React.RefObject<HTMLDivElement>;
   popupRef: React.RefObject<HTMLDivElement>;
+  dontChangeIfTrue?: boolean[];
   startingOpacity?: number;
 };
 
 export const useMobileSwipe = ({
   setDropdownVisible,
-  setHideDropdown,
-  dontChangeIfTrue,
+  dontChangeIfTrue = [],
   overlayRef,
   popupRef,
   startingOpacity = 0.4,
 }: useMobileSwipeProps) => {
   const [menuPosition, setMenuPosition] = useState<menuPos>(null);
-
-  useEffect(() => {
-    if (popupRef.current) {
-      popupRef.current!.classList.add(
-        ...[
-          "after:absolute",
-          "after:left-0",
-          "after:right-0",
-          "after:top-full",
-          "after:h-full",
-          "after:bg-inherit",
-        ]
-      );
-    }
-  }, [popupRef.current]);
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -94,10 +77,8 @@ export const useMobileSwipe = ({
         }
         setTimeout(() => {
           setDropdownVisible(false);
-          setHideDropdown(false);
         }, 300);
       } else {
-        setMenuPosition({ startingY: 0, currentY: 0, deltaY: 0 });
         if (popupRef.current) {
           popupRef.current.style.transform = `translateY(0px)`;
           popupRef.current.style.transitionDuration = "300ms";
@@ -120,7 +101,6 @@ export const useMobileSwipe = ({
     menuPosition,
     dontChangeIfTrue,
     setDropdownVisible,
-    setHideDropdown,
     startingOpacity,
     overlayRef,
     popupRef,

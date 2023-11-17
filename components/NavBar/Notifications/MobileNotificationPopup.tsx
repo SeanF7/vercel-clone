@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
 import { MobileFiltersPopup } from "./FiltersPopup";
 import Link from "next/link";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
@@ -55,6 +56,13 @@ export const MobileNotificationPopup = ({
   const [inbox, setInbox] = useState<Notification[]>([]);
   const [archive, setArchive] = useState<Notification[]>([]);
   const [reload, setReload] = useState(false);
+  const overlay = useRef(null);
+  useMobileSwipe({
+    overlayRef: overlay,
+    popupRef: menuPopup,
+    setDropdownVisible: setVisible,
+    dontChangeIfTrue: [childMenuOpen, showFilterMenu],
+  });
   useDisableScroll(true);
 
   useEffect(() => {
@@ -81,9 +89,12 @@ export const MobileNotificationPopup = ({
 
   return createPortal(
     <>
-      <div className="absolute bottom-0 left-0 z-20 h-full w-full bg-black opacity-50"></div>
       <div
-        className="absolute bottom-0 left-0 z-20 flex h-4/5 w-full"
+        className="absolute bottom-0 left-0 z-20 h-full w-full bg-black opacity-50"
+        ref={overlay}
+      />
+      <div
+        className="mobilePopupAfter absolute bottom-0 left-0 z-20 flex h-4/5 w-full bg-black"
         ref={menuPopup}
       >
         <div className="flex w-full flex-col rounded-md bg-black shadow-[0_0px_1px_1px] shadow-neutral-800">
@@ -241,7 +252,6 @@ export const MobileNotificationPopup = ({
                       showFilterMenu={showFilterMenu}
                       setShowFilterMenu={setShowFilterMenu}
                       setChildMenuOpen={setChildMenuOpen}
-                      button={filterButton}
                     />
                   </div>
                 </div>

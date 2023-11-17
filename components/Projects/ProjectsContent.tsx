@@ -1,11 +1,12 @@
 "use client";
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useState, useRef } from "react";
 import { SearchBar } from "../SearchBar";
 import { ListProject, GridProject } from "./Project";
 import { useProjectContext } from "../../lib/hooks/ProjectContext";
-import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
+import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import Link from "next/link";
 import { createPortal } from "react-dom";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 
 export const ProjectsContent = () => {
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
@@ -471,19 +472,38 @@ export const DesktopTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
   );
 };
 
-export const MobileTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
+type MobileTeamMenuProps = {
+  menuRef: RefObject<HTMLDivElement>;
+  closeMenus: () => void;
+};
+
+export const MobileTeamMenu = ({
+  menuRef,
+  closeMenus,
+}: MobileTeamMenuProps) => {
   const [selectedButton, setSelectedButton] = useState(0);
+  const overlayRef = useRef(null);
   const [teamName, setTeamName] = useState("Sean Firsching's Team");
+
+  useMobileSwipe({
+    overlayRef,
+    startingOpacity: 0.6,
+    popupRef: menuRef,
+    setDropdownVisible: () => closeMenus(),
+  });
 
   return createPortal(
     <>
-      <div className="absolute left-0 top-0 z-50 h-full w-full bg-black opacity-10" />
+      <div
+        className="absolute left-0 top-0 z-50 h-full w-full bg-black opacity-60"
+        ref={overlayRef}
+      />
       <div
         className="absolute bottom-0 left-0 right-0 z-50 ml-auto mr-auto flex h-4/5 w-full items-end justify-center"
         id="portal"
       >
         <div
-          className="flex w-full flex-col gap-4 rounded-xl bg-black bg-gradient-to-b from-neutral-900 to-5% shadow-[0_0px_0px_1px] shadow-neutral-800"
+          className="mobilePopupAfter flex w-full flex-col gap-4 rounded-t-xl bg-black bg-gradient-to-b from-neutral-900 to-5% shadow-[0_0px_0px_1px] shadow-neutral-800 after:bg-neutral-950"
           ref={menuRef}
         >
           <div className="flex flex-col gap-4 p-6">
@@ -586,16 +606,16 @@ export const MobileTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
               </div>
             </details>
           </div>
-          <div className="flex justify-between rounded-b-xl border-t border-neutral-800 bg-neutral-950 p-3 text-sm">
+          <div className="flex justify-between border-t border-neutral-800 bg-neutral-950 p-3 text-sm">
             <button
               className="rounded-md bg-neutral-950 p-3 text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800"
-              onClick={() => setVisible(false)}
+              onClick={() => closeMenus()}
             >
               Cancel
             </button>
             <button
               className="rounded-md bg-neutral-200 p-3 text-neutral-600"
-              onClick={() => setVisible(false)}
+              onClick={() => closeMenus()}
             >
               Continue
             </button>

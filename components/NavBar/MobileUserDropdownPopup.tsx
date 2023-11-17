@@ -17,7 +17,8 @@ export const MobileUserDropdownPopup = () => {
   const [search, setSearch] = useState("");
   const [userListItems, setuserListItems] = useState<Team[]>([]);
   const [hideDropdown, setHideDropdown] = useState(false);
-  const overlay = useRef(null);
+  const [menuOpacity, setMenuOpacity] = useState(0.6);
+  const overlay = useRef<HTMLDivElement>(null);
   const {
     controllingButton: dropdownButton,
     isVisible: dropdownVisible,
@@ -68,18 +69,26 @@ export const MobileUserDropdownPopup = () => {
       }
     }
   );
+  const closeMenus = () => {
+    setDropdownVisible(false);
+    setTeamVisible(false);
+    setHideDropdown(false);
+  };
 
   useMobileSwipe({
     setDropdownVisible,
-    setHideDropdown,
     dontChangeIfTrue: [teamVisible],
     overlayRef: overlay,
     popupRef: dropdownPopup,
+    startingOpacity: menuOpacity,
   });
 
   useEffect(() => {
     if (!teamVisible) {
       setHideDropdown(false);
+    } else {
+      setMenuOpacity(0);
+      if (overlay?.current) overlay.current.style.opacity = "0";
     }
   }, [teamVisible]);
 
@@ -113,11 +122,11 @@ export const MobileUserDropdownPopup = () => {
       {dropdownVisible && (
         <>
           <div
-            className="fixed left-0 top-0 z-50 h-full w-full bg-black opacity-40"
+            className={`fixed left-0 top-0 z-50 h-full w-full bg-black opacity-40`}
             ref={overlay}
           ></div>
           <div
-            className={`fixed bottom-0 left-0 z-50 h-4/5 w-full bg-neutral-950  ${
+            className={`mobilePopupAfter fixed bottom-0 left-0 z-50 h-4/5 w-full bg-neutral-950 ${
               hideDropdown ? "hidden" : "block"
             }`}
             ref={dropdownPopup}
@@ -150,8 +159,8 @@ export const MobileUserDropdownPopup = () => {
                           className="flex h-10 items-center gap-2 rounded-md px-2 hover:bg-neutral-900"
                           ref={teamButton as any}
                           onClick={() => {
-                            setTeamVisible(true);
                             setHideDropdown(true);
+                            setTeamVisible(true);
                           }}
                         >
                           <svg
@@ -176,7 +185,7 @@ export const MobileUserDropdownPopup = () => {
                       {teamVisible && (
                         <MobileTeamMenu
                           menuRef={teamPopup}
-                          setVisible={setTeamVisible}
+                          closeMenus={closeMenus}
                         />
                       )}
                     </ul>
