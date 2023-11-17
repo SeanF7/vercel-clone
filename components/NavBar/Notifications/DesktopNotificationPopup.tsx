@@ -235,7 +235,6 @@ export const DesktopNotificationPopup = ({
                     showFilterMenu={showFilterMenu}
                     setShowFilterMenu={setShowFilterMenu}
                     setChildMenuOpen={setChildMenuOpen}
-                    button={filterButton}
                   />
                 </div>
               </div>
