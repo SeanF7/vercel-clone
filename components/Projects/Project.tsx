@@ -28,7 +28,7 @@ export const GridProject = ({
       <div className="relative flex flex-1">
         <Link
           href={`https://${url}`}
-          className="group absolute h-full w-full"
+          className="group absolute z-0 h-full w-full"
         />
         <div
           className="flex flex-1 flex-col justify-between rounded-md bg-neutral-950 p-4 align-middle shadow-[0_0px_0px_1px] 

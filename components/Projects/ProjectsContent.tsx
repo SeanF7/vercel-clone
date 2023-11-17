@@ -7,6 +7,7 @@ import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import Link from "next/link";
 import { createPortal } from "react-dom";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import useDisableScroll from "@/lib/hooks/useDisableScroll";
 
 export const ProjectsContent = () => {
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
@@ -245,20 +246,25 @@ const ProjectViewButtons = ({
   );
 };
 
-// Need a mobile version of this
 const AddNewButton = () => {
   const { controllingButton, menuPopup, isVisible, setVisible } =
     usePopupExits();
+  const [mobile, setMobile] = useState(false);
 
-  const {
-    controllingButton: teamMenuControllingButton,
-    menuPopup: teamMenuPopup,
-    isVisible: teamMenuIsVisible,
-    setVisible: setTeamMenuVisible,
-  } = usePopupExits();
+  useEffect(() => {
+    const handleResize = () => {
+      setMobile(window.innerWidth <= 600);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div className="relative">
+    <div>
       <button
         className="hover:bg-neutral-30 flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black [@media(min-width:601px)]:w-32"
         ref={controllingButton}
@@ -291,41 +297,17 @@ const AddNewButton = () => {
           <path d="M5 12h14"></path>
         </svg>
       </button>
-      {isVisible && (
-        <div
-          className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
-          ref={menuPopup}
-        >
-          {[
-            { name: "Project", url: "http://vercel.com/new" },
-            { name: "Domain", url: "http://vercel.com/domains" },
-            { name: "Storage", url: "http://vercel.com/stores" },
-          ].map((item, i) => (
-            <Link
-              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              key={i}
-              href={item.url}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <button
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            onClick={() => {
-              setVisible(false);
-              setTeamMenuVisible(!teamMenuIsVisible);
-            }}
-            ref={teamMenuControllingButton}
-          >
-            Team
-          </button>
-        </div>
-      )}
-
-      {teamMenuIsVisible && (
-        <DesktopTeamMenu
-          setVisible={setTeamMenuVisible}
-          menuRef={teamMenuPopup}
+      {mobile ? (
+        <MobileAddButtonPopup
+          isVisible={isVisible}
+          menuPopup={menuPopup}
+          setVisible={setVisible}
+        />
+      ) : (
+        <DesktopAddButtonPopup
+          isVisible={isVisible}
+          menuPopup={menuPopup}
+          setVisible={setVisible}
         />
       )}
     </div>
@@ -469,6 +451,142 @@ export const DesktopTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
       </div>
     </>,
     document.body
+  );
+};
+
+type AddButtonPopupProps = {
+  isVisible: boolean;
+  menuPopup: RefObject<HTMLDivElement>;
+  setVisible: (visible: boolean) => void;
+};
+
+const DesktopAddButtonPopup = ({
+  isVisible,
+  menuPopup,
+  setVisible,
+}: AddButtonPopupProps) => {
+  const {
+    controllingButton: teamMenuControllingButton,
+    menuPopup: teamMenuPopup,
+    isVisible: teamMenuIsVisible,
+    setVisible: setTeamMenuVisible,
+  } = usePopupExits();
+
+  return (
+    <>
+      {isVisible && (
+        <div
+          className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          ref={menuPopup}
+        >
+          {[
+            { name: "Project", url: "http://vercel.com/new" },
+            { name: "Domain", url: "http://vercel.com/domains" },
+            { name: "Storage", url: "http://vercel.com/stores" },
+          ].map((item, i) => (
+            <Link
+              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              key={i}
+              href={item.url}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <button
+            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            onClick={() => {
+              setVisible(false);
+              setTeamMenuVisible(!teamMenuIsVisible);
+            }}
+            ref={teamMenuControllingButton}
+          >
+            Team
+          </button>
+        </div>
+      )}
+
+      {teamMenuIsVisible && (
+        <DesktopTeamMenu
+          setVisible={setTeamMenuVisible}
+          menuRef={teamMenuPopup}
+        />
+      )}
+    </>
+  );
+};
+
+const MobileAddButtonPopup = ({
+  isVisible,
+  menuPopup,
+  setVisible,
+}: AddButtonPopupProps) => {
+  const menuOverlay = useRef(null);
+  const {
+    controllingButton: teamMenuControllingButton,
+    menuPopup: teamMenuPopup,
+    isVisible: teamMenuIsVisible,
+    setVisible: setTeamMenuVisible,
+  } = usePopupExits();
+  useDisableScroll(isVisible || teamMenuIsVisible);
+  useMobileSwipe({
+    overlayRef: menuOverlay,
+    startingOpacity: 0.6,
+    popupRef: menuPopup,
+    setDropdownVisible: () => {
+      setVisible(false);
+      setTeamMenuVisible(false);
+    },
+  });
+
+  return (
+    <>
+      {isVisible && (
+        <>
+          <div
+            className="fixed inset-0 z-10 bg-black opacity-60"
+            ref={menuOverlay}
+          />
+          <div
+            className="absolute bottom-0 left-0 right-0 z-10 rounded-t-lg bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+            ref={menuPopup}
+          >
+            {[
+              { name: "Project", url: "http://vercel.com/new" },
+              { name: "Domain", url: "http://vercel.com/domains" },
+              { name: "Storage", url: "http://vercel.com/stores" },
+            ].map((item, i) => (
+              <Link
+                className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+                key={i}
+                href={item.url}
+              >
+                {item.name}
+              </Link>
+            ))}
+            <button
+              className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              onClick={() => {
+                setVisible(false);
+                setTeamMenuVisible(!teamMenuIsVisible);
+              }}
+              ref={teamMenuControllingButton}
+            >
+              Team
+            </button>
+          </div>
+        </>
+      )}
+
+      {teamMenuIsVisible && (
+        <MobileTeamMenu
+          menuRef={teamMenuPopup}
+          closeMenus={() => {
+            setVisible(false);
+            setTeamMenuVisible(false);
+          }}
+        />
+      )}
+    </>
   );
 };
 
