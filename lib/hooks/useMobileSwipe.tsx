@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type menuPos = {
   startingY: number;
@@ -21,7 +21,11 @@ export const useMobileSwipe = ({
   popupRef,
   startingOpacity = 0.4,
 }: useMobileSwipeProps) => {
-  const [menuPosition, setMenuPosition] = useState<menuPos>(null);
+  const [menuPosition, setMenuPosition] = useState<menuPos>({
+    startingY: 0,
+    currentY: 0,
+    deltaY: 0,
+  });
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -41,7 +45,9 @@ export const useMobileSwipe = ({
       if (
         menuPosition !== null &&
         menuPosition.startingY !== 0 &&
-        dontChangeIfTrue.every((x) => !x)
+        dontChangeIfTrue.every((x) => !x) &&
+        menuPosition.currentY + 20 >=
+          popupRef.current?.getBoundingClientRect().top!
       ) {
         const currentY = e.touches[0].clientY;
         const deltaY = Math.max(currentY - menuPosition.startingY, -30);
@@ -51,9 +57,10 @@ export const useMobileSwipe = ({
           deltaY,
         }));
         if (overlayRef.current)
-          overlayRef.current.style.opacity = `${
-            startingOpacity - deltaY / window.innerHeight
-          }`;
+          overlayRef.current.style.opacity = `${Math.min(
+            startingOpacity - deltaY / window.innerHeight,
+            startingOpacity
+          )}`;
         if (popupRef.current) {
           if (deltaY > -30) {
             popupRef.current.style.transitionDuration = "0ms";
