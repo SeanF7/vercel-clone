@@ -1,17 +1,32 @@
 "use client";
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useState, useRef } from "react";
 import { SearchBar } from "../SearchBar";
 import { ListProject, GridProject } from "./Project";
 import { useProjectContext } from "../../lib/hooks/ProjectContext";
-import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
+import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import Link from "next/link";
 import { createPortal } from "react-dom";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import useDisableScroll from "@/lib/hooks/useDisableScroll";
 
 export const ProjectsContent = () => {
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
   const [isListView, setIsListView] = useState(false);
   const [favoriteExist, setFavoriteExist] = useState(false);
   const { projects, setSearch, search } = useProjectContext();
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMobile(window.innerWidth <= 600);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const favoriteExist = projects.some((project) => project.favorite);
@@ -78,6 +93,7 @@ export const ProjectsContent = () => {
                       lastUpdated={project.lastUpdated}
                       favorite={project.favorite}
                       inFavoriteSection={true}
+                      mobile={mobile}
                     />
                   ))}
               </div>
@@ -95,6 +111,7 @@ export const ProjectsContent = () => {
                 image={project.image}
                 lastUpdated={project.lastUpdated}
                 favorite={project.favorite}
+                mobile={mobile}
               />
             ))}
           </div>
@@ -138,6 +155,7 @@ export const ProjectsContent = () => {
                         image={project.image}
                         lastUpdated={project.lastUpdated}
                         favorite={project.favorite}
+                        mobile={mobile}
                       />
                     ))}
                 </div>
@@ -156,6 +174,7 @@ export const ProjectsContent = () => {
                 image={project.image}
                 lastUpdated={project.lastUpdated}
                 favorite={project.favorite}
+                mobile={mobile}
               />
             ))}
           </div>
@@ -244,20 +263,25 @@ const ProjectViewButtons = ({
   );
 };
 
-// Need a mobile version of this
 const AddNewButton = () => {
   const { controllingButton, menuPopup, isVisible, setVisible } =
     usePopupExits();
+  const [mobile, setMobile] = useState(false);
 
-  const {
-    controllingButton: teamMenuControllingButton,
-    menuPopup: teamMenuPopup,
-    isVisible: teamMenuIsVisible,
-    setVisible: setTeamMenuVisible,
-  } = usePopupExits();
+  useEffect(() => {
+    const handleResize = () => {
+      setMobile(window.innerWidth <= 600);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   return (
-    <div className="relative">
+    <div>
       <button
         className="hover:bg-neutral-30 flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black [@media(min-width:601px)]:w-32"
         ref={controllingButton}
@@ -290,41 +314,17 @@ const AddNewButton = () => {
           <path d="M5 12h14"></path>
         </svg>
       </button>
-      {isVisible && (
-        <div
-          className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
-          ref={menuPopup}
-        >
-          {[
-            { name: "Project", url: "http://vercel.com/new" },
-            { name: "Domain", url: "http://vercel.com/domains" },
-            { name: "Storage", url: "http://vercel.com/stores" },
-          ].map((item, i) => (
-            <Link
-              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              key={i}
-              href={item.url}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <button
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            onClick={() => {
-              setVisible(false);
-              setTeamMenuVisible(!teamMenuIsVisible);
-            }}
-            ref={teamMenuControllingButton}
-          >
-            Team
-          </button>
-        </div>
-      )}
-
-      {teamMenuIsVisible && (
-        <DesktopTeamMenu
-          setVisible={setTeamMenuVisible}
-          menuRef={teamMenuPopup}
+      {mobile ? (
+        <MobileAddButtonPopup
+          isVisible={isVisible}
+          menuPopup={menuPopup}
+          setVisible={setVisible}
+        />
+      ) : (
+        <DesktopAddButtonPopup
+          isVisible={isVisible}
+          menuPopup={menuPopup}
+          setVisible={setVisible}
         />
       )}
     </div>
@@ -471,19 +471,174 @@ export const DesktopTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
   );
 };
 
-export const MobileTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
+type AddButtonPopupProps = {
+  isVisible: boolean;
+  menuPopup: RefObject<HTMLDivElement>;
+  setVisible: (visible: boolean) => void;
+};
+
+const DesktopAddButtonPopup = ({
+  isVisible,
+  menuPopup,
+  setVisible,
+}: AddButtonPopupProps) => {
+  const {
+    controllingButton: teamMenuControllingButton,
+    menuPopup: teamMenuPopup,
+    isVisible: teamMenuIsVisible,
+    setVisible: setTeamMenuVisible,
+  } = usePopupExits();
+
+  return (
+    <>
+      {isVisible && (
+        <div
+          className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          ref={menuPopup}
+        >
+          {[
+            { name: "Project", url: "http://vercel.com/new" },
+            { name: "Domain", url: "http://vercel.com/domains" },
+            { name: "Storage", url: "http://vercel.com/stores" },
+          ].map((item, i) => (
+            <Link
+              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              key={i}
+              href={item.url}
+            >
+              {item.name}
+            </Link>
+          ))}
+          <button
+            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            onClick={() => {
+              setVisible(false);
+              setTeamMenuVisible(!teamMenuIsVisible);
+            }}
+            ref={teamMenuControllingButton}
+          >
+            Team
+          </button>
+        </div>
+      )}
+
+      {teamMenuIsVisible && (
+        <DesktopTeamMenu
+          setVisible={setTeamMenuVisible}
+          menuRef={teamMenuPopup}
+        />
+      )}
+    </>
+  );
+};
+
+const MobileAddButtonPopup = ({
+  isVisible,
+  menuPopup,
+  setVisible,
+}: AddButtonPopupProps) => {
+  const menuOverlay = useRef(null);
+  const {
+    controllingButton: teamMenuControllingButton,
+    menuPopup: teamMenuPopup,
+    isVisible: teamMenuIsVisible,
+    setVisible: setTeamMenuVisible,
+  } = usePopupExits();
+  useDisableScroll(isVisible || teamMenuIsVisible);
+  useMobileSwipe({
+    overlayRef: menuOverlay,
+    startingOpacity: 0.6,
+    popupRef: menuPopup,
+    setDropdownVisible: () => {
+      setVisible(false);
+      setTeamMenuVisible(false);
+    },
+  });
+
+  return (
+    <>
+      {isVisible && (
+        <>
+          <div
+            className="fixed inset-0 z-10 bg-black opacity-60"
+            ref={menuOverlay}
+          />
+          <div
+            className="absolute bottom-0 left-0 right-0 z-10 rounded-t-lg bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+            ref={menuPopup}
+          >
+            {[
+              { name: "Project", url: "http://vercel.com/new" },
+              { name: "Domain", url: "http://vercel.com/domains" },
+              { name: "Storage", url: "http://vercel.com/stores" },
+            ].map((item, i) => (
+              <Link
+                className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+                key={i}
+                href={item.url}
+              >
+                {item.name}
+              </Link>
+            ))}
+            <button
+              className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              onClick={() => {
+                setVisible(false);
+                setTeamMenuVisible(!teamMenuIsVisible);
+              }}
+              ref={teamMenuControllingButton}
+            >
+              Team
+            </button>
+          </div>
+        </>
+      )}
+
+      {teamMenuIsVisible && (
+        <MobileTeamMenu
+          menuRef={teamMenuPopup}
+          closeMenus={() => {
+            setVisible(false);
+            setTeamMenuVisible(false);
+          }}
+        />
+      )}
+    </>
+  );
+};
+
+type MobileTeamMenuProps = {
+  menuRef: RefObject<HTMLDivElement>;
+  closeMenus: () => void;
+};
+
+export const MobileTeamMenu = ({
+  menuRef,
+  closeMenus,
+}: MobileTeamMenuProps) => {
   const [selectedButton, setSelectedButton] = useState(0);
+  const overlayRef = useRef(null);
   const [teamName, setTeamName] = useState("Sean Firsching's Team");
+
+  useMobileSwipe({
+    overlayRef,
+    startingOpacity: 0.6,
+    popupRef: menuRef,
+    setDropdownVisible: () => closeMenus(),
+  });
 
   return createPortal(
     <>
-      <div className="absolute left-0 top-0 z-50 h-full w-full bg-black opacity-10" />
+      <div
+        className="absolute left-0 top-0 z-50 h-full w-full bg-black opacity-60"
+        ref={overlayRef}
+      />
       <div
         className="absolute bottom-0 left-0 right-0 z-50 ml-auto mr-auto flex h-4/5 w-full items-end justify-center"
         id="portal"
       >
         <div
-          className="flex w-full flex-col gap-4 rounded-xl bg-black bg-gradient-to-b from-neutral-900 to-5% shadow-[0_0px_0px_1px] shadow-neutral-800"
+          className="mobilePopupAfter flex w-full flex-col gap-4 rounded-t-xl bg-black bg-gradient-to-b from-neutral-900 to-5% shadow-[0_0px_0px_1px] shadow-neutral-800 after:bg-neutral-950"
           ref={menuRef}
         >
           <div className="flex flex-col gap-4 p-6">
@@ -586,16 +741,16 @@ export const MobileTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
               </div>
             </details>
           </div>
-          <div className="flex justify-between rounded-b-xl border-t border-neutral-800 bg-neutral-950 p-3 text-sm">
+          <div className="flex justify-between border-t border-neutral-800 bg-neutral-950 p-3 text-sm">
             <button
               className="rounded-md bg-neutral-950 p-3 text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800"
-              onClick={() => setVisible(false)}
+              onClick={() => closeMenus()}
             >
               Cancel
             </button>
             <button
               className="rounded-md bg-neutral-200 p-3 text-neutral-600"
-              onClick={() => setVisible(false)}
+              onClick={() => closeMenus()}
             >
               Continue
             </button>

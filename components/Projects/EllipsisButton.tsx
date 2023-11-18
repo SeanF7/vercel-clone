@@ -1,10 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
-import {
-  useFetchProjects,
-  useProjectContext,
-} from "@/lib/hooks/ProjectContext";
+import { useProjectContext } from "@/lib/hooks/ProjectContext";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { useRef } from "react";
+import useDisableScroll from "@/lib/hooks/useDisableScroll";
 
 type Props = {
   projectID: number;
@@ -189,5 +189,84 @@ const StarComponent = ({ favorite }: StarProps) => {
         </>
       )}
     </div>
+  );
+};
+
+export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
+  const { menuPopup, isVisible, setVisible } = usePopupExits();
+  const { fetchData } = useProjectContext();
+  const overlay = useRef(null);
+  const handleClick = () => {
+    fetch(`/api/projects?id=${projectID}`, {
+      method: "PATCH",
+    }).then(() => {
+      fetchData();
+    });
+    setVisible(false);
+  };
+  useDisableScroll(isVisible);
+  useMobileSwipe({
+    popupRef: menuPopup,
+    setDropdownVisible: setVisible,
+    overlayRef: overlay,
+  });
+
+  return (
+    <>
+      <button
+        className="z-0 rounded-md p-2 hover:bg-neutral-700"
+        onClick={() => {
+          setVisible(!isVisible);
+          requestAnimationFrame(() => {
+            menuPopup.current?.classList.toggle("animate-fade");
+          });
+        }}
+      >
+        <svg height="16" viewBox="0 0 16 16" width="16">
+          <path
+            d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z"
+            fill="currentColor"
+          ></path>
+        </svg>
+      </button>
+      {isVisible && (
+        <>
+          <div className="fixed inset-0 bg-black opacity-60" ref={overlay} />
+          <div
+            className="mobilePopupAfter fixed bottom-0 left-0 right-0 z-20 rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
+            ref={menuPopup}
+          >
+            <button
+              className="group/favorite flex h-12 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              onClick={handleClick}
+            >
+              {favorite ? "Remove Favorite" : "Add Favorite"}
+              <StarComponent favorite={favorite} />
+            </button>
+            <Link
+              href={"/"}
+              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            >
+              View Logs
+            </Link>
+            <button className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800">
+              Transfer Project
+            </button>
+            <Link
+              href={"/"}
+              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            >
+              Manage Domains
+            </Link>
+            <Link
+              href={"/"}
+              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            >
+              Settings
+            </Link>
+          </div>
+        </>
+      )}
+    </>
   );
 };

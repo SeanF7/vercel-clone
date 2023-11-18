@@ -8,37 +8,24 @@ type menuPos = {
 
 type useMobileSwipeProps = {
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setHideDropdown: React.Dispatch<React.SetStateAction<boolean>>;
-  dontChangeIfTrue: boolean[];
   overlayRef: React.RefObject<HTMLDivElement>;
   popupRef: React.RefObject<HTMLDivElement>;
+  dontChangeIfTrue?: boolean[];
   startingOpacity?: number;
 };
 
 export const useMobileSwipe = ({
   setDropdownVisible,
-  setHideDropdown,
-  dontChangeIfTrue,
+  dontChangeIfTrue = [],
   overlayRef,
   popupRef,
   startingOpacity = 0.4,
 }: useMobileSwipeProps) => {
-  const [menuPosition, setMenuPosition] = useState<menuPos>(null);
-
-  useEffect(() => {
-    if (popupRef.current) {
-      popupRef.current!.classList.add(
-        ...[
-          "after:absolute",
-          "after:left-0",
-          "after:right-0",
-          "after:top-full",
-          "after:h-full",
-          "after:bg-inherit",
-        ]
-      );
-    }
-  }, [popupRef.current]);
+  const [menuPosition, setMenuPosition] = useState<menuPos>({
+    startingY: 0,
+    currentY: 0,
+    deltaY: 0,
+  });
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -58,7 +45,9 @@ export const useMobileSwipe = ({
       if (
         menuPosition !== null &&
         menuPosition.startingY !== 0 &&
-        dontChangeIfTrue.every((x) => !x)
+        dontChangeIfTrue.every((x) => !x) &&
+        menuPosition.currentY + 20 >=
+          popupRef.current?.getBoundingClientRect().top!
       ) {
         const currentY = e.touches[0].clientY;
         const deltaY = Math.max(currentY - menuPosition.startingY, -30);
@@ -68,9 +57,10 @@ export const useMobileSwipe = ({
           deltaY,
         }));
         if (overlayRef.current)
-          overlayRef.current.style.opacity = `${
-            startingOpacity - deltaY / window.innerHeight
-          }`;
+          overlayRef.current.style.opacity = `${Math.min(
+            startingOpacity - deltaY / window.innerHeight,
+            startingOpacity
+          )}`;
         if (popupRef.current) {
           if (deltaY > -30) {
             popupRef.current.style.transitionDuration = "0ms";
@@ -94,10 +84,8 @@ export const useMobileSwipe = ({
         }
         setTimeout(() => {
           setDropdownVisible(false);
-          setHideDropdown(false);
         }, 300);
       } else {
-        setMenuPosition({ startingY: 0, currentY: 0, deltaY: 0 });
         if (popupRef.current) {
           popupRef.current.style.transform = `translateY(0px)`;
           popupRef.current.style.transitionDuration = "300ms";
@@ -120,7 +108,6 @@ export const useMobileSwipe = ({
     menuPosition,
     dontChangeIfTrue,
     setDropdownVisible,
-    setHideDropdown,
     startingOpacity,
     overlayRef,
     popupRef,

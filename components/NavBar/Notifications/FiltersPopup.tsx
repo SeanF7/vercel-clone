@@ -2,12 +2,12 @@ import React, { useState, useRef } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import Image from "next/image";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 
 type Props = {
   showFilterMenu: boolean;
   setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  button: React.RefObject<HTMLButtonElement>;
 };
 
 export const DesktopFiltersPopup = ({
@@ -171,16 +171,18 @@ export const DesktopFiltersPopup = ({
 };
 
 export const MobileFiltersPopup = ({
-  showFilterMenu,
   setShowFilterMenu,
   setChildMenuOpen,
+  showFilterMenu,
 }: Props) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const [authorSearch, setauthorSearch] = useState("");
+  const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
   const [pageSearch, setPageSearch] = useState("");
   const [branchSearch, setBranchSearch] = useState("");
   const menus = useRef<HTMLDivElement>(null);
+  const overlay = useRef<HTMLDivElement>(null);
+  const filtersOverlay = useRef<HTMLDivElement>(null);
   const { menuPopup } = useCustomPopupExits(
     (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -205,20 +207,37 @@ export const MobileFiltersPopup = ({
         menus.current &&
         !menus.current?.contains(event.target as Node)
       ) {
-        setShowFilterMenu(true);
+        setShowFilterMenu(false);
         setMenuIndex(null);
         setChildMenuOpen(true);
       }
     }
   );
 
+  useMobileSwipe({
+    overlayRef: overlay,
+    popupRef: menuPopup,
+    setDropdownVisible: () => {
+      setShowFilterMenu(false);
+      setChildMenuOpen(false);
+    },
+    startingOpacity: 0.6,
+  });
+
+  useMobileSwipe({
+    overlayRef: filtersOverlay,
+    popupRef: menus,
+    setDropdownVisible: () => setMenuIndex(null),
+    startingOpacity: 0.6,
+  });
+
   return (
     <div className="absolute bottom-0 left-0 w-full">
       {showFilterMenu && (
         <>
-          <div className="fixed inset-0 bg-black opacity-60" />
+          <div className="fixed inset-0 bg-black opacity-60" ref={overlay} />
           <div
-            className="absolute bottom-0 left-0 z-10 flex w-full flex-col place-self-end rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+            className="mobilePopupAfter absolute bottom-0 left-0 z-10 flex w-full flex-col place-self-end rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
             ref={menuPopup}
           >
             {["Author", "Status", "Project", "Page", "Branch"].map(
@@ -242,22 +261,30 @@ export const MobileFiltersPopup = ({
       )}
       {menuIndex !== null && (
         <>
-          <div className="fixed inset-0 bg-black opacity-60" />
-          <div className="absolute bottom-0 left-0 w-full" ref={menus}>
+          <div
+            className="fixed inset-0 bg-black opacity-60"
+            ref={filtersOverlay}
+          />
+          <div
+            className="mobilePopupAfter absolute bottom-0 left-0 w-full bg-neutral-950"
+            ref={menus}
+          >
             {menuIndex == 0 && (
               <div className="flex flex-col">
                 <SearchBar
                   placeHolderText="Author"
                   classes="h-12 rounded-b-none rounded-t-xl"
                   escapeButton={true}
-                  setInputValue={setauthorSearch}
+                  setInputValue={setAuthorSearch}
                   inputValue={authorSearch}
                 />
-                <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
+                <div className=" bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                  WIP/TODO
+                </div>
               </div>
             )}
             {menuIndex == 1 && (
-              <div className=" rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              <div className=" rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
                 {["All", "Resolved"].map((item, i) => (
                   <button
                     className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
@@ -276,7 +303,7 @@ export const MobileFiltersPopup = ({
               </div>
             )}
             {menuIndex == 2 && (
-              <div className="rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              <div className="rounded-t-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
                 <SearchBar
                   placeHolderText="Project"
                   classes="h-12 rounded-none rounded-t-xl outline-none"
@@ -305,7 +332,7 @@ export const MobileFiltersPopup = ({
               </div>
             )}
             {menuIndex == 3 && (
-              <div className="flex flex-1 flex-col rounded-xl bg-neutral-950">
+              <div className="flex flex-1 flex-col rounded-t-xl bg-neutral-950">
                 <SearchBar
                   placeHolderText="Page"
                   classes="h-12 rounded-b-none rounded-xl"
@@ -313,12 +340,12 @@ export const MobileFiltersPopup = ({
                   setInputValue={setPageSearch}
                   inputValue={pageSearch}
                 />
-                <div className="flex rounded-b-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                <div className="flex  bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
                   <div className="flex flex-col rounded-md bg-black text-neutral-200 shadow-[0_0_0_1px] shadow-neutral-700">
                     <p className="w-[240px p-2 text-sm">
                       To filter for comments on pages with multiple similar URLs
                       try using * to match results, such as: <br />
-                      <span className="rounded-[4px] p-1  font-mono text-xs  text-red-400 shadow-[0_0_0_1px] shadow-neutral-700">
+                      <span className="rounded-[4px] p-1 font-mono text-xs text-red-400 shadow-[0_0_0_1px] shadow-neutral-700">
                         /docs/conformance/rules/req*
                       </span>
                     </p>
@@ -335,7 +362,7 @@ export const MobileFiltersPopup = ({
                   setInputValue={setBranchSearch}
                   inputValue={branchSearch}
                 />
-                <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
+                <div className="bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
               </div>
             )}
           </div>
