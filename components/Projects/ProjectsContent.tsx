@@ -14,6 +14,19 @@ export const ProjectsContent = () => {
   const [isListView, setIsListView] = useState(false);
   const [favoriteExist, setFavoriteExist] = useState(false);
   const { projects, setSearch, search } = useProjectContext();
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setMobile(window.innerWidth <= 600);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     const favoriteExist = projects.some((project) => project.favorite);
@@ -80,6 +93,7 @@ export const ProjectsContent = () => {
                       lastUpdated={project.lastUpdated}
                       favorite={project.favorite}
                       inFavoriteSection={true}
+                      mobile={mobile}
                     />
                   ))}
               </div>
@@ -97,6 +111,7 @@ export const ProjectsContent = () => {
                 image={project.image}
                 lastUpdated={project.lastUpdated}
                 favorite={project.favorite}
+                mobile={mobile}
               />
             ))}
           </div>
@@ -140,6 +155,7 @@ export const ProjectsContent = () => {
                         image={project.image}
                         lastUpdated={project.lastUpdated}
                         favorite={project.favorite}
+                        mobile={mobile}
                       />
                     ))}
                 </div>
@@ -158,6 +174,7 @@ export const ProjectsContent = () => {
                 image={project.image}
                 lastUpdated={project.lastUpdated}
                 favorite={project.favorite}
+                mobile={mobile}
               />
             ))}
           </div>

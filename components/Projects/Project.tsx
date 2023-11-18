@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Activity } from "./Activity";
-import { EllipsisButton } from "./EllipsisButton";
+import { EllipsisButton, MobileEllipsisButton } from "./EllipsisButton";
 
 type ProjectProps = {
   name: string;
@@ -12,6 +12,7 @@ type ProjectProps = {
   favorite: boolean;
   projectID: number;
   inFavoriteSection?: boolean;
+  mobile?: boolean;
 };
 
 export const GridProject = ({
@@ -22,6 +23,7 @@ export const GridProject = ({
   url,
   projectID,
   favorite,
+  mobile,
 }: ProjectProps) => {
   return (
     <div className="group flex">
@@ -54,7 +56,14 @@ export const GridProject = ({
             </div>
             <div className="flex items-center gap-2">
               <Activity />
-              <EllipsisButton projectID={projectID} favorite={favorite} />
+              {mobile ? (
+                <MobileEllipsisButton
+                  projectID={projectID}
+                  favorite={favorite}
+                />
+              ) : (
+                <EllipsisButton projectID={projectID} favorite={favorite} />
+              )}
             </div>
           </div>
           <div className="pt-4 text-sm">
@@ -126,6 +135,7 @@ export const ListProject = ({
   favorite,
   projectID,
   inFavoriteSection,
+  mobile,
 }: ProjectProps) => {
   return (
     <div className="relative flex flex-col">
@@ -231,7 +241,11 @@ export const ListProject = ({
         </div>
         <div className="flex items-center pl-2">
           <Activity />
-          <EllipsisButton projectID={projectID} favorite={favorite} />
+          {mobile ? (
+            <MobileEllipsisButton projectID={projectID} favorite={favorite} />
+          ) : (
+            <EllipsisButton projectID={projectID} favorite={favorite} />
+          )}
         </div>
       </div>
     </div>
