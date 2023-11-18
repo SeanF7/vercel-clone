@@ -1,6 +1,15 @@
 import Link from "next/link";
+import { MobileNavPopupNewTeam } from "./MobileNavPopupNewTeam";
 
-export const MobileNavPopup = () => {
+type MobileNavPopupNewTeamProps = {
+  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  setHideMenu: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const MobileNavPopup = ({
+  setShowMenu,
+  setHideMenu,
+}: MobileNavPopupNewTeamProps) => {
   const firstSection = [
     {
       name: "Dashboard",
@@ -12,18 +21,6 @@ export const MobileNavPopup = () => {
     },
     {
       name: "New Team",
-      svg: (
-        <svg
-          fill="none"
-          height="16"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          width="16"
-        >
-          <path d="M12 5v14"></path>
-          <path d="M5 12h14"></path>
-        </svg>
-      ),
     },
     {
       name: "Theme",
@@ -120,15 +117,26 @@ export const MobileNavPopup = () => {
           <div className="h-6 w-6 rounded-full bg-gradient-to-r from-green-400 to-blue-500 " />
         </div>
         <ul className="flex flex-col pb-6 text-neutral-400">
-          {firstSection.map((path) => (
-            <li
-              className={`flex h-12 cursor-pointer items-center justify-between border-b border-neutral-700 `}
-              key={path.name}
-            >
-              {path.name} {path.svg}
-            </li>
-          ))}
-          {/* WIP/TODO Still has to be dynamic and do all the theme stuff. Also dynamically load svgs.*/}
+          {firstSection.map((path) => {
+            if (path.name === "New Team") {
+              return (
+                <MobileNavPopupNewTeam
+                  key={path.name}
+                  setShowMenu={setShowMenu}
+                  setHideMenu={setHideMenu}
+                />
+              );
+            }
+            return (
+              <li
+                className={`flex h-12 cursor-pointer items-center justify-between border-b border-neutral-700 `}
+                key={path.name}
+              >
+                {path.name} {path.svg}
+              </li>
+            );
+          })}
+          {}
           <h1 className="pb-3 pt-7 text-xl font-semibold text-white">
             Resources
           </h1>

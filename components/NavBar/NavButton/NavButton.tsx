@@ -1,17 +1,15 @@
 "use client";
 import React, { useState, useEffect, Suspense } from "react";
-import { usePathname } from "next/navigation";
 import { DesktopNavPopup } from "./DesktopNavPopup";
 import { MobileNavPopup } from "./MobileNavPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
+import useDisableScroll from "@/lib/hooks/useDisableScroll";
 
 type NavButtonProps = {
   children: React.ReactNode;
 };
 
 export const NavButton = ({ children }: NavButtonProps) => {
-  const pathname = usePathname();
-
   const handleButtonClick = () => {
     if (!showMenu && width < 700)
       document.body.classList.add("overflow-hidden");
@@ -19,6 +17,7 @@ export const NavButton = ({ children }: NavButtonProps) => {
     setShowMenu(!showMenu);
   };
   const [width, setWidth] = useState(0);
+  const [menuHide, setMenuHide] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -63,6 +62,7 @@ export const NavButton = ({ children }: NavButtonProps) => {
       }
     }
   );
+  useDisableScroll(showMenu && width <= 700);
 
   return (
     <div className="relative">
@@ -99,9 +99,11 @@ export const NavButton = ({ children }: NavButtonProps) => {
           </div>
         )}
       </button>
-      <div ref={menuPopup}>
+      <div ref={menuPopup} className={`${menuHide ? "hidden" : "block"}`}>
         {showMenu && width > 700 && <DesktopNavPopup />}
-        {showMenu && width <= 700 && <MobileNavPopup />}
+        {showMenu && width <= 700 && (
+          <MobileNavPopup setShowMenu={setShowMenu} setHideMenu={setMenuHide} />
+        )}
       </div>
     </div>
   );
