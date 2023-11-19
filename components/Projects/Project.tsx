@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Activity } from "./Activity";
+import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import { EllipsisButton, MobileEllipsisButton } from "./EllipsisButton";
 
 type ProjectProps = {
@@ -75,7 +76,7 @@ export const GridProject = ({
                   fill="white"
                 ></path>
               </svg>
-              {lastUpdated} ago on
+              {getTimeAgo(lastUpdated)}
               <span className="px-1">
                 <svg
                   height="16"
@@ -211,7 +212,7 @@ export const ListProject = ({
                 {description}
               </Link>
               <span className="flex items-center text-neutral-400">
-                {lastUpdated} on
+                {getTimeAgo(lastUpdated)} on
                 <span className="px-1">
                   <svg
                     height="16"

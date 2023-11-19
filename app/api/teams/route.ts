@@ -1,8 +1,5 @@
-import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
-import { Team } from "@/types";
-
-let teams: Team[] = generateTeams();
+import { teams } from "@/lib/utils/fakeDatabase";
 
 export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("s");
@@ -13,18 +10,4 @@ export async function GET(request: NextRequest) {
         )
       : teams;
   return Response.json(returnTeams);
-}
-
-setInterval(() => {
-  teams = generateTeams();
-}, 10000);
-
-function generateTeams() {
-  return [
-    {
-      id: 1,
-      name: "Sean Firsching",
-      image: "https://avatar.vercel.sh/seanfirsching",
-    },
-  ];
 }
