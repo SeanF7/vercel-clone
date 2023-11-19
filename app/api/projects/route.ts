@@ -1,15 +1,6 @@
 import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  image: string;
-  lastUpdated: string;
-  favorite: boolean;
-};
+import { Project } from "@/types";
 
 let projects: Project[] = generateProjects();
 let favoriteProjects = new Map<number, boolean>();

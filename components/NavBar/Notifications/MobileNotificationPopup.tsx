@@ -9,17 +9,11 @@ import useDisableScroll from "@/lib/hooks/useDisableScroll";
 import { MobileFiltersPopup } from "./FiltersPopup";
 import Link from "next/link";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { Notification } from "@/types";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-type Notification = {
-  id: number;
-  image: string;
-  description: string;
-  time: string;
 };
 
 export const MobileNotificationPopup = ({

@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { Notification } from "@/types";
+import { generateRandomDateWithinTwoWeeks } from "@/lib/utils/timeHelpers";
 
 let inbox: Notification[] = generateInbox();
 let archive: Notification[] = generateArchive();
@@ -34,13 +35,13 @@ function generateInbox() {
       id: 3,
       image: "https://avatar.vercel.sh/seanfirsching",
       description: "Sean Firsching followed you",
-      time: "2h ago",
+      time: generateRandomDateWithinTwoWeeks(),
     },
     {
       id: 4,
       image: "https://avatar.vercel.sh/seanfirsching",
       description: "Sean Firsching followed you",
-      time: "2h ago",
+      time: generateRandomDateWithinTwoWeeks(),
     },
   ];
 }
@@ -51,13 +52,13 @@ function generateArchive() {
       id: 1,
       image: "https://avatar.vercel.sh/seanfirsching",
       description: "Sean Firsching followed you",
-      time: "1h ago",
+      time: generateRandomDateWithinTwoWeeks(),
     },
     {
       id: 2,
       image: "https://avatar.vercel.sh/seanfirsching",
       description: "Sean Firsching followed you",
-      time: "1h ago",
+      time: generateRandomDateWithinTwoWeeks(),
     },
   ];
 }

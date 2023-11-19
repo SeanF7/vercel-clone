@@ -1,3 +1,4 @@
+import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import Image from "next/image";
 
 type Props = {
@@ -37,7 +38,7 @@ export const DesktopNotification = ({
         />
         <div className="flex flex-col">
           <h1 className="text-white">{description}</h1>
-          <p>{time}</p>
+          <p>{getTimeAgo(time)}</p>
         </div>
       </div>
       {!archived && (
@@ -89,7 +90,7 @@ export const MobileNotification = ({
         />
         <div className="flex flex-col">
           <h1 className="text-white">{description}</h1>
-          <p>{time}</p>
+          <p>{getTimeAgo(time)}</p>
         </div>
       </div>
       {!archived && (

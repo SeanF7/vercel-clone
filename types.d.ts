@@ -4,16 +4,22 @@ export type Author = {
   avatar: string;
 };
 
-export type Comment = {
+export type CommentThread = {
   threadId: number;
-  authors: Author[];
-  text: string;
+  author: Author;
   time: string;
-  project: string;
+  project: Pick<Project, "id" | "name" | "image" | "url">;
   page: string;
   branch: string;
-  numberOfReplies: number;
   read: boolean;
+  comments: Comment[];
+};
+
+export type Comment = {
+  threadId: number;
+  author: Author;
+  text: string;
+  time: string;
 };
 
 export type Notification = {
