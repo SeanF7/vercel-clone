@@ -26,15 +26,15 @@ export const GridProject = ({
   mobile,
 }: ProjectProps) => {
   return (
-    <div className="group flex">
+    <div className="flex">
       <div className="relative flex flex-1">
         <Link
           href={`https://${url}`}
-          className="group absolute z-0 h-full w-full"
+          className="peer absolute z-0 h-full w-full"
         />
         <div
-          className="flex flex-1 flex-col justify-between rounded-md bg-neutral-950 p-4 align-middle shadow-[0_0px_0px_1px] 
-        shadow-neutral-800 transition-colors group-hover:bg-neutral-800"
+          className="flex flex-1 flex-col justify-between rounded-md bg-neutral-950 p-4 align-middle 
+        shadow-[0_0px_0px_1px] shadow-neutral-800 transition-colors peer-hover:bg-neutral-800"
         >
           <div className="flex justify-between">
             <div className="flex items-center gap-2">
@@ -102,7 +102,7 @@ export const GridProject = ({
             </span>
           </div>
         </div>
-        <div className="relative  opacity-0 group-hover:opacity-100">
+        <div className="relative  opacity-0 peer-hover:opacity-100">
           <div className="absolute right-0 top-0 -translate-y-1/3 translate-x-1/2 transition-transform  ease-[ease] group-hover:-translate-y-1/2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-neutral-200 text-neutral-700 ">
               <svg

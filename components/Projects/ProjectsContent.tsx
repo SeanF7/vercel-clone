@@ -334,9 +334,14 @@ const AddNewButton = () => {
 type TeamMenuProps = {
   menuRef: RefObject<HTMLDivElement>;
   setVisible: (visible: boolean) => void;
+  transferTeam?: boolean;
 };
 
-export const DesktopTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
+export const DesktopTeamMenu = ({
+  menuRef,
+  setVisible,
+  transferTeam,
+}: TeamMenuProps) => {
   const [selectedButton, setSelectedButton] = useState(0);
   const [teamName, setTeamName] = useState("Sean Firsching's Team");
 
@@ -352,8 +357,15 @@ export const DesktopTeamMenu = ({ menuRef, setVisible }: TeamMenuProps) => {
           ref={menuRef}
         >
           <div className="flex flex-col gap-4 p-6">
-            <h1 className="text-2xl font-bold text-neutral-200">Create Team</h1>
+            <h1 className="text-2xl font-bold text-neutral-200">
+              {transferTeam ? "Transfer" : "Create Team"}
+            </h1>
             <div className="flex flex-col gap-2">
+              {transferTeam && (
+                <p className="text-sm text-neutral-500 ">
+                  Create a new team to transfer your project(s) to.
+                </p>
+              )}
               <p className="text-xs text-neutral-400 ">Team Name</p>
               <input
                 className="rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 outline outline-0 outline-neutral-400 ring-neutral-700 transition-all focus-within:outline-1 focus-within:ring-4 hover:shadow-neutral-600"
@@ -610,11 +622,13 @@ const MobileAddButtonPopup = ({
 type MobileTeamMenuProps = {
   menuRef: RefObject<HTMLDivElement>;
   closeMenus: () => void;
+  transferTeam?: boolean;
 };
 
 export const MobileTeamMenu = ({
   menuRef,
   closeMenus,
+  transferTeam,
 }: MobileTeamMenuProps) => {
   const [selectedButton, setSelectedButton] = useState(0);
   const overlayRef = useRef(null);
@@ -642,8 +656,15 @@ export const MobileTeamMenu = ({
           ref={menuRef}
         >
           <div className="flex flex-col gap-4 p-6">
-            <h1 className="text-2xl font-bold text-neutral-200">Create Team</h1>
+            <h1 className="text-2xl font-bold text-neutral-200">
+              {transferTeam ? "Transfer" : "Create Team"}
+            </h1>
             <div className="flex flex-col gap-2">
+              {transferTeam && (
+                <p className="text-sm text-neutral-500 ">
+                  Create a new team to transfer your project(s) to.
+                </p>
+              )}
               <p className="text-xs text-neutral-400 ">Team Name</p>
               <input
                 className="rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 outline outline-0 outline-neutral-400

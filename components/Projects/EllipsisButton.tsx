@@ -3,8 +3,10 @@ import Link from "next/link";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import { useProjectContext } from "@/lib/hooks/ProjectContext";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { SearchBar } from "../SearchBar";
+import { DesktopTeamMenu, MobileTeamMenu } from "./ProjectsContent";
 
 type Props = {
   projectID: number;
@@ -12,7 +14,22 @@ type Props = {
 };
 
 export const EllipsisButton = ({ projectID, favorite }: Props) => {
+  const [searchAccount, setSearchAccount] = useState("");
+  const [searchSVG, setSearchSVG] = useState<React.ReactNode>(null);
   const { menuPopup, isVisible, setVisible } = usePopupExits();
+  const {
+    menuPopup: transferPopup,
+    isVisible: transferVisible,
+    setVisible: setTransferVisible,
+    controllingButton: transferButton,
+  } = usePopupExits();
+  const {
+    menuPopup: transferTeamPopup,
+    isVisible: transferTeamVisible,
+    setVisible: setTransferTeamVisible,
+    controllingButton: transferTeamButton,
+  } = usePopupExits();
+  const [showAccounts, setShowAccounts] = useState(false);
   const { fetchData } = useProjectContext();
   const handleClick = () => {
     fetch(`/api/projects?id=${projectID}`, {
@@ -22,6 +39,42 @@ export const EllipsisButton = ({ projectID, favorite }: Props) => {
     });
     setVisible(false);
   };
+
+  useEffect(() => {
+    const handleEnter = (event: KeyboardEvent) => {
+      if (event.key === "Enter" && transferVisible) {
+        setSearchAccount("Create Team");
+        setShowAccounts(false);
+      }
+    };
+    window.addEventListener("keydown", handleEnter);
+    return () => {
+      window.removeEventListener("keydown", handleEnter);
+    };
+  }, [transferVisible]);
+
+  useEffect(() => {
+    if (searchAccount === "Create Team")
+      setSearchSVG(
+        <svg
+          fill="none"
+          height="24"
+          width="24"
+          shapeRendering="geometricPrecision"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          viewBox="0 0 24 24"
+          className="text-blue-500"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 8v8"></path>
+          <path d="M8 12h8"></path>
+        </svg>
+      );
+    else setSearchSVG(null);
+  }, [searchAccount]);
 
   return (
     <>
@@ -59,7 +112,14 @@ export const EllipsisButton = ({ projectID, favorite }: Props) => {
           >
             View Logs
           </Link>
-          <button className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800">
+          <button
+            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+            ref={transferButton}
+            onClick={() => {
+              setTransferVisible(!transferVisible);
+              setVisible(false);
+            }}
+          >
             Transfer Project
           </button>
           <Link
@@ -75,6 +135,98 @@ export const EllipsisButton = ({ projectID, favorite }: Props) => {
             Settings
           </Link>
         </div>
+      )}
+      {transferVisible && (
+        <>
+          <div className="fixed inset-0 z-30 bg-black opacity-60"></div>
+          <div className="fixed bottom-0 left-0 z-30 flex h-full w-full items-center justify-center">
+            <div
+              className="flex w-[450px] flex-col rounded-md  bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+              ref={transferPopup}
+            >
+              <div className="flex flex-col gap-4 p-6">
+                <h1 className="text-2xl font-semibold text-neutral-200">
+                  Transfer
+                </h1>
+                <p className="text-sm text-neutral-600">
+                  Transfer your project from
+                  <span className="text-white"> Sean Firsching</span> to another
+                  Vercel account.
+                </p>
+              </div>
+              <div className="flex h-24 w-full flex-col items-center gap-1 border-b border-t border-neutral-700 bg-neutral-900 p-6">
+                <SearchBar
+                  inputValue={searchAccount}
+                  placeHolderText="Select a Vercel Account"
+                  setInputValue={setSearchAccount}
+                  onFocus={() => setShowAccounts(true)}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setShowAccounts(false);
+                    }, 100);
+                  }}
+                  replaceSVG={searchSVG}
+                  focusColors={true}
+                  clearButton={true}
+                />
+                {showAccounts && (
+                  <div
+                    className="z-50 flex w-full rounded-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+                    onClick={() => {
+                      setSearchAccount("Create Team");
+                    }}
+                  >
+                    <div className="flex w-full items-center gap-4 rounded-md bg-neutral-800 p-2 text-sm">
+                      <svg
+                        fill="none"
+                        height="24"
+                        width="24"
+                        shapeRendering="geometricPrecision"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        viewBox="0 0 24 24"
+                        className="text-blue-500"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 8v8"></path>
+                        <path d="M8 12h8"></path>
+                      </svg>
+                      Create Team
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between p-4">
+                <button
+                  className="h-10 rounded-md bg-neutral-950 px-3 text-sm shadow-[0_0px_0px_1px] shadow-neutral-800 transition hover:bg-neutral-900"
+                  onClick={() => setTransferVisible(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="disable:text-white h-10 rounded-md bg-white px-3 text-sm text-neutral-800 shadow-[0_0px_0px_1px] 
+                shadow-neutral-800 hover:bg-neutral-300 disabled:bg-neutral-800"
+                  ref={transferTeamButton}
+                  onClick={() => setTransferTeamVisible(true)}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      {transferTeamVisible && (
+        <DesktopTeamMenu
+          setVisible={() => {
+            setTransferTeamVisible(false);
+            setTransferVisible(false);
+          }}
+          menuRef={transferTeamPopup}
+          transferTeam={true}
+        />
       )}
     </>
   );
@@ -204,6 +356,21 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
     });
     setVisible(false);
   };
+  const [searchAccount, setSearchAccount] = useState("");
+  const [searchSVG, setSearchSVG] = useState<React.ReactNode>(null);
+  const {
+    menuPopup: transferPopup,
+    isVisible: transferVisible,
+    setVisible: setTransferVisible,
+    controllingButton: transferButton,
+  } = usePopupExits();
+  const {
+    menuPopup: transferTeamPopup,
+    isVisible: transferTeamVisible,
+    setVisible: setTransferTeamVisible,
+    controllingButton: transferTeamButton,
+  } = usePopupExits();
+  const [showAccounts, setShowAccounts] = useState(false);
   useDisableScroll(isVisible);
   useMobileSwipe({
     popupRef: menuPopup,
@@ -217,9 +384,6 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
         className="z-0 rounded-md p-2 hover:bg-neutral-700"
         onClick={() => {
           setVisible(!isVisible);
-          requestAnimationFrame(() => {
-            menuPopup.current?.classList.toggle("animate-fade");
-          });
         }}
       >
         <svg height="16" viewBox="0 0 16 16" width="16">
@@ -249,7 +413,14 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
             >
               View Logs
             </Link>
-            <button className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800">
+            <button
+              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
+              ref={transferButton}
+              onClick={() => {
+                setTransferVisible(!transferVisible);
+                setVisible(false);
+              }}
+            >
               Transfer Project
             </button>
             <Link
@@ -266,6 +437,99 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
             </Link>
           </div>
         </>
+      )}
+      {transferVisible && (
+        <>
+          <div className="fixed inset-0 z-30 bg-black opacity-60"></div>
+          <div className="fixed bottom-0 left-0 z-30 flex h-full w-full items-center justify-center px-2">
+            <div
+              className="flex w-[450px] flex-col rounded-md  bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+              ref={transferPopup}
+            >
+              <div className="flex flex-col gap-4 p-6">
+                <h1 className="text-2xl font-semibold text-neutral-200">
+                  Transfer
+                </h1>
+                <p className="text-sm text-neutral-600">
+                  Transfer your project from
+                  <span className="text-white"> Sean Firsching</span> to another
+                  Vercel account.
+                </p>
+              </div>
+              <div className="">
+                <SearchBar
+                  inputValue={searchAccount}
+                  placeHolderText="Select a Vercel Account"
+                  setInputValue={setSearchAccount}
+                  onFocus={() => setShowAccounts(true)}
+                  onBlur={() => {
+                    setTimeout(() => {
+                      setShowAccounts(false);
+                    }, 100);
+                  }}
+                  replaceSVG={searchSVG}
+                  focusColors={true}
+                  clearButton={true}
+                  classes="rounded-none"
+                />
+                {showAccounts && (
+                  <div
+                    className="z-50 flex w-full rounded-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+                    onClick={() => {
+                      setSearchAccount("Create Team");
+                    }}
+                  >
+                    <div className="flex w-full items-center gap-4 rounded-md bg-neutral-800 p-2 text-sm">
+                      <svg
+                        fill="none"
+                        height="24"
+                        width="24"
+                        shapeRendering="geometricPrecision"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        viewBox="0 0 24 24"
+                        className="text-blue-500"
+                      >
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 8v8"></path>
+                        <path d="M8 12h8"></path>
+                      </svg>
+                      Create Team
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="flex justify-between p-4">
+                <button
+                  className="h-10 rounded-md bg-neutral-950 px-3 text-sm shadow-[0_0px_0px_1px] shadow-neutral-800 transition hover:bg-neutral-900"
+                  onClick={() => setTransferVisible(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="disable:text-white h-10 rounded-md bg-white px-3 text-sm text-neutral-800 shadow-[0_0px_0px_1px] 
+                shadow-neutral-800 hover:bg-neutral-300 disabled:bg-neutral-800"
+                  ref={transferTeamButton}
+                  onClick={() => setTransferTeamVisible(true)}
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+      {transferTeamVisible && (
+        <MobileTeamMenu
+          closeMenus={() => {
+            setTransferTeamVisible(false);
+            setTransferVisible(false);
+          }}
+          menuRef={transferTeamPopup}
+          transferTeam={true}
+        />
       )}
     </>
   );
