@@ -59,6 +59,7 @@ export const NavButton = ({ children }: NavButtonProps) => {
         !document.getElementById("portal")?.contains(event.target as Node)
       ) {
         setShowMenu(false);
+        setMenuHide(false);
       }
     }
   );
