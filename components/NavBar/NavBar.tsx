@@ -8,11 +8,7 @@ import { NotificationButton } from "@/components/NavBar/Notifications/Notificati
 import { Avatar } from "./Avatar";
 import { FeedbackButton } from "./FeedbackButton";
 import Link from "next/link";
-
-type User = {
-  name: string;
-  avatar: string;
-};
+import { User } from "@/types";
 
 async function getUser() {
   const res = await fetch(`${process.env.URL}/api/user`);

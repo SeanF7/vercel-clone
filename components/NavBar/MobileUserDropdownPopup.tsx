@@ -6,12 +6,7 @@ import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
 import { MobileTeamMenu } from "../Projects/ProjectsContent";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
-
-type Team = {
-  id: number;
-  name: string;
-  image: string;
-};
+import { Team } from "@/types";
 
 export const MobileUserDropdownPopup = () => {
   const [search, setSearch] = useState("");

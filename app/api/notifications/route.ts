@@ -1,11 +1,5 @@
 import { NextRequest } from "next/server";
-
-type Notification = {
-  id: number;
-  image: string;
-  description: string;
-  time: string;
-};
+import { Notification } from "@/types";
 
 let inbox: Notification[] = generateInbox();
 let archive: Notification[] = generateArchive();

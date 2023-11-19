@@ -4,11 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { UserDropdownPopup } from "./UserDropdownPopup";
 import { MobileUserDropdownPopup } from "./MobileUserDropdownPopup";
-
-type User = {
-  name: string;
-  avatar: string;
-};
+import { User } from "@/types";
 
 type UserDropdownProps = {
   user: User;

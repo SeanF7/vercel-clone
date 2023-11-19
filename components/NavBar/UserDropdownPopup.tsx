@@ -5,22 +5,7 @@ import { SearchBar } from "../SearchBar";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-
-type Project = {
-  id: number;
-  name: string;
-  description: string;
-  url: string;
-  image: string;
-  lastUpdated: string;
-  favorite: boolean;
-};
-
-type Team = {
-  id: number;
-  name: string;
-  image: string;
-};
+import { Team, Project } from "@/types";
 
 export const UserDropdownPopup = () => {
   const { controllingButton, isVisible, menuPopup, setVisible } =

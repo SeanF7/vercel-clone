@@ -1,10 +1,6 @@
 import React from "react";
 import Image from "next/image";
-
-type User = {
-  name: string;
-  avatar: string;
-};
+import { User } from "@/types";
 
 async function getUser() {
   const res = await fetch(`${process.env.URL}/api/user`);

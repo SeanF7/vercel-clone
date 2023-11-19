@@ -1,11 +1,6 @@
 import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
-
-type Team = {
-  id: number;
-  name: string;
-  image: string;
-};
+import { Team } from "@/types";
 
 let teams: Team[] = generateTeams();
 

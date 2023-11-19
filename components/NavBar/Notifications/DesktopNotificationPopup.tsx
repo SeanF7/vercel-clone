@@ -1,22 +1,16 @@
 "use client";
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { DesktopFiltersPopup } from "./FiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { DesktopNotification } from "./Notification";
 import { EmptyTabComponent } from "./EmptyTabComponent";
 import Link from "next/link";
+import { Notification } from "@/types";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
   setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-type Notification = {
-  id: number;
-  image: string;
-  description: string;
-  time: string;
 };
 
 export const DesktopNotificationPopup = ({
@@ -240,6 +234,7 @@ export const DesktopNotificationPopup = ({
               </div>
             </div>
             <div className="flex min-h-[400px] w-full items-center justify-center">
+              {}
               <EmptyTabComponent
                 text="No new comments"
                 svgImport={
