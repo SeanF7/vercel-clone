@@ -48,4 +48,19 @@ export type Project = {
   image: string;
   lastUpdated: string;
   favorite: boolean;
+  branches: string[];
+  pages: string[];
+};
+
+export type ProjectPage = {
+  page: string[];
+  id: number;
+  name: string;
+  image: string;
+};
+
+export type Branch = {
+  id: number;
+  projectName: string;
+  branchName: string;
 };

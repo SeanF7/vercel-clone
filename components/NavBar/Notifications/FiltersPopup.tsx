@@ -1,8 +1,9 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import Image from "next/image";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { Author, Branch, Project, ProjectPage } from "@/types";
 
 type Props = {
   showFilterMenu: boolean;
@@ -16,7 +17,7 @@ export const DesktopFiltersPopup = ({
   setChildMenuOpen,
 }: Props) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const [authorSearch, setauthorSearch] = useState("");
+  const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
   const [pageSearch, setPageSearch] = useState("");
   const [branchSearch, setBranchSearch] = useState("");
@@ -49,6 +50,46 @@ export const DesktopFiltersPopup = ({
       }
     }
   );
+  const [authors, setAuthors] = useState<Author[] | null>(null);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [pages, setPages] = useState<ProjectPage[] | null>(null);
+  const [branches, setBranches] = useState<Branch[] | null>(null);
+
+  useEffect(() => {
+    const getAuthors = async () => {
+      const res = await fetch(`/api/authors?q=${authorSearch}`);
+      const data = await res.json();
+      setAuthors(data);
+    };
+    getAuthors();
+  }, [authorSearch]);
+
+  useEffect(() => {
+    const getProjects = async () => {
+      const res = await fetch(`/api/projects?q=${projectSearch}`);
+      const data = await res.json();
+      setProjects(data);
+    };
+    getProjects();
+  }, [projectSearch]);
+
+  useEffect(() => {
+    const getPages = async () => {
+      const res = await fetch(`/api/pages?q=${pageSearch}`);
+      const data = await res.json();
+      setPages(data);
+    };
+    getPages();
+  }, [pageSearch]);
+
+  useEffect(() => {
+    const getBranches = async () => {
+      const res = await fetch(`/api/branches?q=${branchSearch}`);
+      const data = await res.json();
+      setBranches(data);
+    };
+    getBranches();
+  }, [branchSearch]);
 
   return (
     <div className="relative" ref={menuPopup}>
@@ -77,10 +118,26 @@ export const DesktopFiltersPopup = ({
               placeHolderText="Author"
               classes="h-12 rounded-b-none rounded-t-xl"
               escapeButton={true}
-              setInputValue={setauthorSearch}
+              setInputValue={setAuthorSearch}
               inputValue={authorSearch}
             />
-            <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
+            <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              {authors?.map((author, i) => (
+                <button
+                  className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                  key={i}
+                >
+                  <Image
+                    src={author.avatar}
+                    alt="Author Avatar"
+                    height={16}
+                    width={16}
+                    className="rounded-full"
+                  ></Image>
+                  <span className="px-2">{author.name}</span>
+                </button>
+              ))}
+            </div>
           </div>
         )}
         {menuIndex == 1 && (
@@ -112,22 +169,20 @@ export const DesktopFiltersPopup = ({
               inputValue={projectSearch}
             />
             <div className="flex flex-col p-2">
-              {["vercel-clone", "politics-chat", "sdokb-capstone"].map(
-                (item, i) => (
-                  <button
-                    className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
-                    key={i}
-                  >
-                    <Image
-                      src={"/vercel.ico"}
-                      alt="Vercel Icon"
-                      height={16}
-                      width={16}
-                    ></Image>
-                    <span className="px-2">{item}</span>
-                  </button>
-                )
-              )}
+              {projects?.map((project, i) => (
+                <button
+                  className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                  key={i}
+                >
+                  <Image
+                    src={project.image}
+                    alt="Vercel Icon"
+                    height={16}
+                    width={16}
+                  ></Image>
+                  <span className="px-2">{project.name}</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
@@ -140,7 +195,7 @@ export const DesktopFiltersPopup = ({
               setInputValue={setPageSearch}
               inputValue={pageSearch}
             />
-            <div className="flex rounded-b-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+            <div className="flex h-72 flex-col gap-1 overflow-y-auto rounded-b-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
               <div className="flex flex-col rounded-md bg-black text-neutral-200 shadow-[0_0_0_1px] shadow-neutral-700">
                 <p className="w-[240px p-2 text-sm">
                   To filter for comments on pages with multiple similar URLs try
@@ -149,6 +204,27 @@ export const DesktopFiltersPopup = ({
                     /docs/conformance/rules/req*
                   </span>
                 </p>
+              </div>
+              <div className="flex h-[250px] flex-col">
+                {pages?.map((projectPage, i) => (
+                  <li
+                    className="flex w-full items-center justify-between gap-8 rounded-md px-2 py-2 text-sm text-white hover:bg-neutral-900"
+                    key={projectPage.id}
+                  >
+                    <div className="flex h-6 items-center gap-4">
+                      <Image
+                        src={projectPage.image}
+                        alt="Vercel Icon"
+                        height={16}
+                        width={16}
+                      />
+                      <p className="text-left">{projectPage.page}</p>
+                    </div>
+                    <span className="line-clamp-1 text-ellipsis text-neutral-500">
+                      {projectPage.name}
+                    </span>
+                  </li>
+                ))}
               </div>
             </div>
           </div>
@@ -162,7 +238,19 @@ export const DesktopFiltersPopup = ({
               setInputValue={setBranchSearch}
               inputValue={branchSearch}
             />
-            <div className="rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
+            <div className="h-[250px] overflow-y-auto rounded-b-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              {branches?.map((branch) => (
+                <li
+                  className="flex h-10 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                  key={branch.id}
+                >
+                  <span className="px-2 text-start">{branch.branchName}</span>
+                  <span className="px-2 text-neutral-600">
+                    {branch.projectName}
+                  </span>
+                </li>
+              ))}
+            </div>
           </div>
         )}
       </div>

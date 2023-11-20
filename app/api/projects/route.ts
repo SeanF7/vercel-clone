@@ -5,13 +5,13 @@ import { favoriteProjects, projects } from "@/lib/utils/fakeDatabase";
 
 export async function GET(request: NextRequest) {
   const search = request.nextUrl.searchParams.get("s");
-  let returnProjects =
-    search !== null && search !== ""
-      ? projects.filter((project) =>
-          project.name.toLowerCase().includes(search.toLowerCase())
-        )
-      : projects;
-  return Response.json(returnProjects);
+  if (search === null || search === "") return Response.json(projects);
+
+  return Response.json(
+    projects.filter((project) =>
+      project.name.toLowerCase().includes(search.toLowerCase())
+    )
+  );
 }
 
 export async function PATCH(request: NextRequest) {

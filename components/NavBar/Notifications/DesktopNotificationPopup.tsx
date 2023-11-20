@@ -468,7 +468,7 @@ const DesktopComments = ({
             stroke="currentColor"
             strokeLinecap="round"
             strokeLinejoin="round"
-            stroke-width="1.5"
+            strokeWidth="1.5"
             viewBox="0 0 20 20"
             width="12"
           >

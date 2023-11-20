@@ -3,7 +3,7 @@ import { Comment, Author, Project, CommentThread, Notification } from "@/types";
 import { generateRandomDateWithinTwoWeeks } from "@/lib/utils/timeHelpers";
 
 const avatarURL = "https://avatar.vercel.sh/";
-const authors: Author[] = [
+export const authors: Author[] = [
   {
     id: 1,
     name: "Alice",
@@ -110,6 +110,8 @@ function generateProjects() {
       url: "vercel.com",
       image: vercelLogo.src,
       lastUpdated: generateRandomDateWithinTwoWeeks(),
+      pages: ["/dashboard", "/about", "/contact"],
+      branches: ["main", "dev", "staging"],
       favorite: true,
     },
     {
@@ -119,6 +121,8 @@ function generateProjects() {
       url: "jobs.netflix.com",
       image: "/netflix.png",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
+      pages: ["/locations", "/teams"],
+      branches: ["main", "dev", "staging"],
       favorite: false,
     },
     {
@@ -129,6 +133,8 @@ function generateProjects() {
       url: "twitch.tv",
       image: "/twitch.webp",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
+      pages: ["/directory"],
+      branches: ["main", "dev", "staging"],
       favorite: false,
     },
     {
@@ -139,6 +145,8 @@ function generateProjects() {
       url: "notion.so",
       image: "/notion.webp",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
+      pages: ["/pricing", "/about"],
+      branches: ["main", "dev", "staging"],
       favorite: false,
     },
     {
@@ -149,6 +157,8 @@ function generateProjects() {
       url: "doordash.com",
       image: "/doordash.webp",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
+      pages: ["/store"],
+      branches: ["main", "dev", "staging"],
       favorite: false,
     },
   ];
