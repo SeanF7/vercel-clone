@@ -6,7 +6,7 @@ import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { DesktopNotification } from "./Notification";
 import { EmptyTabComponent } from "./EmptyTabComponent";
 import Link from "next/link";
-import { Notification, CommentThread, CommentFilters } from "@/types";
+import { Notification, CommentThread, CommentFilters, Project } from "@/types";
 import Image from "next/image";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import { FiltersComponent } from "./FilterComponent";
@@ -85,7 +85,7 @@ export const DesktopNotificationPopup = ({
   useEffect(() => {
     const getComments = async () => {
       const authors = filters.authors.map((author) => author.name).join(",");
-      const pages = filters.pages.map((page) => page.page).join(",");
+      const pages = filters.pages.map((page) => page.pageName).join(",");
       const branches = filters.branches
         .map((branch) => `${branch.branchName}-${branch.projectId}`)
         .join(",");
@@ -398,6 +398,7 @@ export const DesktopNotificationPopup = ({
                         setSelectedComment={setSelectedComment}
                         refetchComments={refetchComments}
                         setRefetchComments={setRefetchComments}
+                        setFilters={setFilters}
                       />
                     ))}
                   </div>
@@ -418,6 +419,7 @@ type DesktopCommentsProps = {
   >;
   refetchComments: boolean;
   setRefetchComments: React.Dispatch<React.SetStateAction<boolean>>;
+  setFilters: React.Dispatch<React.SetStateAction<CommentFilters>>;
 };
 
 const DesktopComments = ({
@@ -425,6 +427,7 @@ const DesktopComments = ({
   setSelectedComment,
   refetchComments,
   setRefetchComments,
+  setFilters,
 }: DesktopCommentsProps) => {
   const authorsText = commentThread.comments
     .map((comment) => comment.author.name)
@@ -508,19 +511,35 @@ const DesktopComments = ({
               setIsHovered(false);
             }}
           >
-            <svg
-              fill="none"
-              height="16"
-              shapeRendering="geometricPrecision"
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="1.5"
-              viewBox="0 0 24 24"
-              width="16"
-            >
-              <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
-            </svg>
+            {commentThread.isResolved ? (
+              <svg
+                fill="currentColor"
+                height="16"
+                shapeRendering="geometricPrecision"
+                stroke="black"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                width="16"
+              >
+                <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+              </svg>
+            ) : (
+              <svg
+                fill="none"
+                height="16"
+                shapeRendering="geometricPrecision"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+                width="16"
+              >
+                <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+              </svg>
+            )}
           </button>
           {isHovered &&
             createPortal(
@@ -555,7 +574,16 @@ const DesktopComments = ({
 
       {/* TODO/WIP These apply filters on click */}
       <div className="flex items-center gap-2 text-xs">
-        <button className="flex h-5 items-center rounded-xl bg-neutral-950  py-0.5 pl-0.5 pr-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+        <button
+          className="flex h-5 items-center rounded-xl bg-neutral-950  py-0.5 pl-0.5 pr-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          onClick={(e) => {
+            e.stopPropagation();
+            setFilters((prev) => ({
+              ...prev,
+              projects: [...prev.projects, commentThread.project],
+            }));
+          }}
+        >
           <Image
             alt={commentThread.project.name}
             src={commentThread.project.image}
@@ -565,10 +593,28 @@ const DesktopComments = ({
           />
           <p>{commentThread.project.name}</p>
         </button>
-        <button className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800">
-          <p>{commentThread.page}</p>
+        <button
+          className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          onClick={(e) => {
+            e.stopPropagation();
+            setFilters((prev) => ({
+              ...prev,
+              pages: [...prev.pages, commentThread.page],
+            }));
+          }}
+        >
+          <p>{commentThread.page.pageName}</p>
         </button>
-        <button className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800">
+        <button
+          className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800"
+          onClick={(e) => {
+            e.stopPropagation();
+            setFilters((prev) => ({
+              ...prev,
+              branches: [...prev.branches, commentThread.branch],
+            }));
+          }}
+        >
           <svg
             fill="none"
             height="12"
@@ -587,7 +633,7 @@ const DesktopComments = ({
               d="M5 2.5v10M15 7.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM5 17.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM15 7.5A7.5 7.5 0 017.5 15"
             ></path>
           </svg>
-          {commentThread.branch}
+          {commentThread.branch.branchName}
         </button>
       </div>
     </div>
@@ -665,7 +711,7 @@ const DesktopCommentThread = ({ commentThread }: DesktopCommentThreadProps) => {
                   </svg>
                 </p>
                 <p className="text-xs text-neutral-500 transition group-hover:text-neutral-200">
-                  {commentThread.page}
+                  {commentThread.page.pageName}
                 </p>
               </div>
             </Link>

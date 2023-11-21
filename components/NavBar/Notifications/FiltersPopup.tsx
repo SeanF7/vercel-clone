@@ -62,7 +62,7 @@ export const DesktopFiltersPopup = ({
     activeAuthors: filters.authors.map((author) => author.id),
     activeProjects: filters.projects.map((project) => project.id),
     activePageIDs: filters.pages.map((page) => page.projectId),
-    activePageNames: filters.pages.map((page) => page.page),
+    activePageNames: filters.pages.map((page) => page.pageName),
     activeBranchesIDs: filters.branches.map((branch) => branch.projectId),
     activeBranchNames: filters.branches.map((branch) => branch.branchName),
     activeStatus: filters.status,
@@ -175,7 +175,7 @@ export const DesktopFiltersPopup = ({
         </div>
       )}
 
-      <div className="absolute w-64 -translate-x-full translate-y-10">
+      <div className="absolute z-10 w-64 -translate-x-full translate-y-10">
         {menuIndex == 0 && (
           <div className="flex flex-col">
             <SearchBar
@@ -345,16 +345,16 @@ export const DesktopFiltersPopup = ({
                         height={16}
                         width={16}
                       />
-                      <p className="text-left">{projectPage.page}</p>
+                      <p className="text-left">{projectPage.pageName}</p>
                     </div>
                     <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-500">
-                      {projectPage.name}
+                      {projectPage.projectName}
                     </span>
                     {activeFilters.activePageIDs.includes(
                       projectPage.projectId
                     ) &&
                       activeFilters.activePageNames.includes(
-                        projectPage.page
+                        projectPage.pageName
                       ) && (
                         <span className=" text-neutral-200">
                           <svg

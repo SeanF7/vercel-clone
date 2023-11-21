@@ -8,9 +8,9 @@ export type CommentThread = {
   threadId: number;
   author: Author;
   time: string;
-  project: Pick<Project, "id" | "name" | "image" | "url">;
-  page: string;
-  branch: string;
+  project: Project;
+  page: ProjectPage;
+  branch: Branch;
   read: boolean;
   isResolved: boolean;
   comments: Comment[];
@@ -54,9 +54,9 @@ export type Project = {
 };
 
 export type ProjectPage = {
-  page: string;
+  pageName: string;
   projectId: number;
-  name: string;
+  projectName: string;
   image: string;
 };
 

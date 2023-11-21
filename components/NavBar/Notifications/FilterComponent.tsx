@@ -226,7 +226,7 @@ const PageComponent = ({ pages, setFilters }: PageProps) => {
   return (
     <div className="flex h-8 cursor-pointer items-center gap-2 rounded-md bg-neutral-950 px-2 text-sm text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800 hover:bg-neutral-900">
       {pages.length === 1 ? (
-        <p>{pages[0].page}</p>
+        <p>{pages[0].pageName}</p>
       ) : (
         <span className="text-sm">{pages.length} pages</span>
       )}

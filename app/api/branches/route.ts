@@ -1,20 +1,9 @@
 import { type NextRequest } from "next/server";
-import { projects } from "@/lib/utils/fakeDatabase";
+import { branches } from "@/lib/utils/fakeDatabase";
 
 export async function GET(request: NextRequest) {
   let search = request.nextUrl.searchParams.get("q");
-  let branches = [];
-  for (const project of projects) {
-    for (const branch of project.branches) {
-      if (project.id > 3) continue;
-      if (branch.includes(search || "")) {
-        branches.push({
-          projectId: project.id,
-          projectName: project.name,
-          branchName: branch,
-        });
-      }
-    }
-  }
+  if (!search) return Response.json(branches);
+  branches.filter((branch) => branch.branchName.includes(search!));
   return Response.json(branches);
 }

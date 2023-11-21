@@ -1,5 +1,12 @@
 import vercelLogo from "@/public/vercel.ico";
-import { Comment, Author, Project, CommentThread, Notification } from "@/types";
+import {
+  Comment,
+  Author,
+  Project,
+  CommentThread,
+  Notification,
+  Branch,
+} from "@/types";
 import { generateRandomDateWithinTwoWeeks } from "@/lib/utils/timeHelpers";
 
 const avatarURL = "https://avatar.vercel.sh/";
@@ -46,8 +53,25 @@ export let inbox: Notification[] = generateInbox();
 export let archive: Notification[] = generateArchive();
 export let projects: Project[] = generateProjects();
 export let favoriteProjects = new Map<number, boolean>();
-export let commentThreads: CommentThread[] = generateCommentThreads();
 
+export const branches = projects.flatMap((project) =>
+  project.branches.map((branchName) => ({
+    branchName,
+    projectId: project.id,
+    projectName: project.name,
+  }))
+) as Branch[];
+
+export const pages = projects.flatMap((project) =>
+  project.pages.map((pageName) => ({
+    pageName,
+    projectId: project.id,
+    projectName: project.name,
+    image: project.image,
+  }))
+);
+
+export let commentThreads: CommentThread[] = generateCommentThreads();
 export function clearInbox() {
   inbox = [];
 }
@@ -71,9 +95,13 @@ function generateCommentThreads() {
     {
       threadId: 1,
       author: authors[0],
-      branch: "main",
+      branch: {
+        branchName: "main",
+        projectId: projects[0].id,
+        projectName: projects[0].name,
+      },
       comments: comments.filter((comment) => comment.threadId === 1),
-      page: "/index",
+      page: pages[0],
       project: projects[0],
       read: false,
       isResolved: false,
@@ -82,9 +110,9 @@ function generateCommentThreads() {
     {
       threadId: 2,
       author: authors[1],
-      branch: "main",
+      branch: branches[1],
       comments: comments.filter((comment) => comment.threadId === 2),
-      page: "/teams",
+      page: pages[1],
       project: projects[1],
       read: false,
       isResolved: true,

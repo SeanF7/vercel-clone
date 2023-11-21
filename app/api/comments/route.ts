@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
   if (branches && branches?.length > 0)
     filteredThreads = filteredThreads.filter(
       (thread) =>
-        branches.some((branch) => branch[0] === thread.branch) &&
+        branches.some((branch) => branch[0] === thread.branch.branchName) &&
         branches.some((branch) => branch[1] === thread.project.id.toString())
     );
   if (pages && pages?.length > 0)
     filteredThreads = filteredThreads.filter((thread) =>
-      pages.includes(thread.page)
+      pages.includes(thread.page.pageName)
     );
   return Response.json(filteredThreads);
 }
