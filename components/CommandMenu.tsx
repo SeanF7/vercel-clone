@@ -146,121 +146,116 @@ export const CommandMenu = ({ menuRef }: CommandMenuProps) => {
 
   return createPortal(
     <>
-      <div className="absolute left-0 top-0 z-50 h-full w-full bg-neutral-950 opacity-80" />
+      <div className="absolute bottom-0 left-0 z-50 h-full w-full bg-neutral-950 opacity-80" />
       <div
-        className="absolute left-0 right-0 top-0 z-50 ml-auto mr-auto flex h-full w-full items-center justify-center"
-        id="portal"
+        className="fixed left-1/2 top-1/4 z-50 m-auto flex h-[522px] w-[640px] -translate-x-1/2 flex-col rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+        ref={menuRef}
       >
-        <div
-          className="flex h-[522px] w-[640px] -translate-y-1/4 flex-col rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
-          ref={menuRef}
-        >
-          <div className="flex flex-col gap-2 border-b border-neutral-800 px-2 py-3">
-            <button className="m-2 w-12 rounded-md bg-black p-1 text-xs text-neutral-400 shadow-[0_0px_0px_1px] shadow-neutral-800 transition hover:bg-neutral-900 hover:text-neutral-200">
-              Home
-            </button>
-            <SearchBar
-              inputValue={searchValue}
-              setInputValue={setSearchValue}
-              placeHolderText="What do you need?"
-              escapeButton={true}
-              classes="shadow-none rounded-none h-6 p-0"
-              replaceSVG={<></>}
-              inputClasses="text-lg placeholder:text-neutral-400"
+        <div className="flex flex-col gap-2 border-b border-neutral-800 px-2 py-3">
+          <button className="m-2 w-12 rounded-md bg-black p-1 text-xs text-neutral-400 shadow-[0_0px_0px_1px] shadow-neutral-800 transition hover:bg-neutral-900 hover:text-neutral-200">
+            Home
+          </button>
+          <SearchBar
+            inputValue={searchValue}
+            setInputValue={setSearchValue}
+            placeHolderText="What do you need?"
+            escapeButton={true}
+            classes="shadow-none rounded-none h-8 p-0"
+            replaceSVG={<></>}
+            inputClasses="text-[18px] placeholder:text-neutral-400"
+          />
+        </div>
+        <div className="flex flex-col overflow-y-scroll px-2">
+          <MenuSection title="Projects">
+            <CommandButton
+              icon={svgs.grid}
+              text="Search Projects..."
+              keys={["⇧", "P"]}
             />
-          </div>
-          <div className="flex flex-col overflow-y-scroll px-2">
-            <MenuSection title="Projects">
-              <CommandButton
-                icon={svgs.grid}
-                text="Search Projects..."
-                keys={["⇧", "P"]}
-              />
-              <CommandButton icon={svgs.plus} text="Create a new Project" />
-            </MenuSection>
-            <MenuSection title="Teams">
-              <CommandButton
-                icon={svgs.people}
-                text="Search Teams..."
-                keys={["⇧", "T"]}
-              />
-              <CommandButton icon={svgs.plus} text="Create a new Team" />
-            </MenuSection>
-            <MenuSection title="General">
-              <CommandButton
-                icon={svgs.computer}
-                text="Change Theme..."
-                keys={["T"]}
-              />
-              <CommandButton icon={svgs.copy} text="Copy Current URL" />
-            </MenuSection>
-            <MenuSection title="Navigation">
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Overview"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Integrations"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Activity"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Domains"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Usage"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Monitoring"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Storage"
-              />
-              <CommandButton
-                icon={svgs.rightArrow}
-                text="Go to Personal Acount Settings"
-              />
-            </MenuSection>
-            <MenuSection title="Quick Copy">
-              <CommandButton icon={svgs.copy} text="Copy Persona Account ID" />
-              <CommandButton icon={svgs.gear} text="Scope Settings..." />
-              <CommandButton icon={svgs.person} text="Switch Scope..." />
-              <CommandButton icon={svgs.logout} text="Log Out" />
-            </MenuSection>
-            <MenuSection title="Help">
-              <CommandButton
-                icon={svgs.search}
-                text="Search Docs..."
-                keys={["⇧", "D"]}
-              />
-              <CommandButton icon={svgs.chat} text="Send Feedback..." />
-              <CommandButton icon={svgs.at} text="Contact Support..." />
-            </MenuSection>
-            <MenuSection title="Developer Tools">
-              <CommandButton icon={svgs.link} text="Open in Browser..." />
-              <CommandButton icon={svgs.gear} text="Open Dev Tools..." />
-              <CommandButton
-                icon={svgs.person}
-                text="Open Dev Tools for Scope..."
-              />
-              <CommandButton
-                icon={svgs.link}
-                text="Search Developer Tools"
-                keys={["⇧", "Conrol", "D"]}
-              />
-            </MenuSection>
-          </div>
+            <CommandButton icon={svgs.plus} text="Create a new Project" />
+          </MenuSection>
+          <MenuSection title="Teams">
+            <CommandButton
+              icon={svgs.people}
+              text="Search Teams..."
+              keys={["⇧", "T"]}
+            />
+            <CommandButton icon={svgs.plus} text="Create a new Team" />
+          </MenuSection>
+          <MenuSection title="General">
+            <CommandButton
+              icon={svgs.computer}
+              text="Change Theme..."
+              keys={["T"]}
+            />
+            <CommandButton icon={svgs.copy} text="Copy Current URL" />
+          </MenuSection>
+          <MenuSection title="Navigation">
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Overview"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Integrations"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Activity"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Domains"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Usage"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Monitoring"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Storage"
+            />
+            <CommandButton
+              icon={svgs.rightArrow}
+              text="Go to Personal Acount Settings"
+            />
+          </MenuSection>
+          <MenuSection title="Quick Copy">
+            <CommandButton icon={svgs.copy} text="Copy Persona Account ID" />
+            <CommandButton icon={svgs.gear} text="Scope Settings..." />
+            <CommandButton icon={svgs.person} text="Switch Scope..." />
+            <CommandButton icon={svgs.logout} text="Log Out" />
+          </MenuSection>
+          <MenuSection title="Help">
+            <CommandButton
+              icon={svgs.search}
+              text="Search Docs..."
+              keys={["⇧", "D"]}
+            />
+            <CommandButton icon={svgs.chat} text="Send Feedback..." />
+            <CommandButton icon={svgs.at} text="Contact Support..." />
+          </MenuSection>
+          <MenuSection title="Developer Tools">
+            <CommandButton icon={svgs.link} text="Open in Browser..." />
+            <CommandButton icon={svgs.gear} text="Open Dev Tools..." />
+            <CommandButton
+              icon={svgs.person}
+              text="Open Dev Tools for Scope..."
+            />
+            <CommandButton
+              icon={svgs.link}
+              text="Search Developer Tools"
+              keys={["⇧", "Conrol", "D"]}
+            />
+          </MenuSection>
         </div>
       </div>
     </>,
