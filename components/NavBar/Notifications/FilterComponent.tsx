@@ -167,6 +167,7 @@ const ProjectComponent = ({ projects, setFilters }: ProjectProps) => {
                 width={20}
                 src={project.image}
                 alt={project.name}
+                key={project.id}
               />
               <span className="text-sm">{project.name}</span>
             </>
