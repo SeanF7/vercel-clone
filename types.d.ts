@@ -12,7 +12,7 @@ export type CommentThread = {
   page: string;
   branch: string;
   read: boolean;
-  status: "All" | "Resolved";
+  isResolved: boolean;
   comments: Comment[];
 };
 

@@ -29,10 +29,13 @@ export async function GET(request: NextRequest) {
     filteredThreads = filteredThreads.filter((thread) =>
       thread.comments[0].text.toLowerCase().includes(search.toLowerCase())
     );
-  if (status)
-    filteredThreads = filteredThreads.filter(
-      (thread) => thread.status === status
-    );
+  if (status) {
+    if (status === "Resolved")
+      filteredThreads = filteredThreads.filter((thread) => thread.isResolved);
+  } else {
+    filteredThreads = filteredThreads.filter((thread) => !thread.isResolved);
+  }
+
   if (authors && authors?.length > 0)
     filteredThreads = filteredThreads.filter((thread) =>
       thread.comments.some((comment) => authors.includes(comment.author.name))
@@ -59,7 +62,7 @@ export async function PATCH(request: NextRequest) {
   if (id) {
     commentThreads.forEach((thread) => {
       if (thread.threadId === id) {
-        thread.read = true;
+        thread.isResolved = !thread.isResolved;
       }
     });
   }

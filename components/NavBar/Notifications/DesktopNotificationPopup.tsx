@@ -10,6 +10,7 @@ import { Notification, CommentThread, CommentFilters } from "@/types";
 import Image from "next/image";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import { FiltersComponent } from "./FilterComponent";
+import { createPortal } from "react-dom";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
@@ -50,6 +51,7 @@ export const DesktopNotificationPopup = ({
   const [inbox, setInbox] = useState<Notification[]>([]);
   const [archive, setArchive] = useState<Notification[]>([]);
   const [reload, setReload] = useState(false);
+  const [refetchComments, setRefetchComments] = useState(false);
   const [comments, setComments] = useState<CommentThread[]>([]);
   const [selectedComment, setSelectedComment] = useState<CommentThread | null>(
     null
@@ -108,6 +110,7 @@ export const DesktopNotificationPopup = ({
     filters.branches,
     filters.status,
     filters.projects,
+    refetchComments,
   ]);
 
   const handleTabClick = (index: number) => {
@@ -393,6 +396,8 @@ export const DesktopNotificationPopup = ({
                         commentThread={thread}
                         key={thread.threadId}
                         setSelectedComment={setSelectedComment}
+                        refetchComments={refetchComments}
+                        setRefetchComments={setRefetchComments}
                       />
                     ))}
                   </div>
@@ -411,21 +416,54 @@ type DesktopCommentsProps = {
   setSelectedComment: React.Dispatch<
     React.SetStateAction<CommentThread | null>
   >;
+  refetchComments: boolean;
+  setRefetchComments: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const DesktopComments = ({
   commentThread,
   setSelectedComment,
+  refetchComments,
+  setRefetchComments,
 }: DesktopCommentsProps) => {
   const authorsText = commentThread.comments
     .map((comment) => comment.author.name)
     .join(", ");
   const authors = commentThread.comments.map((comment) => comment.author);
   const timeAgo = getTimeAgo(commentThread.time);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [boundingBox, setBoundingBox] = useState<{
+    left: number;
+    top: number;
+  } | null>(null);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleActivityHover = () => {
+    if (buttonRef.current) {
+      const newBoundingBox = buttonRef.current?.getBoundingClientRect();
+      let boundingBox = {
+        left: newBoundingBox.left + newBoundingBox.width / 2,
+        top: newBoundingBox.top - newBoundingBox.height / 2 + window.scrollY,
+      };
+
+      setBoundingBox(boundingBox);
+    }
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.stopPropagation();
+    fetch(`/api/comments?id=${commentThread.threadId}`, {
+      method: "PATCH",
+    }).then(() => {
+      setRefetchComments(!refetchComments);
+    });
+  };
 
   return (
-    <button
-      className="flex w-full flex-col gap-2 p-4 text-left text-sm text-neutral-200 hover:bg-neutral-900"
+    <div
+      className={`flex w-full cursor-pointer flex-col gap-2 p-4 text-left text-sm text-neutral-200 hover:bg-neutral-900 ${
+        commentThread.isResolved ? "grayscale" : ""
+      }`}
       onClick={() => setSelectedComment(commentThread)}
     >
       <div className="flex w-full items-center justify-between">
@@ -458,7 +496,18 @@ const DesktopComments = ({
             </svg>
             {commentThread.comments.length}
           </span>
-          <button className="">
+          <button
+            onClick={handleClick}
+            ref={buttonRef}
+            onMouseEnter={() => {
+              handleActivityHover();
+              setIsHovered(true);
+            }}
+            onMouseLeave={() => {
+              setBoundingBox(null);
+              setIsHovered(false);
+            }}
+          >
             <svg
               fill="none"
               height="16"
@@ -473,6 +522,31 @@ const DesktopComments = ({
               <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
             </svg>
           </button>
+          {isHovered &&
+            createPortal(
+              <div
+                className="absolute z-50 flex -translate-x-1/2 -translate-y-full flex-col"
+                style={{
+                  top: boundingBox?.top,
+                  left: boundingBox?.left,
+                }}
+              >
+                <span className="flex-1 whitespace-nowrap rounded bg-neutral-100 px-3 py-2 text-center font-sans text-sm text-neutral-700">
+                  {commentThread.isResolved ? "Undo Resolve" : "Resolve"}
+                </span>
+                <div className="relative flex justify-center">
+                  <svg
+                    className="fill-current text-neutral-300"
+                    height="6"
+                    viewBox="0 0 14 6"
+                    width="14"
+                  >
+                    <path d="M13.8284 0H0.17157C0.702003 0 1.21071 0.210714 1.58578 0.585787L5.58578 4.58579C6.36683 5.36684 7.63316 5.36683 8.41421 4.58579L12.4142 0.585786C12.7893 0.210714 13.298 0 13.8284 0Z"></path>
+                  </svg>
+                </div>
+              </div>,
+              document.body
+            )}
         </div>
       </div>
       <div className="line-clamp-3">
@@ -516,7 +590,7 @@ const DesktopComments = ({
           {commentThread.branch}
         </button>
       </div>
-    </button>
+    </div>
   );
 };
 

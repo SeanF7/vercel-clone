@@ -20,7 +20,6 @@ export const Activity = () => {
         top: newBoundingBox.top - 16 + window.scrollY,
       };
       const halfToolTipWidth = 288 / 2;
-      const upperBound = 1200 + halfToolTipWidth;
       if (window.innerWidth > 768 && window.innerWidth < 1344)
         boundingBox.left -= halfToolTipWidth - 32;
       if (window.innerWidth > 768 && window.innerWidth < 1344)

@@ -76,7 +76,7 @@ function generateCommentThreads() {
       page: "/index",
       project: projects[0],
       read: false,
-      status: "All",
+      isResolved: false,
       time: "2023-11-19T10:00:00",
     },
     {
@@ -87,10 +87,10 @@ function generateCommentThreads() {
       page: "/teams",
       project: projects[1],
       read: false,
-      status: "Resolved",
+      isResolved: true,
       time: "2023-11-18T15:30:00",
     },
-  ];
+  ] as CommentThread[];
 }
 
 function generateTeams() {
