@@ -21,7 +21,6 @@ export const usePopupExits = () => {
         isVisible &&
         event.target !== controllingButton.current
       ) {
-        console.log(menuPopup.current, event.target);
         setVisible(false);
       }
     };

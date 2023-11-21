@@ -41,7 +41,6 @@ export const MobileNavPopupNewTeam = ({
           closeMenus={() => {
             setShowMenu(false);
             setHideMenu(false);
-            console.log("closeMenus");
           }}
           menuRef={menuRef}
         />

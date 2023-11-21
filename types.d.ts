@@ -12,6 +12,7 @@ export type CommentThread = {
   page: string;
   branch: string;
   read: boolean;
+  status: "All" | "Resolved";
   comments: Comment[];
 };
 
@@ -53,14 +54,22 @@ export type Project = {
 };
 
 export type ProjectPage = {
-  page: string[];
-  id: number;
+  page: string;
+  projectId: number;
   name: string;
   image: string;
 };
 
 export type Branch = {
-  id: number;
+  projectId: number;
   projectName: string;
   branchName: string;
+};
+
+export type CommentFilters = {
+  authors: Author[];
+  status: string;
+  branches: Branch[];
+  pages: ProjectPage[];
+  projects: Project[];
 };

@@ -6,9 +6,10 @@ export async function GET(request: NextRequest) {
   let branches = [];
   for (const project of projects) {
     for (const branch of project.branches) {
+      if (project.id > 3) continue;
       if (branch.includes(search || "")) {
         branches.push({
-          id: project.id,
+          projectId: project.id,
           projectName: project.name,
           branchName: branch,
         });

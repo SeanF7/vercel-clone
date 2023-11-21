@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import { projects } from "@/lib/utils/fakeDatabase";
+import type { ProjectPage } from "@/types";
 
 export async function GET(request: NextRequest) {
   let search = request.nextUrl.searchParams.get("q");
@@ -8,11 +9,11 @@ export async function GET(request: NextRequest) {
     for (const page of project.pages) {
       if (page.includes(search || "")) {
         pages.push({
-          id: project.id,
+          projectId: project.id,
           name: project.name,
           image: project.image,
           page: page,
-        });
+        } as ProjectPage);
       }
     }
   }

@@ -6,9 +6,10 @@ import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { DesktopNotification } from "./Notification";
 import { EmptyTabComponent } from "./EmptyTabComponent";
 import Link from "next/link";
-import { Notification, CommentThread } from "@/types";
+import { Notification, CommentThread, CommentFilters } from "@/types";
 import Image from "next/image";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
+import { FiltersComponent } from "./FilterComponent";
 
 type Props = {
   controllingButton: React.RefObject<HTMLButtonElement>;
@@ -53,6 +54,13 @@ export const DesktopNotificationPopup = ({
   const [selectedComment, setSelectedComment] = useState<CommentThread | null>(
     null
   );
+  const [filters, setFilters] = useState<CommentFilters>({
+    authors: [],
+    pages: [],
+    branches: [],
+    status: "",
+    projects: [],
+  });
 
   useEffect(() => {
     const getNotifs = async () => {
@@ -74,7 +82,18 @@ export const DesktopNotificationPopup = ({
 
   useEffect(() => {
     const getComments = async () => {
-      const commentsRes = await fetch(`/api/comments?q=${searchValue}`);
+      const authors = filters.authors.map((author) => author.name).join(",");
+      const pages = filters.pages.map((page) => page.page).join(",");
+      const branches = filters.branches
+        .map((branch) => `${branch.branchName}-${branch.projectId}`)
+        .join(",");
+      const projects = filters.projects
+        .map((project) => project.name)
+        .join(",");
+      const commentsRes = await fetch(
+        `/api/comments?q=${searchValue}&authors=${authors}&pages=${pages}&branches=${branches}&status=${filters.status}&projects=${projects}`
+      );
+
       if (!commentsRes.ok) {
         throw new Error("Failed to fetch data");
       }
@@ -82,7 +101,14 @@ export const DesktopNotificationPopup = ({
       setComments(commentsJson);
     };
     getComments();
-  }, [searchValue]);
+  }, [
+    searchValue,
+    filters.authors,
+    filters.pages,
+    filters.branches,
+    filters.status,
+    filters.projects,
+  ]);
 
   const handleTabClick = (index: number) => {
     setIndex(index);
@@ -300,7 +326,7 @@ export const DesktopNotificationPopup = ({
           {index === 2 && (
             <div className="flex flex-col overflow-y-auto">
               <div className="flex flex-col">
-                <div className="flex p-4">
+                <div className="flex p-4 pb-2">
                   <SearchBar
                     placeHolderText="Search comments..."
                     classes="h-8"
@@ -312,7 +338,10 @@ export const DesktopNotificationPopup = ({
                   <div className="ml-4 flex h-8 w-20 rounded-md bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
                     <button
                       className="flex w-full flex-1  items-center px-2 text-white"
-                      onClick={() => setShowFilterMenu(true)}
+                      onClick={() => {
+                        setShowFilterMenu(true);
+                        setChildMenuOpen(true);
+                      }}
                       ref={filterButton}
                     >
                       <span className="mr-2">
@@ -332,9 +361,14 @@ export const DesktopNotificationPopup = ({
                       showFilterMenu={showFilterMenu}
                       setShowFilterMenu={setShowFilterMenu}
                       setChildMenuOpen={setChildMenuOpen}
+                      setFilters={setFilters}
+                      filters={filters}
                     />
                   </div>
                 </div>
+                {filters && (
+                  <FiltersComponent filters={filters} setFilters={setFilters} />
+                )}
               </div>
               <div className="flex h-[400px] w-full items-center justify-center">
                 {comments.length === 0 ? (
@@ -447,7 +481,7 @@ const DesktopComments = ({
 
       {/* TODO/WIP These apply filters on click */}
       <div className="flex items-center gap-2 text-xs">
-        <button className="flex items-center rounded-xl bg-neutral-950  py-0.5 pl-0.5 pr-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+        <button className="flex h-5 items-center rounded-xl bg-neutral-950  py-0.5 pl-0.5 pr-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
           <Image
             alt={commentThread.project.name}
             src={commentThread.project.image}

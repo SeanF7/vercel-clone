@@ -76,6 +76,7 @@ function generateCommentThreads() {
       page: "/index",
       project: projects[0],
       read: false,
+      status: "All",
       time: "2023-11-19T10:00:00",
     },
     {
@@ -83,9 +84,10 @@ function generateCommentThreads() {
       author: authors[1],
       branch: "main",
       comments: comments.filter((comment) => comment.threadId === 2),
-      page: "/contact",
-      project: projects[0],
+      page: "/teams",
+      project: projects[1],
       read: false,
+      status: "Resolved",
       time: "2023-11-18T15:30:00",
     },
   ];

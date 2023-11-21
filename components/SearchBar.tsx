@@ -30,7 +30,6 @@ export const SearchBar = ({
 }: Props) => {
   const handleClear = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     setInputValue("");
-    console.log("Yo");
     e.stopPropagation();
   };
 
