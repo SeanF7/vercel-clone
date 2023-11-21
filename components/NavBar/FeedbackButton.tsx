@@ -90,7 +90,10 @@ export const FeedbackButton = () => {
             </div>
             <div className="flex items-center justify-between rounded-b-xl border-t border-neutral-700 bg-neutral-900 p-2">
               <div>
-                <EmojiButtons setSelectedEmoji={setSelectedEmoji} />
+                <EmojiButtons
+                  setSelectedEmoji={setSelectedEmoji}
+                  selectedEmoji={selectedEmoji}
+                />
               </div>
               <button
                 className="flex h-8 w-14 items-center justify-center rounded-md bg-neutral-200 text-sm text-neutral-600 hover:bg-neutral-300"
@@ -108,9 +111,13 @@ export const FeedbackButton = () => {
 
 type EmojiButtonsProps = {
   setSelectedEmoji: React.Dispatch<React.SetStateAction<number | null>>;
+  selectedEmoji?: number | null;
 };
 
-const EmojiButtons = ({ setSelectedEmoji }: EmojiButtonsProps) => {
+const EmojiButtons = ({
+  setSelectedEmoji,
+  selectedEmoji,
+}: EmojiButtonsProps) => {
   const emojis = [
     {
       svg: (
@@ -125,7 +132,9 @@ const EmojiButtons = ({ setSelectedEmoji }: EmojiButtonsProps) => {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M6.15295 4.92093L5.375 3.5L4.59705 4.92093L3 5.21885L4.11625 6.39495L3.90717 8L5.375 7.30593L6.84283 8L6.63375 6.39495L7.75 5.21885L6.15295 4.92093ZM11.403 4.92093L10.625 3.5L9.84705 4.92093L8.25 5.21885L9.36625 6.39495L9.15717 8L10.625 7.30593L12.0928 8L11.8837 6.39495L13 5.21885L11.403 4.92093Z"
-            className="fill-amber-800 group-hover:fill-cyan-400"
+            className={`${
+              selectedEmoji == 0 ? "fill-cyan-400" : "fill-amber-800"
+            } group-hover:fill-cyan-400`}
           ></path>
         </svg>
       ),
@@ -171,7 +180,9 @@ const EmojiButtons = ({ setSelectedEmoji }: EmojiButtonsProps) => {
             fillRule="evenodd"
             clipRule="evenodd"
             d="M4 9V16H5.5V9H4ZM12 9V16H10.5V9H12Z"
-            className="fill-blue-700 group-hover:fill-cyan-400"
+            className={`${
+              selectedEmoji == 3 ? "fill-cyan-400" : "fill-blue-700"
+            } group-hover:fill-cyan-400 `}
           ></path>
           <path
             fillRule="evenodd"
@@ -188,12 +199,14 @@ const EmojiButtons = ({ setSelectedEmoji }: EmojiButtonsProps) => {
     <div className="flex">
       {emojis.map((emoji, i) => (
         <button
-          className="group flex items-center justify-center rounded-full p-2 text-neutral-100 transition-colors duration-200 ease-[ease] 
-          hover:bg-blue-900  hover:fill-cyan-400 hover:text-cyan-400"
+          className={`group flex items-center justify-center rounded-full p-2 text-neutral-100 transition-colors duration-200 ease-[ease] 
+          hover:bg-blue-900  hover:fill-cyan-400 hover:text-cyan-400 ${
+            selectedEmoji == i ? "bg-blue-900 fill-cyan-400 text-cyan-400" : ""
+          }`}
           key={i}
           onClick={() => setSelectedEmoji(i)}
         >
-          <div className="h-4 w-4 rounded-full ">{emoji.svg}</div>
+          <div className="h-4 w-4 rounded-full fill-blue-700 ">{emoji.svg}</div>
         </button>
       ))}
     </div>
