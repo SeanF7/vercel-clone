@@ -132,7 +132,7 @@ export const MobileUserDropdownPopup = () => {
                 placeHolderText="Find Team..."
                 setInputValue={setSearch}
                 classes="rounded-b-none h-12"
-                textColor="placeholder:text-neutral-400"
+                inputClasses="placeholder:text-neutral-400"
               />
               <div>
                 {userListItems.length > 0 ? (

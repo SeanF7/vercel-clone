@@ -1,10 +1,17 @@
 "use client";
 import { DesktopTeamMenu } from "@/components/Projects/ProjectsContent";
 import { usePopupExits } from "@/lib/hooks/usePopupExits";
+import { CommandMenu } from "@/components/CommandMenu";
 
 export const DesktopNavPopup = () => {
   const { controllingButton, isVisible, menuPopup, setVisible } =
     usePopupExits();
+  const {
+    controllingButton: commandMenuButton,
+    isVisible: isCommandMenuVisible,
+    menuPopup: CommandMenuRef,
+    setVisible: setCommandMenuVisible,
+  } = usePopupExits();
 
   const firstSection = [
     {
@@ -95,19 +102,24 @@ export const DesktopNavPopup = () => {
             )}
           </div>
           <div className="mx-5  my-3 h-0.5 bg-neutral-800" />
-
-          <button className="flex cursor-pointer items-center justify-between  gap-1 px-5  py-1 hover:bg-neutral-800">
-            Command Menu
-            <div className="flex gap-1 text-xs ">
-              <kbd className="rounded-md bg-neutral-950 p-1 font-sans  text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
-                <span>Ctrl</span>
-              </kbd>
-              <kbd className="rounded-md bg-neutral-950 px-2 py-1 font-sans text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
-                K
-              </kbd>
-            </div>
-          </button>
-          {/* Way to implement dark theme at https://tailwindcss.com/docs/dark-mode color-scheme: dark; */}
+          <div>
+            <button
+              className="flex w-full cursor-pointer items-center justify-between  gap-1 px-5  py-1 hover:bg-neutral-800"
+              ref={commandMenuButton}
+              onClick={() => setCommandMenuVisible(true)}
+            >
+              Command Menu
+              <div className="flex gap-1 text-xs ">
+                <kbd className="rounded-md bg-neutral-950 p-1 font-sans  text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
+                  <span>Ctrl</span>
+                </kbd>
+                <kbd className="rounded-md bg-neutral-950 px-2 py-1 font-sans text-white shadow-[0_0px_0px_1px] shadow-neutral-800">
+                  K
+                </kbd>
+              </div>
+            </button>
+            {isCommandMenuVisible && <CommandMenu menuRef={CommandMenuRef} />}
+          </div>
           <li className="flex items-center justify-between px-5 py-1 transition-colors hover:text-white">
             Theme
             <div className="flex items-center py-1 text-neutral-500 hover:text-white">

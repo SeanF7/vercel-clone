@@ -9,7 +9,7 @@ type Props = {
   escapeButton?: boolean;
   focusColors?: boolean;
   clearButton?: boolean;
-  textColor?: string;
+  inputClasses?: string;
   onFocus?: () => void;
   onBlur?: () => void;
   replaceSVG?: React.ReactNode;
@@ -23,7 +23,7 @@ export const SearchBar = ({
   inputValue,
   setInputValue,
   clearButton = false,
-  textColor,
+  inputClasses,
   onFocus,
   onBlur,
   replaceSVG = null,
@@ -53,7 +53,7 @@ export const SearchBar = ({
         </span>
       )}
       <input
-        className={`ml-2 w-full bg-transparent text-sm outline-none ${textColor}`}
+        className={`ml-2 w-full bg-transparent text-sm outline-none ${inputClasses}`}
         placeholder={placeHolderText}
         onChange={(e) => setInputValue(e.target.value)}
         value={inputValue}
