@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { Author, Branch, CommentFilters, Project, ProjectPage } from "@/types";
 
-type Props = {
+type DesktopFilterPopupProps = {
   showFilterMenu: boolean;
   setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +19,7 @@ export const DesktopFiltersPopup = ({
   setChildMenuOpen,
   setFilters,
   filters,
-}: Props) => {
+}: DesktopFilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
@@ -430,11 +430,17 @@ export const DesktopFiltersPopup = ({
   );
 };
 
+type MobileFilterPopupProps = {
+  showFilterMenu: boolean;
+  setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
 export const MobileFiltersPopup = ({
   setShowFilterMenu,
   setChildMenuOpen,
   showFilterMenu,
-}: Props) => {
+}: MobileFilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
