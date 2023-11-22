@@ -6,45 +6,48 @@ import {
   CommentThread,
   Notification,
   Branch,
+  Team,
 } from "@/types";
-import { generateRandomDateWithinTwoWeeks } from "@/lib/utils/timeHelpers";
+import {
+  generateRandomDateWithinTwoWeeks,
+  getTimeAgo,
+} from "@/lib/utils/timeHelpers";
 
-const avatarURL = "https://avatar.vercel.sh/";
 export const authors: Author[] = [
   {
     id: 1,
-    name: "Alice",
-    avatar: `${avatarURL}alice`,
+    name: "Lee Robinson",
+    avatar: `/LeeRobinson.jpg`,
   },
   {
     id: 2,
-    name: "Bob",
-    avatar: `${avatarURL}bob`,
+    name: "Lindsey Simon",
+    avatar: `/LindseySimon.jpg`,
   },
   {
     id: 3,
-    name: "Charlie",
-    avatar: `${avatarURL}charlie`,
-  },
-];
-const comments: Comment[] = [
-  {
-    threadId: 1,
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac lorem nec leo tristique blandit sit amet ac quam. Ut ullamcorper quam id condimentum tempus. Nunc sit amet nisi faucibus, ullamcorper neque in, fringilla lorem. Etiam molestie pretium pellentesque. Nulla in dui et ligula laoreet iaculis. In vel sodales arcu, non luctus massa. Morbi in pellentesque quam, sed consequat nibh. Sed vitae lectus lacus. Etiam cursus feugiat turpis quis maximus. Vivamus non diam et mauris efficitur cursus. Sed ac libero tellus. Donec posuere semper sodales. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Ut nunc neque, porta in sem at, sagittis iaculis eros. Suspendisse erat lectus, placerat sed tincidunt ut, placerat non nisi. Nulla ut nulla quam.",
-    time: "2023-11-19T10:00:00",
-    author: authors[0],
+    name: "Guillermo Rauch",
+    avatar: `/GuillermoRauch.jpg`,
   },
   {
-    threadId: 2,
-    text: "I encountered a bug on the Contact Us page. Could you take a look?",
-    time: "2023-11-18T15:30:00",
-    author: authors[1],
+    id: 4,
+    name: "Dan Clancy",
+    avatar: "/DanClancy.jpg",
   },
   {
-    threadId: 1,
-    text: "Woah that's a lot of text!",
-    time: "2023-11-19T10:00:00",
-    author: authors[1],
+    id: 5,
+    name: "Tony Xu",
+    avatar: "/TonyXu.jpg",
+  },
+  {
+    id: 6,
+    name: "Ivan Zhao",
+    avatar: "/IvanZhao.jpg",
+  },
+  {
+    id: 7,
+    name: "Sean Firsching",
+    avatar: "/SeanFirsching.jpg",
   },
 ];
 
@@ -91,32 +94,137 @@ setInterval(() => {
 }, 10000);
 
 function generateCommentThreads() {
+  let times = Array.from(
+    { length: 5 },
+    () => new Date(generateRandomDateWithinTwoWeeks())
+  )
+    .sort((a, b) => b.getTime() - a.getTime())
+    .map((time) => time.toISOString());
   return [
     {
       threadId: 1,
       author: authors[0],
       branch: {
-        branchName: "main",
+        branchName: "feature-jira-integration",
         projectId: projects[0].id,
         projectName: projects[0].name,
       },
-      comments: comments.filter((comment) => comment.threadId === 1),
+      comments: [
+        {
+          threadId: 1,
+          text: "I think this works well. The load time seems to good after it is cached but the first load is slow. Maybe we can improve that?",
+          time: times[0],
+          author: authors[0],
+        },
+
+        {
+          threadId: 1,
+          text: "We should probably add some tests for this as well. I'll take a look at that.",
+          time: times[0],
+          author: authors[1],
+        },
+      ],
       page: pages[0],
       project: projects[0],
       read: false,
       isResolved: false,
-      time: "2023-11-19T10:00:00",
+      time: times[0],
     },
     {
       threadId: 2,
       author: authors[1],
       branch: branches[1],
-      comments: comments.filter((comment) => comment.threadId === 2),
+      comments: [
+        {
+          threadId: 2,
+          text: "I encountered a bug on the Contact Us page. Could you take a look?",
+          time: times[1],
+          author: authors[1],
+        },
+      ],
       page: pages[1],
       project: projects[1],
       read: false,
       isResolved: true,
-      time: "2023-11-18T15:30:00",
+      time: times[1],
+    },
+    {
+      threadId: 3,
+      author: authors[2],
+      branch: {
+        branchName: "Staging",
+        projectId: projects[0].id,
+        projectName: projects[0].name,
+      },
+      comments: [
+        {
+          threadId: 3,
+          text: "The mobile responsiveness looks off on smaller screens. We might need media queries for that.",
+          time: times[2],
+          author: authors[2],
+        },
+        {
+          threadId: 3,
+          text: "I agree. Let me check and fix it today.",
+          time: times[2],
+          author: authors[0],
+        },
+      ],
+      page: pages[0],
+      project: projects[0],
+      read: false,
+      isResolved: true,
+      time: times[2],
+    },
+    {
+      threadId: 4,
+      author: authors[0],
+      branch: {
+        branchName: "feature-cron-jobs",
+        projectId: projects[0].id,
+        projectName: projects[0].name,
+      },
+      comments: [
+        {
+          threadId: 4,
+          text: "I've implemented the new feature. Could someone review it?",
+          time: times[3],
+          author: authors[0],
+        },
+        {
+          threadId: 4,
+          text: "Sure, I'll take a look at it this afternoon.",
+          time: "2023-11-21T12:00:00",
+          author: authors[1],
+        },
+      ],
+      page: pages[2],
+      project: projects[0],
+      read: false,
+      isResolved: false,
+      time: times[3],
+    },
+    {
+      threadId: 5,
+      author: authors[3],
+      branch: {
+        branchName: "bugfix-creator-studio",
+        projectId: projects[0].id,
+        projectName: projects[0].name,
+      },
+      comments: [
+        {
+          threadId: 4,
+          text: "Looks all good to me. Can you add a test for this as well?",
+          time: times[4],
+          author: authors[3],
+        },
+      ],
+      page: pages[0],
+      project: projects[2],
+      read: false,
+      isResolved: false,
+      time: times[4],
     },
   ] as CommentThread[];
 }
@@ -126,9 +234,9 @@ function generateTeams() {
     {
       id: 1,
       name: "Sean Firsching",
-      image: "https://avatar.vercel.sh/seanfirsching",
+      image: "/SeanFirsching.jpg",
     },
-  ];
+  ] as Team[];
 }
 
 function generateProjects() {
@@ -140,7 +248,7 @@ function generateProjects() {
       url: "vercel.com",
       image: vercelLogo.src,
       lastUpdated: generateRandomDateWithinTwoWeeks(),
-      pages: ["/dashboard", "/about", "/contact"],
+      pages: ["/integrations", "/about", "/contact"],
       branches: ["main", "dev", "staging"],
       favorite: true,
     },
@@ -163,7 +271,7 @@ function generateProjects() {
       url: "twitch.tv",
       image: "/twitch.webp",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
-      pages: ["/directory"],
+      pages: ["/creatorstudio"],
       branches: ["main", "dev", "staging"],
       favorite: false,
     },
@@ -191,39 +299,39 @@ function generateProjects() {
       branches: ["main", "dev", "staging"],
       favorite: false,
     },
-  ];
+  ] as Project[];
 }
 
 function generateInbox() {
   return [
     {
       id: 3,
-      image: "https://avatar.vercel.sh/seanfirsching",
-      description: "Sean Firsching followed you",
+      image: authors[0].avatar,
+      description: "Lee Robinson joined your team!",
       time: generateRandomDateWithinTwoWeeks(),
     },
     {
       id: 4,
-      image: "https://avatar.vercel.sh/seanfirsching",
-      description: "Sean Firsching followed you",
+      image: authors[1].avatar,
+      description: "Lindsey Simon added you to the Next.js Docs project",
       time: generateRandomDateWithinTwoWeeks(),
     },
-  ];
+  ] as Notification[];
 }
 
 function generateArchive() {
   return [
     {
       id: 1,
-      image: "https://avatar.vercel.sh/seanfirsching",
-      description: "Sean Firsching followed you",
+      image: vercelLogo,
+      description: "Thanks for signing up for Vercel!",
       time: generateRandomDateWithinTwoWeeks(),
     },
     {
       id: 2,
-      image: "https://avatar.vercel.sh/seanfirsching",
-      description: "Sean Firsching followed you",
+      image: authors[1].avatar,
+      description: "Created a new branch: feature-jira-integration",
       time: generateRandomDateWithinTwoWeeks(),
     },
-  ];
+  ] as Notification[];
 }

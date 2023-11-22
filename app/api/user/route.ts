@@ -1,7 +1,5 @@
-const user = {
-  name: "Sean Firsching",
-  avatar: "https://avatar.vercel.sh/seanfirsching",
-};
+import { authors } from "@/lib/utils/fakeDatabase";
+
 export async function GET() {
-  return Response.json(user);
+  return Response.json(authors.slice(-1)[0]);
 }

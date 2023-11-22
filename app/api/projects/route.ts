@@ -1,6 +1,4 @@
-import vercelLogo from "@/public/vercel.ico";
 import { type NextRequest } from "next/server";
-import { Project } from "@/types";
 import { favoriteProjects, projects } from "@/lib/utils/fakeDatabase";
 
 export async function GET(request: NextRequest) {
