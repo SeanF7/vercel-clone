@@ -142,7 +142,6 @@ export const DesktopNotificationPopup = ({
     }
   };
 
-  console.log(selectedComment);
   const fetchComments = async () => {
     const authors = filters.authors.map((author) => author.name).join(",");
     const pages = filters.pages.map((page) => page.pageName).join(",");

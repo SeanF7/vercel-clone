@@ -197,7 +197,6 @@ const ProjectViewButtons = ({
 
   const handleMenuItemHover = (event: any) => {
     const menuItem = event.target;
-    console.log(menuItem);
     const menuItemRect = menuItem.getBoundingClientRect();
     const parentRect = menuItem.parentElement.getBoundingClientRect();
 
