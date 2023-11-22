@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, use } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { DesktopFiltersPopup } from "./FiltersPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
@@ -63,6 +63,16 @@ export const DesktopNotificationPopup = ({
     projects: [],
   });
 
+  const [selectedCommentIndex, setSelectedCommentIndex] = useState<number>(0);
+  useEffect(() => {
+    if (selectedComment)
+      setSelectedCommentIndex(
+        comments.findIndex(
+          (comment) => comment.threadId === selectedComment.threadId
+        )
+      );
+  }, [selectedCommentIndex, comments, selectedComment]);
+
   useEffect(() => {
     const getNotifs = async () => {
       const inboxRes = await fetch(`/api/notifications`);
@@ -111,6 +121,28 @@ export const DesktopNotificationPopup = ({
     filters.projects,
   ]);
 
+  const nextComment = () => {
+    if (selectedComment) {
+      const index = comments.findIndex(
+        (comment) => comment.threadId === selectedComment.threadId
+      );
+      if (index !== comments.length - 1) {
+        setSelectedComment(comments[index + 1]);
+      }
+    }
+  };
+  const prevComment = () => {
+    if (selectedComment) {
+      const index = comments.findIndex(
+        (comment) => comment.threadId === selectedComment.threadId
+      );
+      if (index !== 0) {
+        setSelectedComment(comments[index - 1]);
+      }
+    }
+  };
+
+  console.log(selectedComment);
   const fetchComments = async () => {
     const authors = filters.authors.map((author) => author.name).join(",");
     const pages = filters.pages.map((page) => page.pageName).join(",");
@@ -162,7 +194,14 @@ export const DesktopNotificationPopup = ({
                 Back
               </button>
               <div className="flex gap-2">
-                <button className="rounded-md p-1 hover:bg-neutral-900">
+                <button
+                  className={`flex rounded-md p-1 hover:bg-neutral-900 ${
+                    selectedCommentIndex < 1
+                      ? "cursor-not-allowed opacity-50"
+                      : ""
+                  }`}
+                  onClick={prevComment}
+                >
                   <svg
                     fill="none"
                     height="16"
@@ -177,7 +216,14 @@ export const DesktopNotificationPopup = ({
                     <path d="M18 15l-6-6-6 6"></path>
                   </svg>
                 </button>
-                <button className="rounded-md p-1 hover:bg-neutral-900">
+                <button
+                  className={`rounded-md p-1 hover:bg-neutral-900 ${
+                    selectedCommentIndex > comments.length - 2
+                      ? "cursor-not-allowed opacity-50"
+                      : ""
+                  }`}
+                  onClick={nextComment}
+                >
                   <svg
                     fill="none"
                     height="16"
@@ -410,7 +456,7 @@ export const DesktopNotificationPopup = ({
                   />
                 ) : (
                   <div className="flex flex-col self-start">
-                    {comments.map((thread) => (
+                    {comments.map((thread, i) => (
                       <DesktopComments
                         commentThread={thread}
                         key={thread.threadId}

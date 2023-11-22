@@ -126,6 +126,16 @@ export const MobileNotificationPopup = ({
     refetchComments,
   ]);
 
+  const [selectedCommentIndex, setSelectedCommentIndex] = useState<number>(0);
+  useEffect(() => {
+    if (selectedComment)
+      setSelectedCommentIndex(
+        comments.findIndex(
+          (comment) => comment.threadId === selectedComment.threadId
+        )
+      );
+  }, [selectedCommentIndex, comments, selectedComment]);
+
   const nextComment = () => {
     if (selectedComment) {
       const index = comments.findIndex(
@@ -207,8 +217,12 @@ export const MobileNotificationPopup = ({
                 </button>
                 <div className="flex gap-2">
                   <button
-                    className="rounded-md p-1 hover:bg-neutral-900"
-                    onClick={nextComment}
+                    className={`flex rounded-md p-1 hover:bg-neutral-900 ${
+                      selectedCommentIndex < 1
+                        ? "cursor-not-allowed opacity-50"
+                        : ""
+                    }`}
+                    onClick={prevComment}
                   >
                     <svg
                       fill="none"
@@ -225,8 +239,12 @@ export const MobileNotificationPopup = ({
                     </svg>
                   </button>
                   <button
-                    className="rounded-md p-1 hover:bg-neutral-900"
-                    onClick={prevComment}
+                    className={`rounded-md p-1 hover:bg-neutral-900 ${
+                      selectedCommentIndex > comments.length - 2
+                        ? "cursor-not-allowed opacity-50"
+                        : ""
+                    }`}
+                    onClick={nextComment}
                   >
                     <svg
                       fill="none"
