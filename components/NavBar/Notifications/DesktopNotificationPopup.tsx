@@ -51,7 +51,6 @@ export const DesktopNotificationPopup = ({
   const [inbox, setInbox] = useState<Notification[]>([]);
   const [archive, setArchive] = useState<Notification[]>([]);
   const [reload, setReload] = useState(false);
-  const [refetchComments, setRefetchComments] = useState(false);
   const [comments, setComments] = useState<CommentThread[]>([]);
   const [selectedComment, setSelectedComment] = useState<CommentThread | null>(
     null
@@ -110,8 +109,25 @@ export const DesktopNotificationPopup = ({
     filters.branches,
     filters.status,
     filters.projects,
-    refetchComments,
   ]);
+
+  const fetchComments = async () => {
+    const authors = filters.authors.map((author) => author.name).join(",");
+    const pages = filters.pages.map((page) => page.pageName).join(",");
+    const branches = filters.branches
+      .map((branch) => `${branch.branchName}-${branch.projectId}`)
+      .join(",");
+    const projects = filters.projects.map((project) => project.name).join(",");
+    const commentsRes = await fetch(
+      `/api/comments?q=${searchValue}&authors=${authors}&pages=${pages}&branches=${branches}&status=${filters.status}&projects=${projects}`
+    );
+
+    if (!commentsRes.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const commentsJson = await commentsRes.json();
+    setComments(commentsJson);
+  };
 
   const handleTabClick = (index: number) => {
     setIndex(index);
@@ -182,7 +198,10 @@ export const DesktopNotificationPopup = ({
           <div className="flex flex-col overflow-y-auto">
             <div className="flex h-3/4 w-full flex-col gap-5">
               <div className="flex flex-col  bg-neutral-950">
-                <DesktopCommentThread commentThread={selectedComment} />
+                <DesktopCommentThread
+                  commentThread={selectedComment}
+                  fetchComments={fetchComments}
+                />
               </div>
               <div className="flex w-full justify-center pb-8 text-sm">
                 <p className="flex h-5 justify-center gap-1">
@@ -396,9 +415,8 @@ export const DesktopNotificationPopup = ({
                         commentThread={thread}
                         key={thread.threadId}
                         setSelectedComment={setSelectedComment}
-                        refetchComments={refetchComments}
-                        setRefetchComments={setRefetchComments}
                         setFilters={setFilters}
+                        fetchComments={fetchComments}
                       />
                     ))}
                   </div>
@@ -417,17 +435,15 @@ type DesktopCommentsProps = {
   setSelectedComment: React.Dispatch<
     React.SetStateAction<CommentThread | null>
   >;
-  refetchComments: boolean;
-  setRefetchComments: React.Dispatch<React.SetStateAction<boolean>>;
   setFilters: React.Dispatch<React.SetStateAction<CommentFilters>>;
+  fetchComments: () => void;
 };
 
 const DesktopComments = ({
   commentThread,
   setSelectedComment,
-  refetchComments,
-  setRefetchComments,
   setFilters,
+  fetchComments,
 }: DesktopCommentsProps) => {
   const authorsText = commentThread.comments
     .map((comment) => comment.author.name)
@@ -453,12 +469,14 @@ const DesktopComments = ({
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const resolveComment = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     fetch(`/api/comments?id=${commentThread.threadId}`, {
       method: "PATCH",
     }).then(() => {
-      setRefetchComments(!refetchComments);
+      fetchComments();
     });
   };
 
@@ -500,7 +518,7 @@ const DesktopComments = ({
             {commentThread.comments.length}
           </span>
           <button
-            onClick={handleClick}
+            onClick={resolveComment}
             ref={buttonRef}
             onMouseEnter={() => {
               handleActivityHover();
@@ -642,11 +660,32 @@ const DesktopComments = ({
 
 type DesktopCommentThreadProps = {
   commentThread: CommentThread;
+  fetchComments: () => void;
 };
 
-const DesktopCommentThread = ({ commentThread }: DesktopCommentThreadProps) => {
+const DesktopCommentThread = ({
+  commentThread,
+  fetchComments,
+}: DesktopCommentThreadProps) => {
+  const [resolved, setResolved] = useState(commentThread.isResolved);
+  const resolveComment = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    fetch(`/api/comments?id=${commentThread.threadId}`, {
+      method: "PATCH",
+    }).then(() => {
+      fetchComments();
+      setResolved(!resolved);
+    });
+  };
+
   return (
-    <div className="flex w-full flex-col gap-2 text-left text-sm text-neutral-200">
+    <div
+      className={`flex w-full flex-col gap-2 text-left text-sm text-neutral-200 ${
+        resolved ? "grayscale" : ""
+      }`}
+    >
       {commentThread.comments.map((comment, i) => (
         <div
           className="flex flex-col gap-2 border-b border-neutral-800 px-4 py-5"
@@ -667,20 +706,36 @@ const DesktopCommentThread = ({ commentThread }: DesktopCommentThreadProps) => {
               </p>
             </div>
             {i === 0 && (
-              <button>
-                <svg
-                  fill="none"
-                  height="16"
-                  shapeRendering="geometricPrecision"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  width="16"
-                >
-                  <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
-                </svg>
+              <button onClick={resolveComment}>
+                {resolved ? (
+                  <svg
+                    fill="currentColor"
+                    height="16"
+                    shapeRendering="geometricPrecision"
+                    stroke="black"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width="16"
+                  >
+                    <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    fill="none"
+                    height="16"
+                    shapeRendering="geometricPrecision"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width="16"
+                  >
+                    <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+                  </svg>
+                )}
               </button>
             )}
           </div>

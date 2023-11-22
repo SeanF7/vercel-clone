@@ -126,6 +126,45 @@ export const MobileNotificationPopup = ({
     refetchComments,
   ]);
 
+  const nextComment = () => {
+    if (selectedComment) {
+      const index = comments.findIndex(
+        (comment) => comment.threadId === selectedComment.threadId
+      );
+      if (index !== comments.length - 1) {
+        setSelectedComment(comments[index + 1]);
+      }
+    }
+  };
+  const prevComment = () => {
+    if (selectedComment) {
+      const index = comments.findIndex(
+        (comment) => comment.threadId === selectedComment.threadId
+      );
+      if (index !== 0) {
+        setSelectedComment(comments[index - 1]);
+      }
+    }
+  };
+
+  const fetchComments = async () => {
+    const authors = filters.authors.map((author) => author.name).join(",");
+    const pages = filters.pages.map((page) => page.pageName).join(",");
+    const branches = filters.branches
+      .map((branch) => `${branch.branchName}-${branch.projectId}`)
+      .join(",");
+    const projects = filters.projects.map((project) => project.name).join(",");
+    const commentsRes = await fetch(
+      `/api/comments?q=${searchValue}&authors=${authors}&pages=${pages}&branches=${branches}&status=${filters.status}&projects=${projects}`
+    );
+
+    if (!commentsRes.ok) {
+      throw new Error("Failed to fetch data");
+    }
+    const commentsJson = await commentsRes.json();
+    setComments(commentsJson);
+  };
+
   const handleTabClick = (index: number) => {
     setIndex(index);
   };
@@ -167,7 +206,10 @@ export const MobileNotificationPopup = ({
                   Back
                 </button>
                 <div className="flex gap-2">
-                  <button className="rounded-md p-1 hover:bg-neutral-900">
+                  <button
+                    className="rounded-md p-1 hover:bg-neutral-900"
+                    onClick={nextComment}
+                  >
                     <svg
                       fill="none"
                       height="16"
@@ -182,7 +224,10 @@ export const MobileNotificationPopup = ({
                       <path d="M18 15l-6-6-6 6"></path>
                     </svg>
                   </button>
-                  <button className="rounded-md p-1 hover:bg-neutral-900">
+                  <button
+                    className="rounded-md p-1 hover:bg-neutral-900"
+                    onClick={prevComment}
+                  >
                     <svg
                       fill="none"
                       height="16"
@@ -206,7 +251,10 @@ export const MobileNotificationPopup = ({
                 ref={commentThread}
               >
                 <div className="flex flex-col bg-neutral-950">
-                  <MobileCommentThread commentThread={selectedComment} />
+                  <MobileCommentThread
+                    commentThread={selectedComment}
+                    fetchComments={fetchComments}
+                  />
                 </div>
                 <div className="flex w-full flex-wrap justify-center gap-1 pb-8 text-sm">
                   <p className="h-5">
@@ -482,7 +530,9 @@ const MobileComments = ({
     }
   };
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const resolveComment = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.stopPropagation();
     fetch(`/api/comments?id=${commentThread.threadId}`, {
       method: "PATCH",
@@ -532,7 +582,7 @@ const MobileComments = ({
             {commentThread.comments.length}
           </span>
           <button
-            onClick={handleClick}
+            onClick={resolveComment}
             ref={buttonRef}
             onMouseEnter={() => {
               handleActivityHover();
@@ -673,11 +723,31 @@ const MobileComments = ({
 
 type MobileCommentThreadProps = {
   commentThread: CommentThread;
+  fetchComments: () => void;
 };
 
-const MobileCommentThread = ({ commentThread }: MobileCommentThreadProps) => {
+const MobileCommentThread = ({
+  commentThread,
+  fetchComments,
+}: MobileCommentThreadProps) => {
+  const [resolved, setResolved] = useState(commentThread.isResolved);
+  const resolveComment = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
+    fetch(`/api/comments?id=${commentThread.threadId}`, {
+      method: "PATCH",
+    }).then(() => {
+      fetchComments();
+      setResolved(!resolved);
+    });
+  };
   return (
-    <div className="flex w-full flex-col gap-2 text-left text-sm text-neutral-200">
+    <div
+      className={`flex w-full flex-col gap-2 text-left text-sm text-neutral-200 ${
+        resolved ? "grayscale" : ""
+      }`}
+    >
       {commentThread.comments.map((comment, i) => (
         <div
           className="flex flex-col gap-2 border-b border-neutral-800 px-4 py-5"
@@ -698,20 +768,36 @@ const MobileCommentThread = ({ commentThread }: MobileCommentThreadProps) => {
               </p>
             </div>
             {i === 0 && (
-              <button>
-                <svg
-                  fill="none"
-                  height="16"
-                  shapeRendering="geometricPrecision"
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="1.5"
-                  viewBox="0 0 24 24"
-                  width="16"
-                >
-                  <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
-                </svg>
+              <button onClick={resolveComment}>
+                {resolved ? (
+                  <svg
+                    fill="currentColor"
+                    height="16"
+                    shapeRendering="geometricPrecision"
+                    stroke="black"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width="16"
+                  >
+                    <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    fill="none"
+                    height="16"
+                    shapeRendering="geometricPrecision"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.5"
+                    viewBox="0 0 24 24"
+                    width="16"
+                  >
+                    <path d="M8 11.857l2.5 2.5L15.857 9M22 12c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2s10 4.477 10 10z"></path>
+                  </svg>
+                )}
               </button>
             )}
           </div>
