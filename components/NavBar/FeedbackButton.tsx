@@ -65,7 +65,7 @@ export const FeedbackButton = () => {
                 onChange={(e) => setFeedBackText(e.target.value)}
               ></textarea>
               <p
-                className={`ease-[ease]] align-text-bottom transition-[height] duration-300 ${
+                className={`align-text-bottom transition-[height] duration-300 ease-[ease] ${
                   formError.length > 0 ? "h-5" : ""
                 } h-0 text-sm text-red-400 `}
               >
