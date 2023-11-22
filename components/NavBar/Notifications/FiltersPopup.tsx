@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { Author, Branch, CommentFilters, Project, ProjectPage } from "@/types";
 
-type DesktopFilterPopupProps = {
+type FilterPopupProps = {
   showFilterMenu: boolean;
   setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
   setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,7 +19,7 @@ export const DesktopFiltersPopup = ({
   setChildMenuOpen,
   setFilters,
   filters,
-}: DesktopFilterPopupProps) => {
+}: FilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
@@ -430,17 +430,13 @@ export const DesktopFiltersPopup = ({
   );
 };
 
-type MobileFilterPopupProps = {
-  showFilterMenu: boolean;
-  setShowFilterMenu: React.Dispatch<React.SetStateAction<boolean>>;
-  setChildMenuOpen: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
 export const MobileFiltersPopup = ({
   setShowFilterMenu,
   setChildMenuOpen,
   showFilterMenu,
-}: MobileFilterPopupProps) => {
+  filters,
+  setFilters,
+}: FilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const [authorSearch, setAuthorSearch] = useState("");
   const [projectSearch, setProjectSearch] = useState("");
@@ -479,6 +475,106 @@ export const MobileFiltersPopup = ({
       }
     }
   );
+
+  const [authors, setAuthors] = useState<Author[] | null>(null);
+  const [projects, setProjects] = useState<Project[] | null>(null);
+  const [pages, setPages] = useState<ProjectPage[] | null>(null);
+  const [branches, setBranches] = useState<Branch[] | null>(null);
+  const activeFilters = {
+    activeAuthors: filters.authors.map((author) => author.id),
+    activeProjects: filters.projects.map((project) => project.id),
+    activePageIDs: filters.pages.map((page) => page.projectId),
+    activePageNames: filters.pages.map((page) => page.pageName),
+    activeBranchesIDs: filters.branches.map((branch) => branch.projectId),
+    activeBranchNames: filters.branches.map((branch) => branch.branchName),
+    activeStatus: filters.status,
+  };
+
+  useEffect(() => {
+    if (showFilterMenu) {
+      setAuthorSearch("");
+      setProjectSearch("");
+      setPageSearch("");
+      setBranchSearch("");
+      setMenuIndex(null);
+    }
+  }, [showFilterMenu]);
+
+  useEffect(() => {
+    const getAuthors = async () => {
+      const res = await fetch(`/api/authors?q=${authorSearch}`);
+      const data = await res.json();
+      setAuthors(data);
+    };
+    getAuthors();
+  }, [authorSearch]);
+
+  useEffect(() => {
+    const getProjects = async () => {
+      const res = await fetch(`/api/projects?s=${projectSearch}`);
+      const data = await res.json();
+      setProjects(data);
+    };
+    getProjects();
+  }, [projectSearch]);
+
+  useEffect(() => {
+    const getPages = async () => {
+      const res = await fetch(`/api/pages?q=${pageSearch}`);
+      const data = await res.json();
+      setPages(data);
+    };
+    getPages();
+  }, [pageSearch]);
+
+  useEffect(() => {
+    const getBranches = async () => {
+      const res = await fetch(`/api/branches?q=${branchSearch}`);
+      const data = await res.json();
+      setBranches(data);
+    };
+    getBranches();
+  }, [branchSearch]);
+  const handleClick = (
+    type: string,
+    change: Author | Project | string | Branch | ProjectPage
+  ) => {
+    switch (type) {
+      case "author":
+        setFilters((prev) => ({
+          ...prev,
+          authors: [...prev.authors, change as Author],
+        }));
+        break;
+      case "status":
+        setFilters((prev) => ({
+          ...prev,
+          status: change as string,
+        }));
+        break;
+      case "project":
+        setFilters((prev) => ({
+          ...prev,
+          projects: [...prev.projects, change as Project],
+        }));
+        break;
+      case "page":
+        setFilters((prev) => ({
+          ...prev,
+          pages: [...prev.pages, change as ProjectPage],
+        }));
+        break;
+      case "branch":
+        setFilters((prev) => ({
+          ...prev,
+          branches: [...prev.branches, change as Branch],
+        }));
+        break;
+    }
+    setMenuIndex(null);
+    setShowFilterMenu(false);
+    setChildMenuOpen(false);
+  };
 
   useMobileSwipe({
     overlayRef: overlay,
@@ -544,17 +640,58 @@ export const MobileFiltersPopup = ({
                   setInputValue={setAuthorSearch}
                   inputValue={authorSearch}
                 />
-                <div className=" bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
-                  WIP/TODO
+                <div className="max-h-[288px] overflow-y-scroll bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 ">
+                  {authors?.map((author, i) => (
+                    <button
+                      className="flex h-10 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                      key={i}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick("author", author);
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <Image
+                          src={author.avatar}
+                          alt="Author Avatar"
+                          height={16}
+                          width={16}
+                          className="rounded-full"
+                        ></Image>
+                        <span className="px-2">{author.name}</span>
+                      </div>
+                      {activeFilters.activeAuthors.includes(author.id) && (
+                        <span className=" text-neutral-200">
+                          <svg
+                            fill="none"
+                            height="18"
+                            shapeRendering="geometricPrecision"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            viewBox="0 0 24 24"
+                            width="18"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
             {menuIndex == 1 && (
-              <div className=" rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              <div className="rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
                 {["All", "Resolved"].map((item, i) => (
                   <button
                     className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
                     key={i}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleClick("status", item);
+                    }}
                   >
                     {i == 0 && (
                       <span className="h-[10px] w-[10px] rounded-full bg-neutral-600"></span>
@@ -569,7 +706,7 @@ export const MobileFiltersPopup = ({
               </div>
             )}
             {menuIndex == 2 && (
-              <div className="rounded-t-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
+              <div className=" rounded-t-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800">
                 <SearchBar
                   placeHolderText="Project"
                   classes="h-12 rounded-none rounded-t-xl outline-none"
@@ -577,28 +714,49 @@ export const MobileFiltersPopup = ({
                   setInputValue={setProjectSearch}
                   inputValue={projectSearch}
                 />
-                <div className="flex flex-col p-2">
-                  {["vercel-clone", "politics-chat", "sdokb-capstone"].map(
-                    (item, i) => (
-                      <button
-                        className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
-                        key={i}
-                      >
+                <div className="flex max-h-[288px] flex-col overflow-y-scroll p-2 ">
+                  {projects?.map((project, i) => (
+                    <button
+                      className="flex h-10 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                      key={i}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick("project", project);
+                      }}
+                    >
+                      <div className="flex items-center">
                         <Image
-                          src={"/vercel.ico"}
+                          src={project.image}
                           alt="Vercel Icon"
                           height={16}
                           width={16}
                         ></Image>
-                        <span className="px-2">{item}</span>
-                      </button>
-                    )
-                  )}
+                        <span className="px-2">{project.name}</span>
+                      </div>
+                      {activeFilters.activeProjects.includes(project.id) && (
+                        <span className=" text-neutral-200">
+                          <svg
+                            fill="none"
+                            height="18"
+                            shapeRendering="geometricPrecision"
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="1.5"
+                            viewBox="0 0 24 24"
+                            width="18"
+                          >
+                            <path d="M20 6L9 17l-5-5"></path>
+                          </svg>
+                        </span>
+                      )}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
             {menuIndex == 3 && (
-              <div className="flex flex-1 flex-col rounded-t-xl bg-neutral-950">
+              <div className="flex-flex-col rounded-t-xl bg-neutral-950">
                 <SearchBar
                   placeHolderText="Page"
                   classes="h-12 rounded-b-none rounded-xl"
@@ -606,7 +764,7 @@ export const MobileFiltersPopup = ({
                   setInputValue={setPageSearch}
                   inputValue={pageSearch}
                 />
-                <div className="flex  bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                <div className="flex max-h-[288px] flex-col gap-1 overflow-y-scroll bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
                   <div className="flex flex-col rounded-md bg-black text-neutral-200 shadow-[0_0_0_1px] shadow-neutral-700">
                     <p className="w-[240px p-2 text-sm">
                       To filter for comments on pages with multiple similar URLs
@@ -616,6 +774,51 @@ export const MobileFiltersPopup = ({
                       </span>
                     </p>
                   </div>
+
+                  {pages?.map((projectPage, i) => (
+                    <li
+                      className="flex w-full items-center justify-between rounded-md px-2 py-2 text-sm text-white hover:bg-neutral-900"
+                      key={i}
+                      onClick={() => {
+                        handleClick("page", projectPage);
+                      }}
+                    >
+                      <div className="flex h-6 w-40 items-center gap-4">
+                        <Image
+                          src={projectPage.image}
+                          alt="Vercel Icon"
+                          height={16}
+                          width={16}
+                        />
+                        <p className="text-left">{projectPage.pageName}</p>
+                      </div>
+                      <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-500">
+                        {projectPage.projectName}
+                      </span>
+                      {activeFilters.activePageIDs.includes(
+                        projectPage.projectId
+                      ) &&
+                        activeFilters.activePageNames.includes(
+                          projectPage.pageName
+                        ) && (
+                          <span className=" text-neutral-200">
+                            <svg
+                              fill="none"
+                              height="18"
+                              shapeRendering="geometricPrecision"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.5"
+                              viewBox="0 0 24 24"
+                              width="18"
+                            >
+                              <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                          </span>
+                        )}
+                    </li>
+                  ))}
                 </div>
               </div>
             )}
@@ -628,7 +831,47 @@ export const MobileFiltersPopup = ({
                   setInputValue={setBranchSearch}
                   inputValue={branchSearch}
                 />
-                <div className="bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"></div>
+                <div className="max-h-[288px] overflow-y-scroll bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800">
+                  {branches?.map((branch, i) => (
+                    <li
+                      className="flex h-10 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-900"
+                      key={i}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick("branch", branch);
+                      }}
+                    >
+                      <span className="flex w-40 px-2 text-start">
+                        {branch.branchName}
+                      </span>
+                      <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-500">
+                        {branch.projectName}
+                      </span>
+                      {activeFilters.activeBranchesIDs.includes(
+                        branch.projectId
+                      ) &&
+                        activeFilters.activeBranchNames.includes(
+                          branch.branchName
+                        ) && (
+                          <span className=" text-neutral-200">
+                            <svg
+                              fill="none"
+                              height="18"
+                              shapeRendering="geometricPrecision"
+                              stroke="currentColor"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="1.5"
+                              viewBox="0 0 24 24"
+                              width="18"
+                            >
+                              <path d="M20 6L9 17l-5-5"></path>
+                            </svg>
+                          </span>
+                        )}
+                    </li>
+                  ))}
+                </div>
               </div>
             )}
           </div>

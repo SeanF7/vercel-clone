@@ -75,7 +75,8 @@ const AuthorComponent = ({ authors, setFilters }: AuthorProps) => {
       )}
       <button
         className="rounded-md p-1 transition hover:bg-neutral-800"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setFilters((prev) => {
             return {
               ...prev,
@@ -120,14 +121,15 @@ const StatusComponent = ({ status, setFilters }: StatusProps) => {
         <span className="text-sm">{status}</span>
         <button
           className="rounded-md p-1 transition hover:bg-neutral-800"
-          onClick={() =>
+          onClick={(e) => {
+            e.stopPropagation();
             setFilters((prev) => {
               return {
                 ...prev,
                 status: "",
               };
-            })
-          }
+            });
+          }}
         >
           <svg
             fill="none"
@@ -190,7 +192,8 @@ const ProjectComponent = ({ projects, setFilters }: ProjectProps) => {
       )}
       <button
         className="rounded-md p-1 transition hover:bg-neutral-800"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setFilters((prev) => {
             return {
               ...prev,
@@ -233,7 +236,8 @@ const PageComponent = ({ pages, setFilters }: PageProps) => {
       )}
       <button
         className="rounded-md p-1 transition hover:bg-neutral-800"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setFilters((prev) => {
             return {
               ...prev,
@@ -295,7 +299,8 @@ const BranchComponent = ({ branches, setFilters }: BranchProps) => {
 
       <button
         className="rounded-md p-1 transition hover:bg-neutral-800"
-        onClick={() => {
+        onClick={(e) => {
+          e.stopPropagation();
           setFilters((prev) => {
             return {
               ...prev,
@@ -331,7 +336,8 @@ const ClearButton = ({ setFilters }: ClearProps) => {
   return (
     <button
       className="flex items-center rounded-md bg-black p-1 px-2 text-sm hover:bg-neutral-900"
-      onClick={() => {
+      onClick={(e) => {
+        e.stopPropagation();
         setFilters((prev) => {
           return {
             ...prev,
