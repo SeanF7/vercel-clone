@@ -76,7 +76,7 @@ export const GridProject = ({
                   fill="white"
                 ></path>
               </svg>
-              {getTimeAgo(lastUpdated)}
+              {getTimeAgo(lastUpdated)} ago
               <span className="px-1">
                 <svg
                   height="16"
@@ -212,7 +212,7 @@ export const ListProject = ({
                 {description}
               </Link>
               <span className="flex items-center text-neutral-400">
-                {getTimeAgo(lastUpdated)} on
+                {getTimeAgo(lastUpdated)} ago on
                 <span className="px-1">
                   <svg
                     height="16"
