@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 
 type menuPos = {
   startingY: number;
@@ -12,6 +12,7 @@ type useMobileSwipeProps = {
   popupRef: React.RefObject<HTMLDivElement>;
   dontChangeIfTrue?: boolean[];
   startingOpacity?: number;
+  scrollableElements?: React.RefObject<HTMLDivElement>[];
 };
 
 export const useMobileSwipe = ({
@@ -26,9 +27,24 @@ export const useMobileSwipe = ({
     currentY: 0,
     deltaY: 0,
   });
+  const [topOfScroll, setTopOfScroll] = useState(true);
+
+  // Hacky way to check if the element is scrollable and if they are at the top.
+  const checkIfTopOfScroll = (target: HTMLElement | null) => {
+    while (target) {
+      if (target.scrollHeight > target.clientHeight) {
+        if (target.scrollTop !== 0) setTopOfScroll(false);
+        else setTopOfScroll(true);
+
+        break;
+      }
+      target = target.parentElement;
+    }
+  };
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
+      checkIfTopOfScroll(e.target as HTMLElement | null);
       if (
         e.touches[0].clientY + 20 >
         popupRef.current?.getBoundingClientRect().top!
@@ -42,12 +58,16 @@ export const useMobileSwipe = ({
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (topOfScroll) {
+        checkIfTopOfScroll(e.target as HTMLElement | null);
+      }
       if (
         menuPosition !== null &&
         menuPosition.startingY !== 0 &&
         dontChangeIfTrue.every((x) => !x) &&
         menuPosition.currentY + 20 >=
-          popupRef.current?.getBoundingClientRect().top!
+          popupRef.current?.getBoundingClientRect().top! &&
+        topOfScroll
       ) {
         const currentY = e.touches[0].clientY;
         const deltaY = Math.max(currentY - menuPosition.startingY, -30);
@@ -111,5 +131,6 @@ export const useMobileSwipe = ({
     startingOpacity,
     overlayRef,
     popupRef,
+    topOfScroll,
   ]);
 };

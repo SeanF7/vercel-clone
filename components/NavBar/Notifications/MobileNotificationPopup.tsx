@@ -45,7 +45,6 @@ export const MobileNotificationPopup = ({
         !childMenuOpen &&
         document.activeElement !== controllingButton.current
       ) {
-        console.log(menuPopup.current, event.target);
         setVisible(false);
       }
     }
@@ -66,6 +65,7 @@ export const MobileNotificationPopup = ({
     status: "",
     projects: [],
   });
+  const commentThread = useRef(null);
 
   const overlay = useRef(null);
   useMobileSwipe({
@@ -73,6 +73,7 @@ export const MobileNotificationPopup = ({
     popupRef: menuPopup,
     setDropdownVisible: setVisible,
     dontChangeIfTrue: [childMenuOpen, showFilterMenu],
+    scrollableElements: [commentThread],
   });
   useDisableScroll(true);
 
@@ -200,7 +201,10 @@ export const MobileNotificationPopup = ({
               </div>
             </div>
             <div className="flex h-full flex-col">
-              <div className="flex w-full flex-col gap-5 overflow-y-scroll">
+              <div
+                className="flex w-full flex-col gap-5 overflow-y-scroll"
+                ref={commentThread}
+              >
                 <div className="flex flex-col bg-neutral-950">
                   <MobileCommentThread commentThread={selectedComment} />
                 </div>
@@ -711,9 +715,7 @@ const MobileCommentThread = ({ commentThread }: MobileCommentThreadProps) => {
               </button>
             )}
           </div>
-          <div className="">
-            <p>{comment.text}</p>
-          </div>
+          <p>{comment.text}</p>
           {i === 0 && (
             <Link
               className="w-full rounded-md bg-black shadow-[0_0px_0px_1px] shadow-neutral-800 hover:bg-neutral-900"
