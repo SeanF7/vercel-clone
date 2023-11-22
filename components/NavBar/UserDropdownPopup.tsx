@@ -102,14 +102,15 @@ export const UserDropdownPopup = () => {
                       >
                         <svg
                           fill="none"
-                          height="20"
-                          width="20"
+                          height="16"
+                          width="16"
                           shapeRendering="geometricPrecision"
                           stroke="currentColor"
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth="1.5"
                           viewBox="0 0 24 24"
+                          className="text-blue-400"
                         >
                           <circle cx="12" cy="12" r="10"></circle>
                           <path d="M12 8v8"></path>
