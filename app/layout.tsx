@@ -21,7 +21,7 @@ export default function RootLayout({
     <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className={`${inter.className}`}>
         <div className="font-sans">
-          {/* <Popup /> */}
+          <Popup />
           {children}
         </div>
         <Footer />
