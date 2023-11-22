@@ -578,7 +578,7 @@ const MobileAddButtonPopup = ({
             ref={menuOverlay}
           />
           <div
-            className="absolute bottom-0 left-0 right-0 z-10 rounded-t-lg bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
+            className="mobilePopupAfter absolute bottom-0 left-0 right-0 z-10 rounded-t-lg bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
             ref={menuPopup}
           >
             {[
