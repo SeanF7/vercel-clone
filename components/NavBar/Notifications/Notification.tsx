@@ -37,12 +37,12 @@ export const DesktopNotification = ({
           className="h-8 w-8 rounded-full"
         />
         <div className="flex flex-col">
-          <h1 className="text-white">{description}</h1>
+          <h1 className=" text-white">{description}</h1>
           <p>{getTimeAgo(time)}</p>
         </div>
       </div>
       {!archived && (
-        <div className="hidden rounded-full text-neutral-500 transition hover:bg-neutral-800 hover:text-neutral-100 group-hover:inline">
+        <div className="rounded-full text-neutral-500 opacity-0 transition hover:bg-neutral-800 hover:text-neutral-100 group-hover:opacity-100">
           <button className="p-2" onClick={() => handleClick(id)}>
             <svg
               fill="none"
@@ -94,7 +94,7 @@ export const MobileNotification = ({
         </div>
       </div>
       {!archived && (
-        <div className="rounded-full  text-neutral-100 group-hover:inline">
+        <div className="rounded-full  text-neutral-100">
           <button className="p-2" onClick={() => handleClick(id)}>
             <svg
               fill="none"
