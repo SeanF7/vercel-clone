@@ -251,7 +251,10 @@ export const DesktopNotificationPopup = ({
               <div className="flex w-full justify-center pb-8 text-sm">
                 <p className="flex h-5 justify-center gap-1">
                   To reply to the comment thread, go to the
-                  <Link href={"/"} className="flex text-blue-500">
+                  <Link
+                    href={"/"}
+                    className="flex items-center border-blue-500 text-blue-500 hover:border-b"
+                  >
                     deployment
                     <svg
                       height="16"
