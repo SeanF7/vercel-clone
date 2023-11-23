@@ -2,28 +2,19 @@ import { useEffect, useState } from "react";
 import { ProjectPage, CommentFilters } from "@/types";
 import { SearchBar } from "@/components/SearchBar";
 import Image from "next/image";
-import { addToPageFilter } from "@/lib/utils/filtersHelpers";
+import { addToPageFilter, isPageInFilters } from "@/lib/utils/filtersHelpers";
 
-export const PageFIlter = ({
+export const PageFilter = ({
   setFilters,
-  activePagesProjectsID,
-  activePagesNames,
+  activePages,
   closeMenus,
 }: {
   setFilters: React.Dispatch<React.SetStateAction<CommentFilters>>;
-  activePagesProjectsID: number[];
-  activePagesNames: string[];
+  activePages: ProjectPage[];
   closeMenus: () => void;
 }) => {
   const [pages, setPages] = useState<ProjectPage[] | null>(null);
   const [pageSearch, setPageSearch] = useState("");
-
-  const checkIfPageIsInFilters = (page: ProjectPage) => {
-    return (
-      activePagesProjectsID.includes(page.projectId) &&
-      activePagesNames.includes(page.pageName)
-    );
-  };
 
   const handleClick = (page: ProjectPage) => {
     addToPageFilter(page, setFilters, true);
@@ -78,7 +69,7 @@ export const PageFIlter = ({
               <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-500">
                 {projectPage.projectName}
               </span>
-              {checkIfPageIsInFilters(projectPage) && (
+              {isPageInFilters(activePages, projectPage) && (
                 <span className=" text-neutral-200">
                   <svg
                     fill="none"

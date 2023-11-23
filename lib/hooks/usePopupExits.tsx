@@ -54,3 +54,44 @@ export const useCustomPopupExits = (
   }, [customClickHandler, customKeyDownHandler]);
   return { menuPopup, controllingButton, isVisible, setVisible };
 };
+
+type usePopupExistsParamsProps = {
+  isVisible: boolean;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  menuPopup: React.RefObject<HTMLDivElement>;
+  controllingButton: React.RefObject<HTMLButtonElement | HTMLDivElement>;
+};
+
+export const usePopupExistsParams = ({
+  isVisible,
+  setVisible,
+  menuPopup,
+  controllingButton,
+}: usePopupExistsParamsProps) => {
+  useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && isVisible) {
+        setVisible(false);
+        controllingButton.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", keyHandler);
+
+    const clickHandler = (event: MouseEvent) => {
+      if (
+        menuPopup.current &&
+        !menuPopup.current.contains(event.target as Node) &&
+        isVisible &&
+        event.target !== controllingButton.current
+      ) {
+        setVisible(false);
+      }
+    };
+    document.addEventListener("click", clickHandler);
+
+    return () => {
+      window.removeEventListener("keydown", keyHandler);
+      document.removeEventListener("click", clickHandler);
+    };
+  }, [setVisible, isVisible]);
+};

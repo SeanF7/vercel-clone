@@ -32,28 +32,8 @@ export const NotificationPopup = ({
   const [childMenuOpen, setChildMenuOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const filterButton = useRef<HTMLButtonElement>(null);
-  const {
-    menuPopup,
-    isVisible: showFilterMenu,
-    setVisible: setShowFilterMenu,
-  } = useCustomPopupExits(
-    (event: KeyboardEvent) => {
-      if (event.key === "Escape" && !childMenuOpen) {
-        setVisible(false);
-        controllingButton.current?.focus();
-      }
-    },
-    (event: MouseEvent) => {
-      if (
-        menuPopup.current &&
-        !menuPopup.current.contains(event.target as Node) &&
-        !childMenuOpen &&
-        document.activeElement !== controllingButton.current
-      ) {
-        setVisible(false);
-      }
-    }
-  );
+  const menuPopup = useRef(null);
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
   const tabs = ["Inbox", "Archive", "Comments"];
   const [inbox, setInbox] = useState<Notification[]>([]);
   const [archive, setArchive] = useState<Notification[]>([]);
@@ -177,14 +157,18 @@ export const NotificationPopup = ({
   const commentThread = useRef(null);
   const Wrapper = mobile ? MobileWrapper : DesktopWrapper;
   useDisableScroll(mobile);
+  const overlayRef = useRef(null);
+  useMobileSwipe({
+    overlayRef,
+    popupRef: menuPopup,
+    setDropdownVisible: setVisible,
+    startingOpacity: 0.5,
+    dontChangeIfTrue: [childMenuOpen, showFilterMenu],
+    scrollableElements: [commentThread],
+  });
 
   return (
-    <Wrapper
-      menuPopup={menuPopup}
-      setVisible={setVisible}
-      dontChangeIfTrue={[childMenuOpen, showFilterMenu]}
-      scrollableElements={[commentThread]}
-    >
+    <Wrapper menuPopup={menuPopup} overlayRef={overlayRef}>
       {selectedComment ? (
         <div className="left-12 rounded-md bg-black shadow-[0_0px_1px_1px]  shadow-neutral-800 [@media(min-width:601px)]:relative">
           <div className="flex flex-col border-b border-neutral-700">
@@ -292,7 +276,7 @@ export const NotificationPopup = ({
           </div>
         </div>
       ) : (
-        <div className="[@media(max-width:600px)]:mobilePopupAfter relative left-12 flex w-full flex-col rounded-md bg-black shadow-[0_0px_1px_1px]  shadow-neutral-800">
+        <div className="[@media(max-width:600px)]:mobilePopupAfter relative left-12 flex h-full w-full flex-col rounded-md bg-black shadow-[0_0px_1px_1px]  shadow-neutral-800">
           <div className="flex flex-col border-b border-neutral-700">
             <div className="flex items-center justify-between pl-4 pr-2">
               <div className="flex w-full gap-5 text-sm">
@@ -347,7 +331,7 @@ export const NotificationPopup = ({
                   />
                 </div>
               ) : (
-                <div className="grid auto-rows-max grid-cols-1 [@media(min-width:601px)]:min-h-[400px]">
+                <div className="grid h-[80%] auto-rows-max grid-cols-1 [@media(min-width:601px)]:min-h-[400px]">
                   {inbox.map((notification) => (
                     <NotificationComponent
                       {...notification}
@@ -456,7 +440,12 @@ export const NotificationPopup = ({
                   </div>
                 </div>
                 {filters && (
-                  <FiltersComponent filters={filters} setFilters={setFilters} />
+                  <FiltersComponent
+                    filters={filters}
+                    setFilters={setFilters}
+                    mobile={mobile}
+                    setChildMenuOpen={setChildMenuOpen}
+                  />
                 )}
               </div>
               <div className="flex h-full w-full items-center justify-center [@media(min-width:601px)]:h-[400px]">
@@ -516,36 +505,19 @@ const DesktopWrapper = ({
 const MobileWrapper = ({
   children,
   menuPopup,
-  setVisible,
-  dontChangeIfTrue,
-  scrollableElements,
+  overlayRef,
 }: {
   children: React.ReactNode;
   menuPopup: React.RefObject<HTMLDivElement>;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  dontChangeIfTrue?: boolean[];
-  scrollableElements?: React.RefObject<HTMLDivElement>[];
+  overlayRef: React.RefObject<HTMLDivElement>;
 }) => {
-  const overlayRef = useRef(null);
-  useMobileSwipe({
-    overlayRef,
-    popupRef: menuPopup,
-    setDropdownVisible: setVisible,
-    startingOpacity: 0.5,
-    dontChangeIfTrue,
-    scrollableElements,
-  });
-
   return (
     <>
       <div
         className="fixed bottom-0 left-0 z-20 h-screen w-full bg-black opacity-60"
         ref={overlayRef}
       />
-      <div
-        className="mobilePopupAfter fixed bottom-0 left-0 z-20 flex h-4/5 w-full"
-        ref={menuPopup}
-      >
+      <div className="mobilePopupAfter z-20 flex h-4/5 w-full" ref={menuPopup}>
         {children}
       </div>
     </>

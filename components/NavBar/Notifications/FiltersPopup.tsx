@@ -5,7 +5,7 @@ import { CommentFilters } from "@/types";
 import { AuthorFilter } from "./AuthorFilter";
 import { StatusFilter } from "./StatusFilter";
 import { ProjectFilter } from "./ProjectFilter";
-import { PageFIlter } from "./PageFilter";
+import { PageFilter } from "./PageFilter";
 import { BranchFilter } from "./BranchFilter";
 
 type FilterPopupProps = {
@@ -26,37 +26,38 @@ export const FiltersPopup = ({
   mobile,
 }: FilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const { menuPopup } = useCustomPopupExits(
-    (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        if (menuIndex !== null) {
-          setMenuIndex(null);
-          setShowFilterMenu(true);
-          setChildMenuOpen(true);
-        } else {
-          setShowFilterMenu(false);
-          setChildMenuOpen(false);
-        }
-      }
-    },
-    (event: MouseEvent) => {
-      if (
-        menuPopup.current &&
-        !menuPopup.current.contains(event.target as Node) &&
-        !hideFilterMenu
-      ) {
-        setShowFilterMenu(false);
-        setChildMenuOpen(false);
-      } else if (
-        menus.current &&
-        !menus.current?.contains(event.target as Node)
-      ) {
-        setShowFilterMenu(false);
-        setMenuIndex(null);
-        setChildMenuOpen(false);
-      }
-    }
-  );
+  const menuPopup = useRef(false);
+  // const { menuPopup } = useCustomPopupExits(
+  //   (event: KeyboardEvent) => {
+  //     if (event.key === "Escape") {
+  //       if (menuIndex !== null) {
+  //         setMenuIndex(null);
+  //         setShowFilterMenu(true);
+  //         setChildMenuOpen(true);
+  //       } else {
+  //         setShowFilterMenu(false);
+  //         setChildMenuOpen(false);
+  //       }
+  //     }
+  //   },
+  //   (event: MouseEvent) => {
+  //     if (
+  //       menuPopup.current &&
+  //       !menuPopup.current.contains(event.target as Node) &&
+  //       !hideFilterMenu
+  //     ) {
+  //       setShowFilterMenu(false);
+  //       setChildMenuOpen(false);
+  //     } else if (
+  //       menus.current &&
+  //       !menus.current?.contains(event.target as Node)
+  //     ) {
+  //       setShowFilterMenu(false);
+  //       setMenuIndex(null);
+  //       setChildMenuOpen(false);
+  //     }
+  //   }
+  // );
   const [hideFilterMenu, setHideFilterMenu] = useState(false);
   const menus = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
@@ -137,23 +138,15 @@ export const FiltersPopup = ({
             />
           )}
           {menuIndex == 3 && (
-            <PageFIlter
-              activePagesProjectsID={filters.pages.map(
-                (page) => page.projectId
-              )}
-              activePagesNames={filters.pages.map((page) => page.pageName)}
+            <PageFilter
+              activePages={filters.pages}
               closeMenus={cleanUp}
               setFilters={setFilters}
             />
           )}
           {menuIndex == 4 && (
             <BranchFilter
-              activeBranchesNames={filters.branches.map(
-                (branch) => branch.branchName
-              )}
-              activeBranchesProjectsID={filters.branches.map(
-                (branch) => branch.projectId
-              )}
+              activeBranches={filters.branches}
               closeMenus={cleanUp}
               setFilters={setFilters}
             />

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { ProjectPage, CommentFilters, Branch } from "@/types";
+import { CommentFilters, Branch } from "@/types";
 import { SearchBar } from "@/components/SearchBar";
-import Image from "next/image";
-import { addToBranchFilter } from "@/lib/utils/filtersHelpers";
+import {
+  addToBranchFilter,
+  isBranchInFilters,
+} from "@/lib/utils/filtersHelpers";
 
 export const BranchFilter = ({
   setFilters,
-  activeBranchesProjectsID,
-  activeBranchesNames,
+  activeBranches,
   closeMenus,
 }: {
   setFilters: React.Dispatch<React.SetStateAction<CommentFilters>>;
-  activeBranchesProjectsID: number[];
-  activeBranchesNames: string[];
+  activeBranches: Branch[];
   closeMenus: () => void;
 }) => {
   const [branchSearch, setBranchSearch] = useState("");
@@ -25,13 +25,6 @@ export const BranchFilter = ({
     };
     getBranches();
   }, [branchSearch]);
-
-  const checkIfBranchIsInFilters = (branch: Branch) => {
-    return (
-      activeBranchesProjectsID.includes(branch.projectId) &&
-      activeBranchesNames.includes(branch.branchName)
-    );
-  };
 
   const handleClick = (branch: Branch) => {
     addToBranchFilter(branch, setFilters, true);
@@ -60,7 +53,7 @@ export const BranchFilter = ({
             <span className="flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-neutral-500">
               {branch.projectName}
             </span>
-            {checkIfBranchIsInFilters(branch) && (
+            {isBranchInFilters(activeBranches, branch) && (
               <span className=" text-neutral-200">
                 <svg
                   fill="none"

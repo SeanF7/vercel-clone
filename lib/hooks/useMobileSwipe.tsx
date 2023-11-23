@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 type menuPos = {
   startingY: number;
@@ -41,6 +41,35 @@ export const useMobileSwipe = ({
       target = target.parentElement;
     }
   };
+
+  useEffect(() => {
+    const keyHandler = (event: KeyboardEvent) => {
+      if (
+        event.key === "Escape" &&
+        popupRef.current?.checkVisibility() &&
+        dontChangeIfTrue.every((x) => !x)
+      ) {
+        setDropdownVisible(false);
+      }
+    };
+    window.addEventListener("keydown", keyHandler);
+
+    const clickHandler = (event: MouseEvent) => {
+      if (
+        popupRef.current &&
+        !popupRef.current.contains(event.target as Node) &&
+        dontChangeIfTrue.every((v) => !v)
+      ) {
+        setDropdownVisible(false);
+      }
+    };
+    document.addEventListener("click", clickHandler);
+
+    return () => {
+      document.removeEventListener("click", clickHandler);
+      window.removeEventListener("keydown", keyHandler);
+    };
+  }, [setDropdownVisible, popupRef, dontChangeIfTrue]);
 
   useEffect(() => {
     const handleTouchStart = (e: TouchEvent) => {
@@ -134,6 +163,5 @@ export const useMobileSwipe = ({
     overlayRef,
     popupRef,
     topOfScroll,
-    popupRef.current,
   ]);
 };
