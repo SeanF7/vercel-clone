@@ -3,7 +3,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { DesktopNavPopup } from "./DesktopNavPopup";
 import { MobileNavPopup } from "./MobileNavPopup";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
-import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 
 type NavButtonProps = {
   children: React.ReactNode;

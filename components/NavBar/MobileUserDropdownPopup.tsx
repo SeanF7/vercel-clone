@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { TeamMenu } from "../TeamMenu";
-import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { Team } from "@/types";
 

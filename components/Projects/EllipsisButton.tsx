@@ -4,7 +4,7 @@ import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import { useProjectContext } from "@/lib/hooks/ProjectContext";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { useEffect, useRef, useState } from "react";
-import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 import { SearchBar } from "../SearchBar";
 import { TeamMenu } from "../TeamMenu";
 

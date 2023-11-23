@@ -1,14 +1,9 @@
 "use client";
-import { RefObject, useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { SearchBar } from "../SearchBar";
 import { ListProject, GridProject } from "./Project";
 import { useProjectContext } from "../../lib/hooks/ProjectContext";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
-import Link from "next/link";
-import { createPortal } from "react-dom";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
-import useDisableScroll from "@/lib/hooks/useDisableScroll";
-import { TeamMenu } from "../TeamMenu";
+import { AddNewButton } from "./AddNewButton";
 
 export const ProjectsContent = () => {
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
@@ -49,7 +44,7 @@ export const ProjectsContent = () => {
           isListView={isListView}
           setIsListView={setIsListView}
         />
-        <AddNewButton />
+        <AddNewButton mobile={mobile} />
       </div>
       {isListView ? (
         <div>
@@ -262,209 +257,5 @@ const ProjectViewButtons = ({
         </div>
       </div>
     </div>
-  );
-};
-
-const AddNewButton = () => {
-  const { controllingButton, menuPopup, isVisible, setVisible } =
-    usePopupExits();
-  const [mobile, setMobile] = useState(false);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setMobile(window.innerWidth <= 600);
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-
-  return (
-    <div>
-      <button
-        className="hover:bg-neutral-30 flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black [@media(min-width:601px)]:w-32"
-        ref={controllingButton}
-        onClick={() => setVisible(!isVisible)}
-      >
-        <div className="flex flex-1 items-center justify-between">
-          <span className=" font-medium: medium inline-block select-none text-sm [@media(max-width:600px)]:hidden">
-            Add New...
-          </span>
-          <svg
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            width="24"
-            className="[@media(max-width:600px)]:hidden"
-          >
-            <path d="M6 9l6 6 6-6"></path>
-          </svg>
-        </div>
-        <svg
-          fill="none"
-          height="24"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          className="[@media(min-width:601px)]:hidden"
-          width="24"
-        >
-          <path d="M12 5v14"></path>
-          <path d="M5 12h14"></path>
-        </svg>
-      </button>
-      {mobile ? (
-        <MobileAddButtonPopup
-          isVisible={isVisible}
-          menuPopup={menuPopup}
-          setVisible={setVisible}
-        />
-      ) : (
-        <DesktopAddButtonPopup
-          isVisible={isVisible}
-          menuPopup={menuPopup}
-          setVisible={setVisible}
-        />
-      )}
-    </div>
-  );
-};
-
-type AddButtonPopupProps = {
-  isVisible: boolean;
-  menuPopup: RefObject<HTMLDivElement>;
-  setVisible: (visible: boolean) => void;
-};
-
-const DesktopAddButtonPopup = ({
-  isVisible,
-  menuPopup,
-  setVisible,
-}: AddButtonPopupProps) => {
-  const {
-    controllingButton: teamMenuControllingButton,
-    menuPopup: teamMenuPopup,
-    isVisible: teamMenuIsVisible,
-    setVisible: setTeamMenuVisible,
-  } = usePopupExits();
-
-  return (
-    <>
-      {isVisible && (
-        <div
-          className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
-          ref={menuPopup}
-        >
-          {[
-            { name: "Project", url: "http://vercel.com/new" },
-            { name: "Domain", url: "http://vercel.com/domains" },
-            { name: "Storage", url: "http://vercel.com/stores" },
-          ].map((item, i) => (
-            <Link
-              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              key={i}
-              href={item.url}
-            >
-              {item.name}
-            </Link>
-          ))}
-          <button
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            onClick={() => {
-              setVisible(false);
-              setTeamMenuVisible(!teamMenuIsVisible);
-            }}
-            ref={teamMenuControllingButton}
-          >
-            Team
-          </button>
-        </div>
-      )}
-
-      {teamMenuIsVisible && (
-        <DesktopTeamMenu
-          setVisible={setTeamMenuVisible}
-          menuRef={teamMenuPopup}
-        />
-      )}
-    </>
-  );
-};
-
-const MobileAddButtonPopup = ({
-  isVisible,
-  menuPopup,
-  setVisible,
-}: AddButtonPopupProps) => {
-  const menuOverlay = useRef(null);
-  const {
-    controllingButton: teamMenuControllingButton,
-    menuPopup: teamMenuPopup,
-    isVisible: teamMenuIsVisible,
-    setVisible: setTeamMenuVisible,
-  } = usePopupExits();
-  useDisableScroll(isVisible || teamMenuIsVisible);
-  useMobileSwipe({
-    overlayRef: menuOverlay,
-    startingOpacity: 0.6,
-    popupRef: menuPopup,
-    setDropdownVisible: () => {
-      setVisible(false);
-      setTeamMenuVisible(false);
-    },
-  });
-
-  return (
-    <>
-      {isVisible && (
-        <>
-          <div
-            className="fixed inset-0 z-10 bg-black opacity-60"
-            ref={menuOverlay}
-          />
-          <div
-            className="mobilePopupAfter absolute bottom-0 left-0 right-0 z-10 rounded-t-lg bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
-            ref={menuPopup}
-          >
-            {[
-              { name: "Project", url: "http://vercel.com/new" },
-              { name: "Domain", url: "http://vercel.com/domains" },
-              { name: "Storage", url: "http://vercel.com/stores" },
-            ].map((item, i) => (
-              <Link
-                className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-                key={i}
-                href={item.url}
-              >
-                {item.name}
-              </Link>
-            ))}
-            <button
-              className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              onClick={() => {
-                setVisible(false);
-                setTeamMenuVisible(!teamMenuIsVisible);
-              }}
-              ref={teamMenuControllingButton}
-            >
-              Team
-            </button>
-          </div>
-        </>
-      )}
-
-      {teamMenuIsVisible && (
-        <TeamMenu
-          menuRef={teamMenuPopup}
-          closeMenus={() => {
-            setTeamMenuVisible(false);
-          }}
-          mobile={true}
-        />
-      )}
-    </>
   );
 };

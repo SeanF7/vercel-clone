@@ -11,7 +11,7 @@ import Image from "next/image";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import { FiltersComponent } from "./FilterComponent";
 import { createPortal } from "react-dom";
-import useDisableScroll from "@/lib/hooks/useDisableScroll";
+import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 
 type Props = {

@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import { useState, useRef, RefObject } from "react";
 import Link from "next/link";
 import { useMobileSwipe } from "../lib/hooks/useMobileSwipe";
+import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 
 type TeamMenuProps = {
   menuRef: RefObject<HTMLDivElement>;
@@ -188,6 +189,7 @@ const MobileWrapper = ({
   overlayRef,
   menuRef,
 }: TeamMenuWrapperProps) => {
+  useDisableScroll(true);
   return (
     <>
       <div

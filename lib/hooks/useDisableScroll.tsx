@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const useDisableScroll = (disable: boolean) => {
+export const useDisableScroll = (disable: boolean) => {
   useEffect(() => {
     const body = document.querySelector("body");
     if (!body) return;
@@ -14,5 +14,3 @@ const useDisableScroll = (disable: boolean) => {
     };
   }, [disable]);
 };
-
-export default useDisableScroll;
