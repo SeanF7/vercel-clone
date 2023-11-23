@@ -6,7 +6,7 @@ type menuPos = {
   deltaY: number;
 } | null;
 
-type useMobileSwipeProps = {
+type usePopupExitProps = {
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
   overlayRef?: React.RefObject<HTMLDivElement>;
   popupRef: React.RefObject<HTMLDivElement>;
@@ -21,7 +21,7 @@ export const usePopupExits = ({
   overlayRef,
   popupRef,
   startingOpacity = 0.4,
-}: useMobileSwipeProps) => {
+}: usePopupExitProps) => {
   const [menuPosition, setMenuPosition] = useState<menuPos>({
     startingY: 0,
     currentY: 0,

@@ -25,7 +25,7 @@ export const FiltersPopup = ({
   mobile,
 }: FilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
-  const menuPopup = useRef(false);
+  const menuPopup = useRef(null);
   const [hideFilterMenu, setHideFilterMenu] = useState(false);
   const menus = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
