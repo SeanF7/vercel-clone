@@ -94,10 +94,12 @@ export const useMobileSwipe = ({
     };
 
     const handleTouchEnd = () => {
+      if (dontChangeIfTrue.some((x) => x)) return;
       if (
         menuPosition !== null &&
         menuPosition?.deltaY > popupRef.current?.clientHeight! / 3
       ) {
+        overlayRef!.current!.style.opacity = "0";
         if (popupRef.current) {
           popupRef.current.style.transitionDuration = "300ms";
           popupRef.current.style.transform = `translateY(${window.innerHeight}px)`;
@@ -132,5 +134,6 @@ export const useMobileSwipe = ({
     overlayRef,
     popupRef,
     topOfScroll,
+    popupRef.current,
   ]);
 };

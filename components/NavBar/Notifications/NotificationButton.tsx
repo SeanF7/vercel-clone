@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { DesktopNotificationPopup } from "./DesktopNotificationPopup";
-import { MobileNotificationPopup } from "./MobileNotificationPopup";
+import { NotificationPopup } from "./NotificationPopup";
 
 export const NotificationButton = () => {
   const [showNotifications, setShowNotifications] = useState(false);
@@ -55,16 +54,11 @@ export const NotificationButton = () => {
           </svg>
         </span>
       </button>
-      {showNotifications && width > 700 && (
-        <DesktopNotificationPopup
+      {showNotifications && (
+        <NotificationPopup
           setVisible={setShowNotifications}
           controllingButton={button}
-        />
-      )}
-      {showNotifications && width < 700 && (
-        <MobileNotificationPopup
-          setVisible={setShowNotifications}
-          controllingButton={button}
+          mobile={width < 700}
         />
       )}
     </div>

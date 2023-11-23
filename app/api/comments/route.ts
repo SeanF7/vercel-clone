@@ -1,5 +1,4 @@
 import { NextRequest } from "next/server";
-import { Comment, Author, Project, CommentThread } from "@/types";
 import { commentThreads } from "@/lib/utils/fakeDatabase";
 
 export async function GET(request: NextRequest) {
@@ -19,11 +18,14 @@ export async function GET(request: NextRequest) {
       : request.nextUrl.searchParams
           .get("branches")
           ?.split(",")
-          .map((branch) => branch.split("-"));
+          .map((branch) => branch.split(":"));
   const pages =
     request.nextUrl.searchParams.get("pages") === ""
       ? []
-      : request.nextUrl.searchParams.get("pages")?.split(",");
+      : request.nextUrl.searchParams
+          .get("pages")
+          ?.split(",")
+          .map((branch) => branch.split(":"));
   let filteredThreads = commentThreads;
   if (search)
     filteredThreads = filteredThreads.filter((thread) =>
@@ -50,9 +52,12 @@ export async function GET(request: NextRequest) {
         branches.some((branch) => branch[0] === thread.branch.branchName) &&
         branches.some((branch) => branch[1] === thread.project.id.toString())
     );
+
   if (pages && pages?.length > 0)
-    filteredThreads = filteredThreads.filter((thread) =>
-      pages.includes(thread.page.pageName)
+    filteredThreads = filteredThreads.filter(
+      (thread) =>
+        pages.some((page) => page[0] === thread.page.pageName) &&
+        pages.some((page) => page[1] === thread.project.id.toString())
     );
   return Response.json(filteredThreads);
 }

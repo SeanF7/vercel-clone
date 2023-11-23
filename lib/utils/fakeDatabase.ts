@@ -1,6 +1,4 @@
-import vercelLogo from "@/public/vercel.ico";
 import {
-  Comment,
   Author,
   Project,
   CommentThread,
@@ -8,10 +6,7 @@ import {
   Branch,
   Team,
 } from "@/types";
-import {
-  generateRandomDateWithinTwoWeeks,
-  getTimeAgo,
-} from "@/lib/utils/timeHelpers";
+import { generateRandomDateWithinTwoWeeks } from "@/lib/utils/timeHelpers";
 
 export const authors: Author[] = [
   {
@@ -100,12 +95,13 @@ function generateCommentThreads() {
   )
     .sort((a, b) => b.getTime() - a.getTime())
     .map((time) => time.toISOString());
+  console.log(pages.forEach((page, i) => console.log(page.pageName, i)));
   return [
     {
       threadId: 1,
       author: authors[0],
       branch: {
-        branchName: "feature-jira-integration",
+        branchName: projects[0].branches[0],
         projectId: projects[0].id,
         projectName: projects[0].name,
       },
@@ -208,9 +204,9 @@ function generateCommentThreads() {
       threadId: 5,
       author: authors[3],
       branch: {
-        branchName: "bugfix-creator-studio",
-        projectId: projects[0].id,
-        projectName: projects[0].name,
+        branchName: projects[2].branches[1],
+        projectId: projects[2].id,
+        projectName: projects[2].name,
       },
       comments: [
         {
@@ -220,7 +216,7 @@ function generateCommentThreads() {
           author: authors[3],
         },
       ],
-      page: pages[0],
+      page: pages[5],
       project: projects[2],
       read: false,
       isResolved: false,
@@ -246,10 +242,10 @@ function generateProjects() {
       name: "Vercel",
       description: "Develop. Preview. Ship.",
       url: "vercel.com",
-      image: vercelLogo.src,
+      image: "/vercelRound.png",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
       pages: ["/integrations", "/about", "/contact"],
-      branches: ["main", "dev", "staging"],
+      branches: ["main", "feature-jira-integration", "staging"],
       favorite: true,
     },
     {
@@ -272,7 +268,7 @@ function generateProjects() {
       image: "/twitch.webp",
       lastUpdated: generateRandomDateWithinTwoWeeks(),
       pages: ["/creatorstudio"],
-      branches: ["main", "dev", "staging"],
+      branches: ["main", "bugfix-creator-studio", "staging"],
       favorite: false,
     },
     {
@@ -323,7 +319,7 @@ function generateArchive() {
   return [
     {
       id: 1,
-      image: vercelLogo,
+      image: "/vercelRound.png",
       description: "Thanks for signing up for Vercel!",
       time: generateRandomDateWithinTwoWeeks(),
     },

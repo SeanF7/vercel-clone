@@ -15,6 +15,7 @@ export const Footer = () => {
                   alt="Vercel Logo"
                   width={26}
                   height={26}
+                  className="h-auto w-auto"
                 />
                 <p>© 2023</p>
               </div>

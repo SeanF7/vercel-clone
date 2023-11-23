@@ -117,7 +117,7 @@ export const MobileUserDropdownPopup = () => {
       {dropdownVisible && (
         <>
           <div
-            className={`fixed left-0 top-0 z-50 h-full w-full bg-black opacity-40`}
+            className={`fixed left-0 top-0 z-50 h-full w-full bg-black opacity-60`}
             ref={overlay}
           ></div>
           <div

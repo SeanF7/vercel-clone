@@ -161,19 +161,15 @@ const ProjectComponent = ({ projects, setFilters }: ProjectProps) => {
     <div className="flex h-8 cursor-pointer items-center gap-2 rounded-md bg-neutral-950 px-2 text-sm text-neutral-200 shadow-[0_0px_0px_1px] shadow-neutral-800 hover:bg-neutral-900">
       {projects.length === 1 ? (
         <>
-          {projects.map((project) => (
-            <>
-              <Image
-                className="rounded-full"
-                height={20}
-                width={20}
-                src={project.image}
-                alt={project.name}
-                key={project.id}
-              />
-              <span className="text-sm">{project.name}</span>
-            </>
-          ))}
+          <Image
+            className="rounded-full"
+            height={20}
+            width={20}
+            src={projects[0].image}
+            alt={projects[0].name}
+            key={projects[0].id}
+          />
+          <span className="text-sm">{projects[0].name}</span>
         </>
       ) : (
         <>

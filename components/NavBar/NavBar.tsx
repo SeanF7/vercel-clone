@@ -47,6 +47,7 @@ export const NavBar = async () => {
                 alt="Vercel Logo"
                 width={26}
                 height={26}
+                className="h-auto w-auto"
               />
             </Link>
             <div className="p-2">
