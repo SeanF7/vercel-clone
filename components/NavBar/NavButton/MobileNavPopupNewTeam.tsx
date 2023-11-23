@@ -1,5 +1,5 @@
-import { MobileTeamMenu } from "@/components/Projects/ProjectsContent";
 import React, { useRef, useState } from "react";
+import { TeamMenu } from "../../TeamMenu";
 
 type MobileNavPopupNewTeamProps = {
   setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
@@ -37,12 +37,13 @@ export const MobileNavPopupNewTeam = ({
         </svg>
       </button>
       {isClicked && (
-        <MobileTeamMenu
+        <TeamMenu
           closeMenus={() => {
             setShowMenu(false);
             setHideMenu(false);
           }}
           menuRef={menuRef}
+          mobile={true}
         />
       )}
     </>

@@ -95,7 +95,6 @@ function generateCommentThreads() {
   )
     .sort((a, b) => b.getTime() - a.getTime())
     .map((time) => time.toISOString());
-  console.log(pages.forEach((page, i) => console.log(page.pageName, i)));
   return [
     {
       threadId: 1,

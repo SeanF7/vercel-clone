@@ -6,7 +6,7 @@ import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { useEffect, useRef, useState } from "react";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
 import { SearchBar } from "../SearchBar";
-import { DesktopTeamMenu, MobileTeamMenu } from "./ProjectsContent";
+import { TeamMenu } from "../TeamMenu";
 
 type Props = {
   projectID: number;
@@ -219,11 +219,12 @@ export const EllipsisButton = ({ projectID, favorite }: Props) => {
         </>
       )}
       {transferTeamVisible && (
-        <DesktopTeamMenu
-          setVisible={() => {
+        <TeamMenu
+          closeMenus={() => {
             setTransferTeamVisible(false);
             setTransferVisible(false);
           }}
+          mobile={false}
           menuRef={transferTeamPopup}
           transferTeam={true}
         />
