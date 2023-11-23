@@ -154,7 +154,7 @@ export const EllipsisButton = ({
 
   const Wrapper = mobile ? MobileWrapper : DesktopWrapper;
 
-  useDisableScroll(mobile);
+  useDisableScroll(mobile && isVisible);
 
   return (
     <>
