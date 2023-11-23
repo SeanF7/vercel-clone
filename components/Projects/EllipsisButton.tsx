@@ -523,13 +523,14 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
         </>
       )}
       {transferTeamVisible && (
-        <MobileTeamMenu
+        <TeamMenu
           closeMenus={() => {
             setTransferTeamVisible(false);
             setTransferVisible(false);
           }}
           menuRef={transferTeamPopup}
           transferTeam={true}
+          mobile={true}
         />
       )}
     </>

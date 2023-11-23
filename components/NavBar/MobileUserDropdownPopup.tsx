@@ -2,8 +2,8 @@
 import { SearchBar } from "@/components/SearchBar";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useCustomPopupExits, usePopupExits } from "@/lib/hooks/usePopupExits";
-import { MobileTeamMenu } from "../Projects/ProjectsContent";
+import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
+import { TeamMenu } from "../TeamMenu";
 import useDisableScroll from "@/lib/hooks/useDisableScroll";
 import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import { Team } from "@/types";
@@ -178,9 +178,10 @@ export const MobileUserDropdownPopup = () => {
                         </li>
                       )}
                       {teamVisible && (
-                        <MobileTeamMenu
+                        <TeamMenu
                           menuRef={teamPopup}
                           closeMenus={closeMenus}
+                          mobile={true}
                         />
                       )}
                     </ul>
