@@ -1,18 +1,16 @@
 import { createPortal } from "react-dom";
 import { useState, useRef, RefObject } from "react";
 import Link from "next/link";
-import { useMobileSwipe } from "../lib/hooks/useMobileSwipe";
+import { usePopupExits } from "../lib/hooks/useMobileSwipe";
 import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 
 type TeamMenuProps = {
-  menuRef: RefObject<HTMLDivElement>;
   closeMenus?: () => void;
   transferTeam?: boolean;
   mobile: boolean;
 };
 
 export const TeamMenu = ({
-  menuRef,
   closeMenus = () => {},
   transferTeam,
   mobile,
@@ -20,8 +18,9 @@ export const TeamMenu = ({
   const [selectedButton, setSelectedButton] = useState(0);
   const overlayRef = useRef(null);
   const [teamName, setTeamName] = useState("Sean Firsching's Team");
+  const menuRef = useRef(null);
 
-  useMobileSwipe({
+  usePopupExits({
     overlayRef,
     startingOpacity: 0.6,
     popupRef: menuRef,

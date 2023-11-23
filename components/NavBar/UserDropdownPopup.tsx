@@ -1,15 +1,15 @@
 "use client";
-
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import { SearchBar } from "../SearchBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Team, Project } from "@/types";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
+import { TeamMenu } from "../TeamMenu";
 
 export const UserDropdownPopup = () => {
-  const { controllingButton, isVisible, menuPopup, setVisible } =
-    usePopupExits();
+  const [isVisible, setVisible] = useState(false);
+  const menuPopup = useRef(null);
   const [teamSearch, setTeamSearch] = useState("");
   const [teams, setTeams] = useState<Team[]>([]);
   const [projectSearch, setProjectSearch] = useState("");
@@ -17,6 +17,13 @@ export const UserDropdownPopup = () => {
   const [hoveredAccount, setHoveredAccount] = useState(0);
   const [projects, setProjects] = useState<Project[]>([]);
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
+  const [showTeamMenu, setShowTeamMenu] = useState(false);
+
+  usePopupExits({
+    popupRef: menuPopup,
+    setDropdownVisible: setVisible,
+    dontChangeIfTrue: [showTeamMenu],
+  });
 
   useEffect(() => {
     fetch(`/api/teams?s=${teamSearch}`)
@@ -47,7 +54,6 @@ export const UserDropdownPopup = () => {
     <div className="flex items-center">
       <button
         className="flex h-10 w-7 flex-shrink-0 items-center justify-center rounded-lg text-sm text-gray-400 hover:bg-neutral-800"
-        ref={controllingButton}
         onClick={() => setVisible(!isVisible)}
       >
         <svg
@@ -98,6 +104,7 @@ export const UserDropdownPopup = () => {
                     {teamSearch === "" && (
                       <li
                         className="flex h-10 w-full items-center gap-2 rounded-md px-2 hover:bg-neutral-900"
+                        onClick={() => setShowTeamMenu(true)}
                         onMouseEnter={() => setHoveredAccount(1)}
                       >
                         <svg
@@ -118,6 +125,15 @@ export const UserDropdownPopup = () => {
                         </svg>
                         Create Team
                       </li>
+                    )}
+                    {showTeamMenu && (
+                      <TeamMenu
+                        closeMenus={() => {
+                          setShowTeamMenu(false);
+                          setHoveredAccount(0);
+                        }}
+                        mobile={false}
+                      />
                     )}
                   </ul>
                 </div>

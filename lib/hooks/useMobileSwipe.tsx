@@ -8,14 +8,14 @@ type menuPos = {
 
 type useMobileSwipeProps = {
   setDropdownVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  overlayRef: React.RefObject<HTMLDivElement>;
+  overlayRef?: React.RefObject<HTMLDivElement>;
   popupRef: React.RefObject<HTMLDivElement>;
   dontChangeIfTrue?: boolean[];
   startingOpacity?: number;
   scrollableElements?: React.RefObject<HTMLDivElement>[];
 };
 
-export const useMobileSwipe = ({
+export const usePopupExits = ({
   setDropdownVisible,
   dontChangeIfTrue = [],
   overlayRef,
@@ -105,7 +105,7 @@ export const useMobileSwipe = ({
           currentY,
           deltaY,
         }));
-        if (overlayRef.current)
+        if (overlayRef?.current)
           overlayRef.current.style.opacity = `${Math.min(
             startingOpacity - deltaY / window.innerHeight,
             startingOpacity
@@ -128,7 +128,7 @@ export const useMobileSwipe = ({
         menuPosition !== null &&
         menuPosition?.deltaY > popupRef.current?.clientHeight! / 3
       ) {
-        overlayRef!.current!.style.opacity = "0";
+        if (overlayRef?.current) overlayRef.current!.style.opacity = "0";
         if (popupRef.current) {
           popupRef.current.style.transitionDuration = "300ms";
           popupRef.current.style.transform = `translateY(${window.innerHeight}px)`;
@@ -141,7 +141,7 @@ export const useMobileSwipe = ({
           popupRef.current.style.transform = `translateY(0px)`;
           popupRef.current.style.transitionDuration = "300ms";
         }
-        if (overlayRef.current)
+        if (overlayRef?.current)
           overlayRef.current.style.opacity = startingOpacity.toString();
       }
     };

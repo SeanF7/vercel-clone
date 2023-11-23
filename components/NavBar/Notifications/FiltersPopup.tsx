@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { CommentFilters } from "@/types";
 import { AuthorFilter } from "./AuthorFilter";
 import { StatusFilter } from "./StatusFilter";
@@ -27,37 +26,6 @@ export const FiltersPopup = ({
 }: FilterPopupProps) => {
   const [menuIndex, setMenuIndex] = useState<number | null>(null);
   const menuPopup = useRef(false);
-  // const { menuPopup } = useCustomPopupExits(
-  //   (event: KeyboardEvent) => {
-  //     if (event.key === "Escape") {
-  //       if (menuIndex !== null) {
-  //         setMenuIndex(null);
-  //         setShowFilterMenu(true);
-  //         setChildMenuOpen(true);
-  //       } else {
-  //         setShowFilterMenu(false);
-  //         setChildMenuOpen(false);
-  //       }
-  //     }
-  //   },
-  //   (event: MouseEvent) => {
-  //     if (
-  //       menuPopup.current &&
-  //       !menuPopup.current.contains(event.target as Node) &&
-  //       !hideFilterMenu
-  //     ) {
-  //       setShowFilterMenu(false);
-  //       setChildMenuOpen(false);
-  //     } else if (
-  //       menus.current &&
-  //       !menus.current?.contains(event.target as Node)
-  //     ) {
-  //       setShowFilterMenu(false);
-  //       setMenuIndex(null);
-  //       setChildMenuOpen(false);
-  //     }
-  //   }
-  // );
   const [hideFilterMenu, setHideFilterMenu] = useState(false);
   const menus = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
@@ -69,13 +37,13 @@ export const FiltersPopup = ({
     setHideFilterMenu(false);
   };
 
-  useMobileSwipe({
+  usePopupExits({
     overlayRef: overlay,
     popupRef: menus,
     setDropdownVisible: cleanUp,
     startingOpacity: 0.6,
   });
-  useMobileSwipe({
+  usePopupExits({
     overlayRef: overlay,
     popupRef: menuPopup,
     setDropdownVisible: cleanUp,

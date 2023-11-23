@@ -1,15 +1,22 @@
 "use client";
 import { createPortal } from "react-dom";
 import { SearchBar } from "./SearchBar";
-import { useState } from "react";
-import Image from "next/image";
+import { useState, useRef } from "react";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 
 type CommandMenuProps = {
   menuRef: React.RefObject<HTMLDivElement>;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const CommandMenu = ({ menuRef }: CommandMenuProps) => {
+export const CommandMenu = ({ menuRef, setVisible }: CommandMenuProps) => {
   const [searchValue, setSearchValue] = useState("");
+  const overlayRef = useRef(null);
+  usePopupExits({
+    overlayRef,
+    popupRef: menuRef,
+    setDropdownVisible: () => setVisible(false),
+  });
 
   const svgs = {
     grid: (
@@ -146,7 +153,10 @@ export const CommandMenu = ({ menuRef }: CommandMenuProps) => {
 
   return createPortal(
     <>
-      <div className="absolute bottom-0 left-0 z-50 h-full w-full bg-neutral-950 opacity-80" />
+      <div
+        className="absolute bottom-0 left-0 z-50 h-full w-full bg-neutral-950 opacity-80"
+        ref={overlayRef}
+      />
       <div
         className="fixed left-1/2 top-1/4 z-50 m-auto flex h-[522px] w-[640px] -translate-x-1/2 flex-col rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
         ref={menuRef}

@@ -4,8 +4,7 @@ import Image from "next/image";
 import { useRef, useState } from "react";
 import { StatusFilter } from "./StatusFilter";
 import { ProjectFilter } from "./ProjectFilter";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
-import { usePopupExistsParams } from "@/lib/hooks/usePopupExits";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { AuthorFilter } from "./AuthorFilter";
 import { PageFilter } from "./PageFilter";
 import { BranchFilter } from "./BranchFilter";
@@ -91,11 +90,20 @@ const AuthorComponent = ({
 }: AuthorProps) => {
   const [showAuthorFilterPopup, setShowProjectFilterPopup] = useState(false);
   const button = useRef<HTMLDivElement>(null);
+  const popupRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const cleanUp = () => {
     setChildMenuOpen(false);
     setShowProjectFilterPopup(false);
   };
+
+  usePopupExits({
+    overlayRef,
+    popupRef,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobilePopupWrapper : DesktopPopupWrapper;
   return (
@@ -168,12 +176,7 @@ const AuthorComponent = ({
         </button>
       </div>
       {showAuthorFilterPopup && (
-        <Wrapper
-          cleanUp={cleanUp}
-          button={button}
-          isVisible={showAuthorFilterPopup}
-          setVisible={setShowProjectFilterPopup}
-        >
+        <Wrapper overlayRef={overlayRef} popupRef={popupRef}>
           <AuthorFilter
             activeAuthors={authors.map((author) => author.id)}
             setFilters={setFilters}
@@ -200,11 +203,20 @@ const StatusComponent = ({
 }: StatusProps) => {
   const [showStatusFilter, setShowStatusFilter] = useState(false);
   const button = useRef<HTMLDivElement>(null);
+  const popupRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const cleanUp = () => {
     setChildMenuOpen(false);
     setShowStatusFilter(false);
   };
+
+  usePopupExits({
+    overlayRef,
+    popupRef,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobilePopupWrapper : DesktopPopupWrapper;
 
@@ -253,12 +265,7 @@ const StatusComponent = ({
       </div>
 
       {showStatusFilter && (
-        <Wrapper
-          button={button}
-          cleanUp={cleanUp}
-          isVisible={showStatusFilter}
-          setVisible={setShowStatusFilter}
-        >
+        <Wrapper overlayRef={overlayRef} popupRef={popupRef}>
           <StatusFilter
             activeStatus={status}
             setFilters={setFilters}
@@ -285,11 +292,20 @@ const ProjectComponent = ({
 }: ProjectProps) => {
   const [showProjectFilterPopup, setShowProjectFilterPopup] = useState(false);
   const button = useRef<HTMLDivElement>(null);
+  const popupRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const cleanUp = () => {
     setChildMenuOpen(false);
     setShowProjectFilterPopup(false);
   };
+
+  usePopupExits({
+    overlayRef,
+    popupRef,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobilePopupWrapper : DesktopPopupWrapper;
   return (
@@ -359,12 +375,7 @@ const ProjectComponent = ({
         </button>
       </div>
       {showProjectFilterPopup && (
-        <Wrapper
-          cleanUp={cleanUp}
-          setVisible={setShowProjectFilterPopup}
-          button={button}
-          isVisible={showProjectFilterPopup}
-        >
+        <Wrapper overlayRef={overlayRef} popupRef={popupRef}>
           <ProjectFilter
             activeProjects={projects.map((project) => project.id)}
             setFilters={setFilters}
@@ -391,11 +402,20 @@ const PageComponent = ({
 }: PageProps) => {
   const [showPageFilterPopup, setShowPageFilterPopup] = useState(false);
   const button = useRef<HTMLDivElement>(null);
+  const popupRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const cleanUp = () => {
     setChildMenuOpen(false);
     setShowPageFilterPopup(false);
   };
+
+  usePopupExits({
+    overlayRef,
+    popupRef,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobilePopupWrapper : DesktopPopupWrapper;
 
@@ -444,12 +464,7 @@ const PageComponent = ({
         </button>
       </div>
       {showPageFilterPopup && (
-        <Wrapper
-          cleanUp={cleanUp}
-          button={button}
-          isVisible={showPageFilterPopup}
-          setVisible={setShowPageFilterPopup}
-        >
+        <Wrapper overlayRef={overlayRef} popupRef={popupRef}>
           <PageFilter
             activePages={pages}
             setFilters={setFilters}
@@ -476,11 +491,20 @@ const BranchComponent = ({
 }: BranchProps) => {
   const [showBranchFilterPopup, setShowBranchFilterPopup] = useState(false);
   const button = useRef<HTMLDivElement>(null);
+  const popupRef = useRef(null);
+  const overlayRef = useRef(null);
 
   const cleanUp = () => {
     setChildMenuOpen(false);
     setShowBranchFilterPopup(false);
   };
+
+  usePopupExits({
+    overlayRef,
+    popupRef,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobilePopupWrapper : DesktopPopupWrapper;
   return (
@@ -547,12 +571,7 @@ const BranchComponent = ({
         </button>
       </div>
       {showBranchFilterPopup && (
-        <Wrapper
-          cleanUp={cleanUp}
-          button={button}
-          isVisible={showBranchFilterPopup}
-          setVisible={setShowBranchFilterPopup}
-        >
+        <Wrapper overlayRef={overlayRef} popupRef={popupRef}>
           <BranchFilter
             activeBranches={branches}
             setFilters={setFilters}
@@ -593,28 +612,16 @@ const ClearButton = ({ setFilters }: ClearProps) => {
 
 type DesktopPopupWrapperProps = {
   children: React.ReactNode;
-  button: React.RefObject<HTMLDivElement>;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  isVisible: boolean;
+  popupRef: React.RefObject<HTMLDivElement>;
 };
 
 const DesktopPopupWrapper = ({
   children,
-  button,
-  setVisible,
-  isVisible,
+  popupRef,
 }: DesktopPopupWrapperProps) => {
-  const menuPopup = useRef(null);
-  usePopupExistsParams({
-    controllingButton: button,
-    menuPopup,
-    setVisible,
-    isVisible,
-  });
-
   return (
     <div
-      ref={menuPopup}
+      ref={popupRef}
       className="absolute z-50 w-64  translate-y-10 rounded-xl bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
     >
       {children}
@@ -624,21 +631,13 @@ const DesktopPopupWrapper = ({
 
 const MobilePopupWrapper = ({
   children,
-  cleanUp,
+  overlayRef,
+  popupRef,
 }: {
   children: React.ReactNode;
-  cleanUp: () => void;
+  overlayRef: React.RefObject<HTMLDivElement>;
+  popupRef: React.RefObject<HTMLDivElement>;
 }) => {
-  const overlayRef = useRef<HTMLDivElement>(null);
-  const popupRef = useRef<HTMLDivElement>(null);
-
-  useMobileSwipe({
-    overlayRef,
-    popupRef,
-    setDropdownVisible: cleanUp,
-    startingOpacity: 0.6,
-  });
-
   return (
     <>
       <div className="fixed inset-0 bg-black opacity-60" ref={overlayRef}></div>

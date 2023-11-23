@@ -2,75 +2,28 @@
 import { SearchBar } from "@/components/SearchBar";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { TeamMenu } from "../TeamMenu";
 import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { Team } from "@/types";
 
 export const MobileUserDropdownPopup = () => {
   const [search, setSearch] = useState("");
-  const [userListItems, setuserListItems] = useState<Team[]>([]);
+  const [userListItems, setUserListItems] = useState<Team[]>([]);
   const [hideDropdown, setHideDropdown] = useState(false);
   const [menuOpacity, setMenuOpacity] = useState(0.6);
   const overlay = useRef<HTMLDivElement>(null);
-  const {
-    controllingButton: dropdownButton,
-    isVisible: dropdownVisible,
-    menuPopup: dropdownPopup,
-    setVisible: setDropdownVisible,
-  } = useCustomPopupExits(
-    (event) => {
-      if (event.key === "Escape" && dropdownVisible && !teamVisible) {
-        setDropdownVisible(false);
-        setHideDropdown(false);
-      }
-    },
-    (event) => {
-      if (
-        dropdownPopup.current &&
-        !dropdownPopup.current.contains(event.target as Node) &&
-        dropdownVisible &&
-        event.target !== dropdownButton.current &&
-        !teamVisible
-      ) {
-        setDropdownVisible(false);
-      }
-    }
-  );
-  const {
-    controllingButton: teamButton,
-    isVisible: teamVisible,
-    menuPopup: teamPopup,
-    setVisible: setTeamVisible,
-  } = useCustomPopupExits(
-    (event) => {
-      if (event.key === "Escape" && teamVisible) {
-        setDropdownVisible(false);
-        setTeamVisible(false);
-        setHideDropdown(false);
-      }
-    },
-    (event) => {
-      if (
-        teamPopup.current &&
-        !teamPopup.current.contains(event.target as Node) &&
-        teamVisible &&
-        event.target !== teamButton.current
-      ) {
-        setDropdownVisible(false);
-        setTeamVisible(false);
-        setHideDropdown(false);
-      }
-    }
-  );
+  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const dropdownPopup = useRef(null);
+  const [teamVisible, setTeamVisible] = useState(false);
+
   const closeMenus = () => {
     setDropdownVisible(false);
     setTeamVisible(false);
     setHideDropdown(false);
   };
 
-  useMobileSwipe({
+  usePopupExits({
     setDropdownVisible,
     dontChangeIfTrue: [teamVisible],
     overlayRef: overlay,
@@ -91,7 +44,7 @@ export const MobileUserDropdownPopup = () => {
     fetch(`/api/teams?s=${search}`)
       .then((res) => res.json())
       .then((data) => {
-        setuserListItems(data);
+        setUserListItems(data);
       });
   }, [search]);
 
@@ -101,7 +54,6 @@ export const MobileUserDropdownPopup = () => {
     <>
       <button
         className="flex h-10 w-7 flex-shrink-0 items-center justify-center rounded-lg text-sm text-gray-400 hover:bg-neutral-800"
-        ref={dropdownButton}
         onClick={() => setDropdownVisible(!dropdownVisible)}
       >
         <svg
@@ -152,7 +104,6 @@ export const MobileUserDropdownPopup = () => {
                         <li
                           role="button"
                           className="flex h-10 items-center gap-2 rounded-md px-2 hover:bg-neutral-900"
-                          ref={teamButton as any}
                           onClick={() => {
                             setHideDropdown(true);
                             setTeamVisible(true);
@@ -178,11 +129,7 @@ export const MobileUserDropdownPopup = () => {
                         </li>
                       )}
                       {teamVisible && (
-                        <TeamMenu
-                          menuRef={teamPopup}
-                          closeMenus={closeMenus}
-                          mobile={true}
-                        />
+                        <TeamMenu closeMenus={closeMenus} mobile={true} />
                       )}
                     </ul>
                   </div>

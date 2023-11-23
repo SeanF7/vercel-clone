@@ -1,19 +1,17 @@
-import { useRef, RefObject } from "react";
+import { useRef, RefObject, useState } from "react";
 import Link from "next/link";
 import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { TeamMenu } from "@/components/TeamMenu";
 
 export const AddNewButton = ({ mobile }: { mobile: boolean }) => {
-  const { controllingButton, menuPopup, isVisible, setVisible } =
-    usePopupExits();
+  const [isVisible, setVisible] = useState(false);
+  const menuPopup = useRef(null);
 
   return (
     <div>
       <button
         className="hover:bg-neutral-30 flex h-10 items-center rounded-md bg-neutral-200 px-2 text-center align-middle text-black [@media(min-width:601px)]:w-32"
-        ref={controllingButton}
         onClick={() => setVisible(!isVisible)}
       >
         <div className="flex flex-1 items-center justify-between">
@@ -66,17 +64,20 @@ const AddButtonPopup = ({
   setVisible,
   mobile,
 }: AddButtonPopupProps) => {
-  const {
-    controllingButton: teamMenuControllingButton,
-    menuPopup: teamMenuPopup,
-    isVisible: teamMenuIsVisible,
-    setVisible: setTeamMenuVisible,
-  } = usePopupExits();
+  const [teamMenuVisible, setTeamMenuVisible] = useState(false);
+  const menuOverlay = useRef(null);
 
   const cleanUp = () => {
     setVisible(false);
     setTeamMenuVisible(false);
   };
+
+  usePopupExits({
+    overlayRef: menuOverlay,
+    popupRef: menuPopup,
+    setDropdownVisible: cleanUp,
+    startingOpacity: 0.6,
+  });
 
   const Wrapper = mobile ? MobileWrapper : DesktopWrapper;
 
@@ -84,7 +85,7 @@ const AddButtonPopup = ({
     <>
       {isVisible && (
         <>
-          <Wrapper menuRef={menuPopup} cleanUp={cleanUp} menuPopup={menuPopup}>
+          <Wrapper menuRef={menuPopup} menuOverlay={menuOverlay}>
             {[
               { name: "Project", url: "http://vercel.com/new" },
               { name: "Domain", url: "http://vercel.com/domains" },
@@ -102,9 +103,8 @@ const AddButtonPopup = ({
               className="flex h-14 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800 [@media(min-width:600px)]:h-10"
               onClick={() => {
                 setVisible(false);
-                setTeamMenuVisible(!teamMenuIsVisible);
+                setTeamMenuVisible(!teamMenuVisible);
               }}
-              ref={teamMenuControllingButton}
             >
               Team
             </button>
@@ -112,9 +112,8 @@ const AddButtonPopup = ({
         </>
       )}
 
-      {teamMenuIsVisible && (
+      {teamMenuVisible && (
         <TeamMenu
-          menuRef={teamMenuPopup}
           closeMenus={() => {
             setTeamMenuVisible(false);
           }}
@@ -128,37 +127,26 @@ const AddButtonPopup = ({
 type AddButtonWrapperProps = {
   children: React.ReactNode;
   menuRef: RefObject<HTMLDivElement>;
-  menuPopup: RefObject<HTMLDivElement>;
-  cleanUp: () => void;
+  menuOverlay: RefObject<HTMLDivElement>;
 };
 
 const DesktopWrapper = ({ children, menuRef }: AddButtonWrapperProps) => {
   return (
-    <>
-      <div
-        className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
-        ref={menuRef}
-      >
-        {children}
-      </div>
-    </>
+    <div
+      className="absolute z-10  w-32 translate-y-2 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
+      ref={menuRef}
+    >
+      {children}
+    </div>
   );
 };
 
 const MobileWrapper = ({
   children,
   menuRef,
-  menuPopup,
-  cleanUp,
+  menuOverlay,
 }: AddButtonWrapperProps) => {
-  const menuOverlay = useRef(null);
   useDisableScroll(true);
-  useMobileSwipe({
-    overlayRef: menuOverlay,
-    popupRef: menuPopup,
-    setDropdownVisible: cleanUp,
-    startingOpacity: 0.6,
-  });
   return (
     <>
       <div

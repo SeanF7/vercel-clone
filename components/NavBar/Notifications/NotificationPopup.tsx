@@ -2,7 +2,6 @@
 import { useState, useRef, useEffect } from "react";
 import { SearchBar } from "@/components/SearchBar";
 import { FiltersPopup } from "./FiltersPopup";
-import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { Notification as NotificationComponent } from "./Notification";
 import { EmptyTabComponent } from "./EmptyTabComponent";
 import Link from "next/link";
@@ -13,7 +12,7 @@ import {
 } from "@/types";
 import { FiltersComponent } from "./FilterComponent";
 import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { CommentThread } from "@/components/NavBar/Notifications/CommentThread";
 import { Comment } from "@/components/NavBar/Notifications/Comment";
 
@@ -158,7 +157,7 @@ export const NotificationPopup = ({
   const Wrapper = mobile ? MobileWrapper : DesktopWrapper;
   useDisableScroll(mobile);
   const overlayRef = useRef(null);
-  useMobileSwipe({
+  usePopupExits({
     overlayRef,
     popupRef: menuPopup,
     setDropdownVisible: setVisible,

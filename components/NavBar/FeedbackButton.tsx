@@ -1,5 +1,5 @@
 "use client";
-import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import React, { useState, useEffect, useRef } from "react";
 
 export const FeedbackButton = () => {
@@ -22,7 +22,7 @@ export const FeedbackButton = () => {
     }
   };
 
-  useMobileSwipe({
+  usePopupExits({
     popupRef: menuPopup,
     setDropdownVisible: setShowFeedbackMenu,
   });

@@ -11,7 +11,6 @@ export const MobileNavPopupNewTeam = ({
   setHideMenu,
 }: MobileNavPopupNewTeamProps) => {
   const [isClicked, setIsClicked] = useState(false);
-  const menuRef = useRef(null);
 
   const handleClick = () => {
     setIsClicked(true);
@@ -42,7 +41,6 @@ export const MobileNavPopupNewTeam = ({
             setShowMenu(false);
             setHideMenu(false);
           }}
-          menuRef={menuRef}
           mobile={true}
         />
       )}

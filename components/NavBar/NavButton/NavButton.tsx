@@ -2,7 +2,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { DesktopNavPopup } from "./DesktopNavPopup";
 import { MobileNavPopup } from "./MobileNavPopup";
-import { useCustomPopupExits } from "@/lib/hooks/usePopupExits";
 import { useDisableScroll } from "@/lib/hooks/useDisableScroll";
 
 type NavButtonProps = {
@@ -10,14 +9,9 @@ type NavButtonProps = {
 };
 
 export const NavButton = ({ children }: NavButtonProps) => {
-  const handleButtonClick = () => {
-    if (!showMenu && width < 700)
-      document.body.classList.add("overflow-hidden");
-    else document.body.classList.remove("overflow-hidden");
-    setShowMenu(!showMenu);
-  };
   const [width, setWidth] = useState(0);
   const [menuHide, setMenuHide] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,32 +31,6 @@ export const NavButton = ({ children }: NavButtonProps) => {
     };
   }, [width]);
 
-  const {
-    menuPopup,
-    controllingButton,
-    isVisible: showMenu,
-    setVisible: setShowMenu,
-  } = useCustomPopupExits(
-    (event: KeyboardEvent) => {
-      if (event.key === "Escape" && showMenu) {
-        setShowMenu(false);
-        controllingButton.current?.focus();
-      }
-    },
-    (event: MouseEvent) => {
-      if (
-        menuPopup.current &&
-        !menuPopup.current.contains(event.target as Node) &&
-        showMenu &&
-        event.target !== controllingButton.current &&
-        // This is a hack to prevent the menu from closing when clicking on the portal as otherwise it will close as its outside of the hierarchy
-        !document.getElementById("portal")?.contains(event.target as Node)
-      ) {
-        setShowMenu(false);
-        setMenuHide(false);
-      }
-    }
-  );
   useDisableScroll(showMenu && width <= 700);
 
   return (
@@ -76,8 +44,7 @@ export const NavButton = ({ children }: NavButtonProps) => {
       ></div>
       <button
         className="flex h-8 w-8 rounded-full"
-        onClick={handleButtonClick}
-        ref={controllingButton}
+        onClick={() => setShowMenu(!showMenu)}
       >
         <div className="hidden [@media(min-width:700px)]:flex">
           <Suspense
@@ -100,8 +67,13 @@ export const NavButton = ({ children }: NavButtonProps) => {
           </div>
         )}
       </button>
-      <div ref={menuPopup} className={`${menuHide ? "hidden" : "block"}`}>
-        {showMenu && width > 700 && <DesktopNavPopup />}
+      <div className={`${menuHide ? "hidden" : "block"}`}>
+        {showMenu && width > 700 && (
+          <DesktopNavPopup
+            setShowMenu={setShowMenu}
+            setHideMenu={setMenuHide}
+          />
+        )}
         {showMenu && width <= 700 && (
           <MobileNavPopup setShowMenu={setShowMenu} setHideMenu={setMenuHide} />
         )}

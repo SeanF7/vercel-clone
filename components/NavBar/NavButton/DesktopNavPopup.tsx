@@ -1,17 +1,28 @@
 "use client";
 import { TeamMenu } from "@/components/TeamMenu";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
 import { CommandMenu } from "@/components/CommandMenu";
+import { useState, useRef } from "react";
+import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 
-export const DesktopNavPopup = () => {
-  const { controllingButton, isVisible, menuPopup, setVisible } =
-    usePopupExits();
-  const {
-    controllingButton: commandMenuButton,
-    isVisible: isCommandMenuVisible,
-    menuPopup: CommandMenuRef,
-    setVisible: setCommandMenuVisible,
-  } = usePopupExits();
+type DesktopNavPopupNewTeamProps = {
+  setShowMenu: React.Dispatch<React.SetStateAction<boolean>>;
+  setHideMenu: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const DesktopNavPopup = ({
+  setHideMenu,
+  setShowMenu,
+}: DesktopNavPopupNewTeamProps) => {
+  const [showTeamMenu, setShowTeamMenu] = useState(false);
+  const [showCommandMenu, setShowCommandMenu] = useState(false);
+  const commandMenuRef = useRef(null);
+
+  const navRef = useRef(null);
+  usePopupExits({
+    popupRef: navRef,
+    setDropdownVisible: setShowMenu,
+    dontChangeIfTrue: [showTeamMenu, showCommandMenu],
+  });
 
   const firstSection = [
     {
@@ -61,7 +72,10 @@ export const DesktopNavPopup = () => {
   ];
 
   return (
-    <div className="absolute left-full right-0 z-50 w-[250px] -translate-x-full pt-3 font-sans">
+    <div
+      className="absolute left-full right-0 z-50 w-[250px] -translate-x-full pt-3 font-sans"
+      ref={navRef}
+    >
       <div className="z-20 flex flex-col rounded-xl bg-neutral-950  shadow-[0_0px_1px_1px] shadow-neutral-800">
         <div className="px-5 pb-2 pt-5">
           <h1 className="text-sm font-semibold text-white">Sean Firsching</h1>
@@ -80,9 +94,9 @@ export const DesktopNavPopup = () => {
           <div>
             <button
               className="flex w-full cursor-pointer items-center justify-between px-5  py-2 transition-colors hover:bg-neutral-800  hover:text-white "
-              ref={controllingButton}
               onClick={() => {
-                setVisible(!isVisible);
+                setShowTeamMenu(!showTeamMenu);
+                setHideMenu(true);
               }}
             >
               Create Team
@@ -97,10 +111,13 @@ export const DesktopNavPopup = () => {
                 <path d="M5 12h14"></path>
               </svg>
             </button>
-            {isVisible && (
+            {showTeamMenu && (
               <TeamMenu
-                menuRef={menuPopup}
-                closeMenus={() => setVisible(false)}
+                closeMenus={() => {
+                  setShowTeamMenu(false);
+                  setHideMenu(false);
+                  setShowMenu(false);
+                }}
                 mobile={false}
               />
             )}
@@ -109,8 +126,10 @@ export const DesktopNavPopup = () => {
           <div>
             <button
               className="flex w-full cursor-pointer items-center justify-between  gap-1 px-5  py-1 hover:bg-neutral-800"
-              ref={commandMenuButton}
-              onClick={() => setCommandMenuVisible(true)}
+              onClick={() => {
+                setShowCommandMenu(!showCommandMenu);
+                setHideMenu(true);
+              }}
             >
               Command Menu
               <div className="flex gap-1 text-xs ">
@@ -122,7 +141,16 @@ export const DesktopNavPopup = () => {
                 </kbd>
               </div>
             </button>
-            {isCommandMenuVisible && <CommandMenu menuRef={CommandMenuRef} />}
+            {showCommandMenu && (
+              <CommandMenu
+                menuRef={commandMenuRef}
+                setVisible={() => {
+                  setShowCommandMenu(false);
+                  setHideMenu(false);
+                  setShowMenu(false);
+                }}
+              />
+            )}
           </div>
           <li className="flex items-center justify-between px-5 py-1 transition-colors hover:text-white">
             Theme
