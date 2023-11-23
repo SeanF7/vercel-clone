@@ -3,6 +3,11 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
 import { CommentThread, CommentFilters } from "@/types";
+import {
+  addToBranchFilter,
+  addToPageFilter,
+  addToProjectFilter,
+} from "@/lib/utils/filtersHelpers";
 
 type CommentsProps = {
   commentThread: CommentThread;
@@ -170,10 +175,7 @@ export const Comment = ({
           className="flex h-5 flex-shrink items-center rounded-xl bg-neutral-950  py-0.5 pl-0.5 pr-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
           onClick={(e) => {
             e.stopPropagation();
-            setFilters((prev) => ({
-              ...prev,
-              projects: [...prev.projects, commentThread.project],
-            }));
+            addToProjectFilter(commentThread.project, setFilters, false);
           }}
         >
           <Image
@@ -192,10 +194,7 @@ export const Comment = ({
           className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800"
           onClick={(e) => {
             e.stopPropagation();
-            setFilters((prev) => ({
-              ...prev,
-              pages: [...prev.pages, commentThread.page],
-            }));
+            addToPageFilter(commentThread.page, setFilters, false);
           }}
         >
           <p className="line-clamp-1 overflow-hidden text-ellipsis">
@@ -206,10 +205,7 @@ export const Comment = ({
           className="flex items-center gap-2 rounded-xl bg-neutral-950 px-2 py-0.5 shadow-[0_0px_0px_1px] shadow-neutral-800"
           onClick={(e) => {
             e.stopPropagation();
-            setFilters((prev) => ({
-              ...prev,
-              branches: [...prev.branches, commentThread.branch],
-            }));
+            addToBranchFilter(commentThread.branch, setFilters, false);
           }}
         >
           <svg

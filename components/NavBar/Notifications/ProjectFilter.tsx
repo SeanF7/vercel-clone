@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { CommentFilters, Project } from "@/types";
 import { SearchBar } from "@/components/SearchBar";
 import Image from "next/image";
+import { addToProjectFilter } from "@/lib/utils/filtersHelpers";
 
 export const ProjectFilter = ({
   setFilters,
@@ -23,21 +24,7 @@ export const ProjectFilter = ({
     getProjects();
   }, [projectSearch]);
   const handleClick = (project: Project) => {
-    setFilters((prev) => {
-      const isProjectInFilter = activeProjects.includes(project.id);
-
-      if (isProjectInFilter) {
-        return {
-          ...prev,
-          projects: prev.projects.filter((p) => p.id !== project.id),
-        };
-      } else {
-        return {
-          ...prev,
-          projects: [...prev.projects, project],
-        };
-      }
-    });
+    addToProjectFilter(project, setFilters, true);
     closeMenus();
   };
   return (

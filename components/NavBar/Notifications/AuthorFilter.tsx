@@ -2,6 +2,7 @@ import Image from "next/image";
 import { SearchBar } from "@/components/SearchBar";
 import { useState, useEffect } from "react";
 import { Author, CommentFilters } from "@/types";
+import { addToAuthorFilter } from "@/lib/utils/filtersHelpers";
 
 export const AuthorFilter = ({
   setFilters,
@@ -23,21 +24,7 @@ export const AuthorFilter = ({
     getAuthors();
   }, [authorSearch]);
   const handleClick = (author: Author) => {
-    setFilters((prev) => {
-      const isAuthorInFilters = activeAuthors.includes(author.id);
-
-      if (isAuthorInFilters) {
-        return {
-          ...prev,
-          authors: prev.authors.filter((a) => a.id !== author.id),
-        };
-      } else {
-        return {
-          ...prev,
-          authors: [...prev.authors, author],
-        };
-      }
-    });
+    addToAuthorFilter(author, setFilters, true);
     closeMenus();
   };
 

@@ -1,5 +1,6 @@
+"use client";
+import { addToStatusFilter } from "@/lib/utils/filtersHelpers";
 import { CommentFilters } from "@/types";
-import { useState, useEffect } from "react";
 
 export const StatusFilter = ({
   setFilters,
@@ -11,21 +12,7 @@ export const StatusFilter = ({
   closeMenus: () => void;
 }) => {
   const handleClick = (status: string) => {
-    setFilters((prev) => {
-      const isStatusInFilters = prev.status == status;
-
-      if (isStatusInFilters) {
-        return {
-          ...prev,
-          status: "",
-        };
-      } else {
-        return {
-          ...prev,
-          status: status,
-        };
-      }
-    });
+    addToStatusFilter(status, setFilters);
     closeMenus();
   };
 

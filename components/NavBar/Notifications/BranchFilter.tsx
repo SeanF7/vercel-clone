@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ProjectPage, CommentFilters, Branch } from "@/types";
 import { SearchBar } from "@/components/SearchBar";
 import Image from "next/image";
+import { addToBranchFilter } from "@/lib/utils/filtersHelpers";
 
 export const BranchFilter = ({
   setFilters,
@@ -33,25 +34,7 @@ export const BranchFilter = ({
   };
 
   const handleClick = (branch: Branch) => {
-    setFilters((prev) => {
-      const isBranchInFilters = checkIfBranchIsInFilters(branch);
-
-      if (isBranchInFilters) {
-        return {
-          ...prev,
-          branches: prev.branches.filter(
-            (p) =>
-              p.projectId !== branch.projectId ||
-              p.branchName !== branch.branchName
-          ),
-        };
-      } else {
-        return {
-          ...prev,
-          branches: [...prev.branches, branch],
-        };
-      }
-    });
+    addToBranchFilter(branch, setFilters, true);
     closeMenus();
   };
 

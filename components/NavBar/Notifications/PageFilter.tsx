@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { ProjectPage, CommentFilters } from "@/types";
 import { SearchBar } from "@/components/SearchBar";
 import Image from "next/image";
+import { addToPageFilter } from "@/lib/utils/filtersHelpers";
 
 export const PageFIlter = ({
   setFilters,
@@ -25,24 +26,7 @@ export const PageFIlter = ({
   };
 
   const handleClick = (page: ProjectPage) => {
-    setFilters((prev) => {
-      const isPageInFilters = checkIfPageIsInFilters(page);
-
-      if (isPageInFilters) {
-        return {
-          ...prev,
-          pages: prev.pages.filter(
-            (p) =>
-              p.projectId !== page.projectId || p.pageName !== page.pageName
-          ),
-        };
-      } else {
-        return {
-          ...prev,
-          pages: [...prev.pages, page],
-        };
-      }
-    });
+    addToPageFilter(page, setFilters, true);
     closeMenus();
   };
 
