@@ -102,7 +102,7 @@ export const MobileNavPopup = ({
         <div className="flex justify-center">
           <Link
             href={"https://vercel.com/contact"}
-            className="w-full rounded-md bg-neutral-950 p-2 text-white shadow-[0_0px_1px_1px] shadow-neutral-800"
+            className="w-full rounded-md bg-neutral-950 p-2 text-center text-white shadow-[0_0px_1px_1px] shadow-neutral-800"
           >
             Contact
           </Link>
