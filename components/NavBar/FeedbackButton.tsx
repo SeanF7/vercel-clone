@@ -1,19 +1,13 @@
 "use client";
+import { useMobileSwipe } from "@/lib/hooks/useMobileSwipe";
 import React, { useState, useEffect, useRef } from "react";
-import { usePopupExits } from "@/lib/hooks/usePopupExits";
-import Link from "next/link";
-import { redirect } from "next/dist/server/api-utils";
 
 export const FeedbackButton = () => {
   const [feedBackText, setFeedBackText] = useState("");
   const [selectedEmoji, setSelectedEmoji] = useState<number | null>(null);
   const [formError, setFormError] = useState("");
-  const {
-    menuPopup,
-    controllingButton,
-    isVisible: showFeedbackMenu,
-    setVisible: setShowFeedbackMenu,
-  } = usePopupExits();
+  const [showFeedbackMenu, setShowFeedbackMenu] = useState(false);
+  const menuPopup = useRef<HTMLDivElement>(null);
 
   const handleSubmission = () => {
     if (feedBackText.length > 0 && selectedEmoji != null) {
@@ -27,6 +21,11 @@ export const FeedbackButton = () => {
       }
     }
   };
+
+  useMobileSwipe({
+    popupRef: menuPopup,
+    setDropdownVisible: setShowFeedbackMenu,
+  });
 
   useEffect(() => {
     setFormError("");
@@ -46,7 +45,6 @@ export const FeedbackButton = () => {
             menuPopup.current?.classList.toggle("animate-fade");
           });
         }}
-        ref={controllingButton}
       >
         Feedback
       </button>
@@ -199,9 +197,11 @@ const EmojiButtons = ({
     <div className="flex">
       {emojis.map((emoji, i) => (
         <button
-          className={`group flex items-center justify-center rounded-full p-2 text-neutral-100 transition-colors duration-200 ease-[ease] 
+          className={`group flex items-center justify-center rounded-full p-2 transition-colors duration-200 ease-[ease] 
           hover:bg-blue-900  hover:fill-cyan-400 hover:text-cyan-400 ${
-            selectedEmoji == i ? "bg-blue-900 fill-cyan-400 text-cyan-400" : ""
+            selectedEmoji == i
+              ? "bg-blue-900 fill-cyan-400 text-cyan-400"
+              : "text-neutral-100"
           }`}
           key={i}
           onClick={() => setSelectedEmoji(i)}
