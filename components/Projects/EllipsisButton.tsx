@@ -11,226 +11,7 @@ import { TeamMenu } from "../TeamMenu";
 type Props = {
   projectID: number;
   favorite: boolean;
-};
-
-export const EllipsisButton = ({ projectID, favorite }: Props) => {
-  const [searchAccount, setSearchAccount] = useState("");
-  const [searchSVG, setSearchSVG] = useState<React.ReactNode>(null);
-  const { menuPopup, isVisible, setVisible } = usePopupExits();
-  const {
-    menuPopup: transferPopup,
-    isVisible: transferVisible,
-    setVisible: setTransferVisible,
-    controllingButton: transferButton,
-  } = usePopupExits();
-  const {
-    menuPopup: transferTeamPopup,
-    isVisible: transferTeamVisible,
-    setVisible: setTransferTeamVisible,
-    controllingButton: transferTeamButton,
-  } = usePopupExits();
-  const [showAccounts, setShowAccounts] = useState(false);
-  const { fetchData } = useProjectContext();
-  const handleClick = () => {
-    fetch(`/api/projects?id=${projectID}`, {
-      method: "PATCH",
-    }).then(() => {
-      fetchData();
-    });
-    setVisible(false);
-  };
-
-  useEffect(() => {
-    const handleEnter = (event: KeyboardEvent) => {
-      if (event.key === "Enter" && transferVisible) {
-        setSearchAccount("Create Team");
-        setShowAccounts(false);
-      }
-    };
-    window.addEventListener("keydown", handleEnter);
-    return () => {
-      window.removeEventListener("keydown", handleEnter);
-    };
-  }, [transferVisible]);
-
-  useEffect(() => {
-    if (searchAccount === "Create Team")
-      setSearchSVG(
-        <svg
-          fill="none"
-          height="24"
-          width="24"
-          shapeRendering="geometricPrecision"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth="1.5"
-          viewBox="0 0 24 24"
-          className="text-blue-500"
-        >
-          <circle cx="12" cy="12" r="10"></circle>
-          <path d="M12 8v8"></path>
-          <path d="M8 12h8"></path>
-        </svg>
-      );
-    else setSearchSVG(null);
-  }, [searchAccount]);
-
-  return (
-    <>
-      <button
-        className="z-0 rounded-md p-2 hover:bg-neutral-700"
-        onClick={() => {
-          setVisible(!isVisible);
-          requestAnimationFrame(() => {
-            menuPopup.current?.classList.toggle("animate-fade");
-          });
-        }}
-      >
-        <svg height="16" viewBox="0 0 16 16" width="16">
-          <path
-            d="M4 8C4 8.82843 3.32843 9.5 2.5 9.5C1.67157 9.5 1 8.82843 1 8C1 7.17157 1.67157 6.5 2.5 6.5C3.32843 6.5 4 7.17157 4 8ZM9.5 8C9.5 8.82843 8.82843 9.5 8 9.5C7.17157 9.5 6.5 8.82843 6.5 8C6.5 7.17157 7.17157 6.5 8 6.5C8.82843 6.5 9.5 7.17157 9.5 8ZM13.5 9.5C14.3284 9.5 15 8.82843 15 8C15 7.17157 14.3284 6.5 13.5 6.5C12.6716 6.5 12 7.17157 12 8C12 8.82843 12.6716 9.5 13.5 9.5Z"
-            fill="currentColor"
-          ></path>
-        </svg>
-      </button>
-      {isVisible && (
-        <div
-          className="absolute z-20 w-[184px] -translate-x-3/4 translate-y-2/3 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
-          ref={menuPopup}
-        >
-          <button
-            className="group/favorite flex h-10 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            onClick={handleClick}
-          >
-            {favorite ? "Remove Favorite" : "Add Favorite"}
-            <StarComponent favorite={favorite} />
-          </button>
-          <Link
-            href={"/"}
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-          >
-            View Logs
-          </Link>
-          <button
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            ref={transferButton}
-            onClick={() => {
-              setTransferVisible(!transferVisible);
-              setVisible(false);
-            }}
-          >
-            Transfer Project
-          </button>
-          <Link
-            href={"/"}
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-          >
-            Manage Domains
-          </Link>
-          <Link
-            href={"/"}
-            className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-          >
-            Settings
-          </Link>
-        </div>
-      )}
-      {transferVisible && (
-        <>
-          <div className="fixed inset-0 z-30 bg-black opacity-60"></div>
-          <div className="fixed bottom-0 left-0 z-30 flex h-full w-full items-center justify-center">
-            <div
-              className="flex w-[450px] flex-col rounded-md  bg-neutral-950 shadow-[0_0px_0px_1px] shadow-neutral-800"
-              ref={transferPopup}
-            >
-              <div className="flex flex-col gap-4 p-6">
-                <h1 className="text-2xl font-semibold text-neutral-200">
-                  Transfer
-                </h1>
-                <p className="text-sm text-neutral-600">
-                  Transfer your project from
-                  <span className="text-white"> Sean Firsching</span> to another
-                  Vercel account.
-                </p>
-              </div>
-              <div className="flex h-24 w-full flex-col items-center gap-1 border-b border-t border-neutral-700 bg-neutral-900 p-6">
-                <SearchBar
-                  inputValue={searchAccount}
-                  placeHolderText="Select a Vercel Account"
-                  setInputValue={setSearchAccount}
-                  onFocus={() => setShowAccounts(true)}
-                  onBlur={() => {
-                    setTimeout(() => {
-                      setShowAccounts(false);
-                    }, 100);
-                  }}
-                  replaceSVG={searchSVG}
-                  focusColors={true}
-                  clearButton={true}
-                />
-                {showAccounts && (
-                  <div
-                    className="z-50 flex w-full rounded-xl bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800"
-                    onClick={() => {
-                      setSearchAccount("Create Team");
-                    }}
-                  >
-                    <div className="flex w-full items-center gap-4 rounded-md bg-neutral-800 p-2 text-sm">
-                      <svg
-                        fill="none"
-                        height="24"
-                        width="24"
-                        shapeRendering="geometricPrecision"
-                        stroke="currentColor"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="1.5"
-                        viewBox="0 0 24 24"
-                        className="text-blue-500"
-                      >
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 8v8"></path>
-                        <path d="M8 12h8"></path>
-                      </svg>
-                      Create Team
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-between p-4">
-                <button
-                  className="h-10 rounded-md bg-neutral-950 px-3 text-sm shadow-[0_0px_0px_1px] shadow-neutral-800 transition hover:bg-neutral-900"
-                  onClick={() => setTransferVisible(false)}
-                >
-                  Cancel
-                </button>
-                <button
-                  className="disable:text-white h-10 rounded-md bg-white px-3 text-sm text-neutral-800 shadow-[0_0px_0px_1px] 
-                shadow-neutral-800 hover:bg-neutral-300 disabled:bg-neutral-800"
-                  ref={transferTeamButton}
-                  onClick={() => setTransferTeamVisible(true)}
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-      {transferTeamVisible && (
-        <TeamMenu
-          closeMenus={() => {
-            setTransferTeamVisible(false);
-            setTransferVisible(false);
-          }}
-          mobile={false}
-          menuRef={transferTeamPopup}
-          transferTeam={true}
-        />
-      )}
-    </>
-  );
+  mobile?: boolean;
 };
 
 type StarProps = {
@@ -345,7 +126,11 @@ const StarComponent = ({ favorite }: StarProps) => {
   );
 };
 
-export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
+export const EllipsisButton = ({
+  projectID,
+  favorite,
+  mobile = false,
+}: Props) => {
   const { menuPopup, isVisible, setVisible } = usePopupExits();
   const { fetchData } = useProjectContext();
   const overlay = useRef(null);
@@ -372,12 +157,38 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
     controllingButton: transferTeamButton,
   } = usePopupExits();
   const [showAccounts, setShowAccounts] = useState(false);
-  useDisableScroll(isVisible);
   useMobileSwipe({
     popupRef: menuPopup,
     setDropdownVisible: setVisible,
     overlayRef: overlay,
   });
+  useEffect(() => {
+    if (searchAccount === "Create Team")
+      setSearchSVG(
+        <svg
+          fill="none"
+          height="24"
+          width="24"
+          shapeRendering="geometricPrecision"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="1.5"
+          viewBox="0 0 24 24"
+          className="text-blue-500"
+        >
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M12 8v8"></path>
+          <path d="M8 12h8"></path>
+        </svg>
+      );
+    else setSearchSVG(null);
+  }, [searchAccount]);
+  const Wrapper = mobile ? MobileWrapper : DesktopWrapper;
+
+  useDisableScroll(
+    (isVisible || transferVisible || transferTeamVisible) && mobile
+  );
 
   return (
     <>
@@ -395,49 +206,43 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
         </svg>
       </button>
       {isVisible && (
-        <>
-          <div className="fixed inset-0 bg-black opacity-60" ref={overlay} />
-          <div
-            className="mobilePopupAfter fixed bottom-0 left-0 right-0 z-20 rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
-            ref={menuPopup}
+        <Wrapper menuRef={menuPopup}>
+          <button
+            className="group/favorite flex h-12 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800 [@media(min-width:600px)]:h-10"
+            onClick={handleClick}
           >
-            <button
-              className="group/favorite flex h-12 w-full items-center justify-between rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              onClick={handleClick}
-            >
-              {favorite ? "Remove Favorite" : "Add Favorite"}
-              <StarComponent favorite={favorite} />
-            </button>
-            <Link
-              href={"/"}
-              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            >
-              View Logs
-            </Link>
-            <button
-              className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-              ref={transferButton}
-              onClick={() => {
-                setTransferVisible(!transferVisible);
-                setVisible(false);
-              }}
-            >
-              Transfer Project
-            </button>
-            <Link
-              href={"/"}
-              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            >
-              Manage Domains
-            </Link>
-            <Link
-              href={"/"}
-              className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800"
-            >
-              Settings
-            </Link>
-          </div>
-        </>
+            {favorite ? "Remove Favorite" : "Add Favorite"}
+            <StarComponent favorite={favorite} />
+          </button>
+          {["View Logs", "Transfer Project", "Manage Domains", "Settings"].map(
+            (text, i) => {
+              if (i === 1)
+                return (
+                  <button
+                    className="flex h-10 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800 [@media(min-width:600px)]:h-10"
+                    ref={transferButton}
+                    onClick={() => {
+                      setTransferVisible(!transferVisible);
+                      setVisible(false);
+                    }}
+                    key={i}
+                  >
+                    {text}
+                  </button>
+                );
+
+              return (
+                <Link
+                  href={"/"}
+                  className="flex h-12 w-full items-center rounded-md px-2 py-1 text-sm text-white hover:bg-neutral-800 [@media(min-width:600px)]:h-10"
+                  key={i}
+                >
+                  {text}
+                </Link>
+              );
+            }
+          )}
+        </Wrapper>
       )}
       {transferVisible && (
         <>
@@ -530,9 +335,43 @@ export const MobileEllipsisButton = ({ projectID, favorite }: Props) => {
           }}
           menuRef={transferTeamPopup}
           transferTeam={true}
-          mobile={true}
+          mobile={mobile}
         />
       )}
+    </>
+  );
+};
+
+type WrapperProps = {
+  children: React.ReactNode;
+  menuRef: React.RefObject<HTMLDivElement>;
+};
+
+const DesktopWrapper = ({ children, menuRef }: WrapperProps) => {
+  return (
+    <>
+      <div
+        ref={menuRef}
+        className="absolute z-20 w-[184px] -translate-x-3/4 translate-y-2/3 rounded-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
+      >
+        {children}
+      </div>
+    </>
+  );
+};
+
+const MobileWrapper = ({ children, menuRef }: WrapperProps) => {
+  const menuOverlay = useRef(null);
+
+  return (
+    <>
+      <div className="fixed inset-0 bg-black opacity-60" ref={menuOverlay} />
+      <div
+        ref={menuRef}
+        className="mobilePopupAfter fixed bottom-0 left-0 right-0 z-20 rounded-t-lg bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 "
+      >
+        {children}
+      </div>
     </>
   );
 };

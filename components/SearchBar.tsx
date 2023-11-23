@@ -35,7 +35,7 @@ export const SearchBar = ({
 
   return (
     <div
-      className={`flex w-full rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800${
+      className={`flex w-full items-center rounded-md bg-neutral-950 p-2 shadow-[0_0px_0px_1px] shadow-neutral-800 ${
         focusColors
           ? " outline outline-0 outline-neutral-400 ring-neutral-700 transition-all focus-within:outline-1 focus-within:ring-4"
           : ""

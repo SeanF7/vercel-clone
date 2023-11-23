@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Activity } from "./Activity";
 import { getTimeAgo } from "@/lib/utils/timeHelpers";
-import { EllipsisButton, MobileEllipsisButton } from "./EllipsisButton";
+import { EllipsisButton } from "./EllipsisButton";
 
 type ProjectProps = {
   name: string;
@@ -57,14 +57,11 @@ export const GridProject = ({
             </div>
             <div className="flex items-center gap-2">
               <Activity />
-              {mobile ? (
-                <MobileEllipsisButton
-                  projectID={projectID}
-                  favorite={favorite}
-                />
-              ) : (
-                <EllipsisButton projectID={projectID} favorite={favorite} />
-              )}
+              <EllipsisButton
+                projectID={projectID}
+                favorite={favorite}
+                mobile={mobile}
+              />
             </div>
           </div>
           <div className="pt-4 text-sm">
@@ -242,11 +239,11 @@ export const ListProject = ({
         </div>
         <div className="flex items-center pl-2">
           <Activity />
-          {mobile ? (
-            <MobileEllipsisButton projectID={projectID} favorite={favorite} />
-          ) : (
-            <EllipsisButton projectID={projectID} favorite={favorite} />
-          )}
+          <EllipsisButton
+            projectID={projectID}
+            favorite={favorite}
+            mobile={mobile}
+          />
         </div>
       </div>
     </div>
