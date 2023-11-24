@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<a name="readme-top"></a>
 
-## Getting Started
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+<h3 align="center">Vercel Clone</h3>
+  <p align="center">
+    A copy of the Vercel dashboard.
+    <br />
+    <br />
+    <a href="https://vercel-clone-three.vercel.app/dashboard">
+    <img alt="Static Badge" src="https://img.shields.io/badge/View%20Demo-000000?style=for-the-badge&logo=Vercel&logoColor=white">
+    </a>
+    <a href="https://linkedin.com/in/sean_firsching">
+    <img src='https://img.shields.io/badge/linkedin-%230077B5.svg?style=for-the-badge&logo=linkedin&logoColor=white'/>
+    </a>
+  </p>
+</div>
 
-First, run the development server:
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+This project was a practice in using Next.js and React.js to create a copy of the Vercel dashboard. It uses Next.js for routing and React.js for the components. The project is hosted on Vercel. It also uses Tailwind CSS for styling.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## What I Learned
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+From this project I learned a lot about Next.js and React.js. I am now more comfortable with the basics of React hooks and also more complicated forms like creating custom hooks and context providers. I also learned how to use Next.js for routing and creating API routes to use on the front end. I also am more comfortable with CSS and using it to style a project through Tailwind.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Built With
 
-## Learn More
+* [![Next][Next.js]][Next-url]
+* [![React][React.js]][React-url]
+* [![Tailwind][Tailwind]][Tailwind-url]
 
-To learn more about Next.js, take a look at the following resources:
+<!-- CONTACT -->
+## Contact
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Sean Firsching - seanfirsching@gmail.com
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Project Link: [https://github.com/SeanF7/vercel-clone](https://github.com/SeanF7/vercel-clone)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[linkedin-url]: https://linkedin.com/in/sean_firsching
+[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
+[Next-url]: https://nextjs.org/
+[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
+[React-url]: https://reactjs.org/
+[Tailwind]: https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
+[Tailwind-url]: https://tailwindcss.com/
