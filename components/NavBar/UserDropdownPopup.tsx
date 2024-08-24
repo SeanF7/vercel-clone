@@ -3,7 +3,7 @@ import { SearchBar } from "../SearchBar";
 import { useEffect, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Team, Project } from "@/types";
+import type { Team, Project } from "@/types";
 import { usePopupExits } from "@/lib/hooks/useMobileSwipe";
 import { TeamMenu } from "../TeamMenu";
 
