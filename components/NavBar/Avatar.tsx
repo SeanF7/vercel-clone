@@ -1,15 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { User } from "@/types";
-
-async function getUser() {
-  const res = await fetch(`${process.env.URL}/api/user`);
-  if (!res.ok) {
-    return { name: "null", avatar: "null" };
-  }
-  const json = (await res.json()) as User;
-  return json;
-}
+import { authors } from "@/lib/utils/fakeDatabase";
 
 type AvatarProps = {
   width?: number;
@@ -17,7 +9,7 @@ type AvatarProps = {
 };
 
 export const Avatar = async ({ width = 16, height = 16 }: AvatarProps) => {
-  const user = await getUser();
+  const user = authors.slice(-1)[0];
 
   return (
     <Image

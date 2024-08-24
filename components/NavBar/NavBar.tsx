@@ -9,15 +9,7 @@ import { Avatar } from "./Avatar";
 import { FeedbackButton } from "./FeedbackButton";
 import Link from "next/link";
 import { User } from "@/types";
-
-async function getUser() {
-  const res = await fetch(`${process.env.URL}/api/user`);
-  if (!res.ok) {
-    return { name: "null", avatar: "null" };
-  }
-  const json = await res.json();
-  return json as User;
-}
+import { authors } from "@/lib/utils/fakeDatabase";
 
 export const NavBar = async () => {
   const navButtons = [
@@ -34,7 +26,7 @@ export const NavBar = async () => {
       path: "http://vercel.com/docs",
     },
   ];
-  const user = await getUser();
+  const user = authors.slice(-1)[0];
 
   return (
     <div className="relative select-none">
